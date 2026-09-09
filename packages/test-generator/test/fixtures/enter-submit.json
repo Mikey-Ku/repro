@@ -1,0 +1,19 @@
+{
+  "session": {
+    "id": "7d8e9f0a-1b2c-4d3e-8f4a-5b6c7d8e9f0a",
+    "projectSlug": "demo",
+    "startedAt": 1757400100000,
+    "initialUrl": "https://shop.example.com/",
+    "release": null,
+    "browser": "Firefox 143",
+    "dashboardUrl": null
+  },
+  "expectations": [{ "kind": "url", "pathPrefix": "/search" }],
+  "events": [
+    { "seq": 0, "ts": 1757400100000, "type": "navigation", "data": { "url": "https://shop.example.com/", "kind": "load", "title": "Shop" } },
+    { "seq": 1, "ts": 1757400101500, "type": "input", "data": { "target": { "tag": "input", "name": "q", "type": "search", "role": "searchbox", "accessibleName": "Search products", "placeholder": "Search", "cssPath": "header > form > input", "sensitive": false, "formId": "site-search" }, "kind": "text", "value": "running shoes", "masked": false } },
+    { "seq": 2, "ts": 1757400102200, "type": "submit", "data": { "target": { "tag": "form", "id": "site-search", "cssPath": "header > form", "sensitive": false } } },
+    { "seq": 3, "ts": 1757400102400, "type": "navigation", "data": { "url": "https://shop.example.com/search?q=running+shoes", "kind": "push", "title": "Search results" } },
+    { "seq": 4, "ts": 1757400102900, "type": "network", "data": { "kind": "fetch", "method": "GET", "url": "https://shop.example.com/api/search?q=running+shoes", "path": "/api/search?q=running+shoes", "status": 200, "ok": true, "durationMs": 210, "requestId": "req_010" } }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "password": "CANARY_PASSWORD_hunter2_9f3a1c",
+  "cardNumber": "CANARY_CARD_4242424242424242",
+  "cvc": "CANARY_CVC_9317",
+  "expiry": "CANARY_EXPIRY_12_29",
+  "token": "CANARY_TOKEN_sk_live_51Hq7wR2eZvKYlo2C",
+  "cookie": "CANARY_COOKIE_sess_7f3a9c2e1b",
+  "bearerHeader": "Bearer CANARY_TOKEN_sk_live_51Hq7wR2eZvKYlo2C",
+  "queryToken": "CANARY_QS_TOKEN_e2b1f0c9a7",
+  "apiKey": "CANARY_APIKEY_ak_test_00112233",
+  "maskedText": "CANARY_MASKED_TEXT_acct_998877",
+  "blockedText": "CANARY_BLOCKED_WIDGET_5551234",
+  "responseSecret": "CANARY_RESPONSE_SECRET_rk_live_zz99"
+}

@@ -1,0 +1,9 @@
+{
+  "extends": "@repro/config/tsconfig.node.json",
+  "compilerOptions": {
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "rootDir": ".",
+    "noEmit": true
+  },
+  "include": ["src", "client", "canaries.json"]
+}

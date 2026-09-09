@@ -1,0 +1,5 @@
+{
+  "extends": "@repro/config/tsconfig.node.json",
+  "compilerOptions": { "rootDir": ".", "noEmit": true, "lib": ["ES2023", "DOM"] },
+  "include": ["**/*.ts"]
+}

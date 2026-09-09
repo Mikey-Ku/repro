@@ -1,0 +1,16 @@
+{
+  "session": {
+    "id": "0a1b2c3d-4e5f-4a6b-8c7d-8e9f0a1b2c3d",
+    "projectSlug": "demo",
+    "startedAt": 1757400200000,
+    "initialUrl": "https://shop.example.com/",
+    "release": "2026.09.1",
+    "browser": "Safari 26"
+  },
+  "events": [
+    { "seq": 0, "ts": 1757400200000, "type": "navigation", "data": { "url": "https://shop.example.com/", "kind": "load", "title": "Shop" } },
+    { "seq": 1, "ts": 1757400201000, "type": "click", "data": { "target": { "tag": "div", "cssPath": "main > div.hero > div:nth-child(2)", "sensitive": false }, "x": 300, "y": 400 } },
+    { "seq": 2, "ts": 1757400202000, "type": "click", "data": { "target": { "tag": "span", "sensitive": false }, "x": 310, "y": 410 } },
+    { "seq": 3, "ts": 1757400203000, "type": "click", "data": { "target": { "tag": "button", "role": "button", "accessibleName": "Add to cart", "text": "Add to cart", "cssPath": "main > div.hero > button", "sensitive": false }, "x": 320, "y": 500 } }
+  ]
+}

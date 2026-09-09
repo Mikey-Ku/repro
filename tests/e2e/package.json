@@ -1,0 +1,26 @@
+{
+  "name": "@repro/e2e",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Complete product journey: demo session to dashboard to generated test to reproduction.",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@playwright/test": "^1.63.0",
+    "@repro/contracts": "workspace:*",
+    "@repro/db": "workspace:*",
+    "postgres": "^3.4.9",
+    "drizzle-orm": "^0.45.2"
+  },
+  "devDependencies": {
+    "@repro/config": "workspace:*",
+    "@types/node": "^22.20.2",
+    "eslint": "^9.39.5",
+    "tsx": "^4.23.13",
+    "typescript": "^5.9.3"
+  }
+}

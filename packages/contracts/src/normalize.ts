@@ -80,7 +80,8 @@ function actionFromInput(event: InputEvent): NormalizedAction {
  * 3. A click on a form control that is then filled is dropped (filling implies focus).
  * 4. A click on a submit control followed by a submit event keeps the click and drops the submit.
  * 5. A submit with no preceding submit click becomes `press-enter` on the last filled control.
- * 6. rrweb, console, network, error, annotation and identify events are not actions.
+ * 6. Inputs of kind `other` (file, range, color) are omitted with a reason.
+ * 7. rrweb, console, network, error, annotation and identify events are not actions.
  */
 export function normalizeEvents(events: readonly RecordedEvent[]): NormalizedSession {
   const sorted = [...events].sort((a, b) => a.seq - b.seq);
@@ -119,6 +120,10 @@ export function normalizeEvents(events: readonly RecordedEvent[]): NormalizedSes
         break;
       }
       case 'input': {
+        if (event.data.kind === 'other') {
+          omitted.push({ seq: event.seq, type: 'input', reason: `Changes to <input type="${event.data.target.type ?? 'unknown'}"> cannot be replayed from a recording.` });
+          break;
+        }
         const action = actionFromInput(event);
         const last = actions[actions.length - 1];
         if (last && last.kind === 'click' && isFormControl(last.target) && sameTarget(last.target, event.data.target)) {

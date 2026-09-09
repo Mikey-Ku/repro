@@ -1,0 +1,29 @@
+{
+  "session": {
+    "id": "9e8d7c6b-5a4f-4e3d-9c2b-1a0f9e8d7c6b",
+    "projectSlug": "demo",
+    "startedAt": 1757400300000,
+    "initialUrl": "https://shop.example.com/'); require('child_process') //",
+    "release": "1.0.0\n// injected release line",
+    "browser": "Chrome 140",
+    "dashboardUrl": "http://localhost:3000/p/demo/sessions/9e8d7c6b process.exit(1)"
+  },
+  "incident": { "id": "inc_02", "title": "Title with `backticks` and ${process.env.HOME}\nand a newline", "message": "x" },
+  "expectations": [
+    { "kind": "visible", "text": "Done'); process.exit(1); ('" },
+    { "kind": "url", "pathPrefix": "/done/'); process.exit(1); ('" }
+  ],
+  "testName": "Name with 'quotes' and\nnewlines and \"doubles\"",
+  "events": [
+    { "seq": 0, "ts": 1757400300000, "type": "navigation", "data": { "url": "https://shop.example.com/'); require('child_process') //", "kind": "load" } },
+    { "seq": 1, "ts": 1757400301000, "type": "input", "data": { "target": { "tag": "input", "type": "text", "label": "Note `${process.env.HOME}`\nsecond line", "sensitive": false }, "kind": "text", "value": "'); require('child_process').execSync('touch /tmp/pwned') //", "masked": false } },
+    { "seq": 2, "ts": 1757400302000, "type": "input", "data": { "target": { "tag": "input", "type": "text", "placeholder": "Line separator \\ backslash", "sensitive": false }, "kind": "text", "value": "tab\there \"double\" 'single' \\ end", "masked": false } },
+    { "seq": 3, "ts": 1757400303000, "type": "input", "data": { "target": { "tag": "input", "type": "text", "name": "weird\"name]", "sensitive": false, "formId": "form with spaces" }, "kind": "text", "value": "ok", "masked": false } },
+    { "seq": 4, "ts": 1757400304000, "type": "input", "data": { "target": { "tag": "input", "type": "password", "name": "secret'); process.exit(1); ('", "sensitive": true }, "kind": "text", "value": null, "masked": true } },
+    { "seq": 5, "ts": 1757400305000, "type": "click", "data": { "target": { "tag": "button", "role": "button", "accessibleName": "'); require('child_process') //", "sensitive": false }, "x": 1, "y": 1 } },
+    { "seq": 6, "ts": 1757400306000, "type": "click", "data": { "target": { "tag": "div", "cssPath": "div'); require('child_process') //", "sensitive": false }, "x": 1, "y": 1 } },
+    { "seq": 7, "ts": 1757400307000, "type": "navigation", "data": { "url": "https://shop.example.com/done/'); process.exit(1); ('?x=1", "kind": "push" } },
+    { "seq": 8, "ts": 1757400307500, "type": "network", "data": { "kind": "xhr", "method": "post", "url": "https://shop.example.com/api/'); process.exit(1); ('", "path": "/api/'); process.exit(1); ('", "status": 500, "ok": false, "durationMs": 12, "requestId": "req_020" } },
+    { "seq": 9, "ts": 1757400308000, "type": "error", "data": { "kind": "exception", "name": "Error", "message": "boom */ process.exit(1) /*\nsecond line", "handled": false } }
+  ]
+}

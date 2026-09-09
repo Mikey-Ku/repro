@@ -1,0 +1,44 @@
+{
+  "session": {
+    "id": "3f1c2a9e-5b7d-4c8e-9a0b-1d2e3f4a5b6c",
+    "projectSlug": "demo",
+    "startedAt": 1757400000000,
+    "initialUrl": "https://shop.example.com/login",
+    "release": "2026.09.1",
+    "browser": "Chrome 140",
+    "dashboardUrl": "http://localhost:3000/p/demo/sessions/3f1c2a9e-5b7d-4c8e-9a0b-1d2e3f4a5b6c"
+  },
+  "incident": {
+    "id": "inc_01",
+    "title": "TypeError after Place order on /checkout",
+    "message": "Cannot read properties of undefined (reading 'total')"
+  },
+  "expectations": [{ "kind": "visible", "testId": "order-confirmation" }],
+  "events": [
+    { "seq": 0, "ts": 1757400000000, "type": "navigation", "data": { "url": "https://shop.example.com/login", "kind": "load", "title": "Sign in" } },
+    { "seq": 1, "ts": 1757400000005, "type": "rrweb", "data": { "type": 4, "timestamp": 1757400000005, "data": { "href": "https://shop.example.com/login", "width": 1440, "height": 900 } } },
+    { "seq": 2, "ts": 1757400000030, "type": "rrweb", "data": { "type": 2, "timestamp": 1757400000030, "data": { "node": { "type": 0, "childNodes": [] }, "initialOffset": { "top": 0, "left": 0 } } } },
+    { "seq": 3, "ts": 1757400001200, "type": "click", "data": { "target": { "tag": "input", "id": "email", "name": "email", "type": "email", "role": "textbox", "accessibleName": "Email", "label": "Email", "autocomplete": "email", "cssPath": "form#login-form > div:nth-child(1) > input", "sensitive": false, "formId": "login-form" }, "x": 420, "y": 310 } },
+    { "seq": 4, "ts": 1757400002140, "type": "input", "data": { "target": { "tag": "input", "id": "email", "name": "email", "type": "email", "role": "textbox", "accessibleName": "Email", "label": "Email", "autocomplete": "email", "cssPath": "form#login-form > div:nth-child(1) > input", "sensitive": false, "formId": "login-form" }, "kind": "text", "value": "dev@repro.local", "masked": false } },
+    { "seq": 5, "ts": 1757400003900, "type": "input", "data": { "target": { "tag": "input", "id": "password", "name": "password", "type": "password", "role": "textbox", "accessibleName": "Password", "label": "Password", "autocomplete": "current-password", "cssPath": "form#login-form > div:nth-child(2) > input", "sensitive": true, "formId": "login-form" }, "kind": "text", "value": "CANARY_PASSWORD_VALUE", "masked": true } },
+    { "seq": 6, "ts": 1757400004500, "type": "click", "data": { "target": { "tag": "button", "type": "submit", "role": "button", "accessibleName": "Sign in", "text": "Sign in", "cssPath": "form#login-form > button", "sensitive": false, "formId": "login-form" }, "x": 480, "y": 420 } },
+    { "seq": 7, "ts": 1757400004502, "type": "submit", "data": { "target": { "tag": "form", "id": "login-form", "cssPath": "form#login-form", "sensitive": false } } },
+    { "seq": 8, "ts": 1757400004890, "type": "network", "data": { "kind": "fetch", "method": "POST", "url": "https://shop.example.com/api/login", "path": "/api/login", "status": 200, "ok": true, "durationMs": 380, "requestId": "req_001" } },
+    { "seq": 9, "ts": 1757400005000, "type": "navigation", "data": { "url": "https://shop.example.com/checkout?token=[redacted]", "kind": "push", "title": "Checkout" } },
+    { "seq": 10, "ts": 1757400007300, "type": "input", "data": { "target": { "tag": "input", "id": "fullName", "name": "fullName", "type": "text", "role": "textbox", "accessibleName": "Full name", "label": "Full name", "autocomplete": "name", "cssPath": "form#checkout-form > fieldset:nth-child(1) > div:nth-child(1) > input", "sensitive": false, "formId": "checkout-form" }, "kind": "text", "value": "Ada Lovelace", "masked": false } },
+    { "seq": 11, "ts": 1757400009100, "type": "input", "data": { "target": { "tag": "input", "name": "address", "type": "text", "label": "Address", "placeholder": "Street address", "autocomplete": "street-address", "cssPath": "form#checkout-form > fieldset:nth-child(1) > div:nth-child(2) > input", "sensitive": false, "formId": "checkout-form" }, "kind": "text", "value": "12 Analytical Engine Way", "masked": false } },
+    { "seq": 12, "ts": 1757400010400, "type": "input", "data": { "target": { "tag": "input", "name": "city", "type": "text", "placeholder": "City", "cssPath": "form#checkout-form > fieldset:nth-child(1) > div:nth-child(3) > input", "sensitive": false, "formId": "checkout-form" }, "kind": "text", "value": "London", "masked": false } },
+    { "seq": 13, "ts": 1757400011250, "type": "input", "data": { "target": { "tag": "input", "name": "postalCode", "type": "text", "cssPath": "form#checkout-form > fieldset:nth-child(1) > div:nth-child(4) > input", "sensitive": false, "formId": "checkout-form" }, "kind": "text", "value": "N1 9GU", "masked": false } },
+    { "seq": 14, "ts": 1757400012800, "type": "input", "data": { "target": { "tag": "select", "id": "shipping", "name": "shipping", "role": "combobox", "accessibleName": "Shipping method", "label": "Shipping method", "cssPath": "form#checkout-form > fieldset:nth-child(2) > select", "sensitive": false, "formId": "checkout-form" }, "kind": "select", "value": "express", "masked": false } },
+    { "seq": 15, "ts": 1757400015600, "type": "input", "data": { "target": { "tag": "input", "name": "cardNumber", "type": "text", "label": "Card number", "autocomplete": "cc-number", "cssPath": "form#checkout-form > fieldset:nth-child(3) > div:nth-child(1) > input", "sensitive": true, "formId": "checkout-form" }, "kind": "text", "value": "CANARY_CARD_4242", "masked": true } },
+    { "seq": 16, "ts": 1757400017000, "type": "input", "data": { "target": { "tag": "input", "name": "cardExpiry", "type": "text", "label": "Expiry", "placeholder": "MM/YY", "autocomplete": "cc-exp", "cssPath": "form#checkout-form > fieldset:nth-child(3) > div:nth-child(2) > input", "sensitive": true, "formId": "checkout-form" }, "kind": "text", "value": "CANARY_EXPIRY", "masked": true } },
+    { "seq": 17, "ts": 1757400018100, "type": "input", "data": { "target": { "tag": "input", "name": "cardCvc", "type": "text", "label": "CVC", "autocomplete": "cc-csc", "cssPath": "form#checkout-form > fieldset:nth-child(3) > div:nth-child(3) > input", "sensitive": true, "formId": "checkout-form" }, "kind": "text", "value": "CANARY_CVC", "masked": true } },
+    { "seq": 18, "ts": 1757400019700, "type": "input", "data": { "target": { "tag": "input", "testId": "promo-code", "id": "promo", "name": "promoCode", "type": "text", "label": "Promo code", "cssPath": "form#checkout-form > fieldset:nth-child(4) > input", "sensitive": false, "formId": "checkout-form" }, "kind": "text", "value": "SAVE10", "masked": false } },
+    { "seq": 19, "ts": 1757400020500, "type": "input", "data": { "target": { "tag": "input", "id": "saveCard", "name": "saveCard", "type": "checkbox", "role": "checkbox", "accessibleName": "Save card for next time", "label": "Save card for next time", "cssPath": "form#checkout-form > fieldset:nth-child(3) > label > input", "sensitive": false, "formId": "checkout-form" }, "kind": "checkbox", "value": "on", "masked": false, "checked": true } },
+    { "seq": 20, "ts": 1757400021900, "type": "click", "data": { "target": { "tag": "button", "type": "submit", "role": "button", "accessibleName": "Place order", "text": "Place order", "cssPath": "form#checkout-form > button", "sensitive": false, "formId": "checkout-form" }, "x": 640, "y": 812 } },
+    { "seq": 21, "ts": 1757400021902, "type": "submit", "data": { "target": { "tag": "form", "id": "checkout-form", "cssPath": "form#checkout-form", "sensitive": false } } },
+    { "seq": 22, "ts": 1757400022450, "type": "network", "data": { "kind": "fetch", "method": "POST", "url": "https://shop.example.com/api/orders", "path": "/api/orders", "status": 200, "ok": true, "durationMs": 540, "requestId": "req_002" } },
+    { "seq": 23, "ts": 1757400022470, "type": "error", "data": { "kind": "exception", "name": "TypeError", "message": "Cannot read properties of undefined (reading 'total')", "stack": "TypeError: Cannot read properties of undefined (reading 'total')\n    at renderConfirmation (https://shop.example.com/assets/checkout.js:42:18)", "handled": false, "source": "https://shop.example.com/assets/checkout.js", "line": 42, "column": 18 } },
+    { "seq": 24, "ts": 1757400022480, "type": "console", "data": { "level": "error", "args": ["Failed to render confirmation"] } }
+  ]
+}

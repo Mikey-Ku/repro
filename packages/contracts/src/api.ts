@@ -108,9 +108,9 @@ export const IncidentSchema = z.object({
 export type Incident = z.infer<typeof IncidentSchema>;
 
 export const ExpectationSchema = z.discriminatedUnion('kind', [
-  z.object({ kind: 'no-errors' }),
-  z.object({ kind: 'visible', testId: z.string().max(200).optional(), role: z.string().max(64).optional(), name: z.string().max(200).optional(), text: z.string().max(200).optional() }),
-  z.object({ kind: 'url', pathPrefix: z.string().max(500) }),
+  z.object({ kind: z.literal('no-errors') }),
+  z.object({ kind: z.literal('visible'), testId: z.string().max(200).optional(), role: z.string().max(64).optional(), name: z.string().max(200).optional(), text: z.string().max(200).optional() }),
+  z.object({ kind: z.literal('url'), pathPrefix: z.string().max(500) }),
 ]);
 export type Expectation = z.infer<typeof ExpectationSchema>;
 

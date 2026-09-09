@@ -1,0 +1,25 @@
+{
+  "name": "@repro/bench",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Reproducible benchmarks for Repro (bundle size, main-thread cost, payload, ingestion, dashboard).",
+  "type": "module",
+  "scripts": {
+    "bench": "tsx run.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@playwright/test": "^1.63.0",
+    "@repro/contracts": "workspace:*",
+    "@repro/test-generator": "workspace:*",
+    "@repro/db": "workspace:*"
+  },
+  "devDependencies": {
+    "@repro/config": "workspace:*",
+    "@types/node": "^22.20.2",
+    "eslint": "^9.39.5",
+    "tsx": "^4.23.13",
+    "typescript": "^5.9.3"
+  }
+}
