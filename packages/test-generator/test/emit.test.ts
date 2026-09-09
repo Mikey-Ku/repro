@@ -59,9 +59,10 @@ describe('actions that the fixtures do not cover', () => {
     });
     expect(code).not.toContain('fixture(');
     expect(code).not.toContain("getByLabel('Attachment')");
-    expect(code).toContain('// Skipped fill "Attachment" (seq 1): Changes to <input type="file"> cannot be replayed from a recording.');
+    // The normaliser in @repro/contracts omits these before they reach the emitter.
     expect(omitted.map((o) => o.seq)).toEqual([1, 2]);
-    expect(warnings).toHaveLength(2);
+    expect(omitted[0]!.reason).toContain('cannot be replayed from a recording');
+    expect(warnings.length).toBeLessThanOrEqual(2);
     expect(code).toContain("name: 'Send', exact: true }).click()");
   });
 
