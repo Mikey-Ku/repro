@@ -1,0 +1,5 @@
+{
+  "extends": "@repro/config/tsconfig.library.json",
+  "compilerOptions": { "rootDir": ".", "noEmit": true },
+  "include": ["src", "test"]
+}

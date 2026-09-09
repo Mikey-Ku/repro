@@ -1,0 +1,18 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+  - "tests/*"
+  - "scripts/bench"
+
+# pnpm blocks dependency lifecycle scripts by default. These are the only ones we allow.
+allowBuilds:
+  esbuild: true
+  "@tailwindcss/oxide": true
+  sharp: true
+  unrs-resolver: true
+  "@swc/core": true
+  protobufjs: true
+  msgpackr-extract: true
+
+# Allow freshly published versions (pnpm 12 defaults to a 24h quarantine).
+minimumReleaseAge: 0

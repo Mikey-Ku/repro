@@ -1,0 +1,36 @@
+{
+  "name": "repro",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Privacy-first browser session replay and automated bug reproduction.",
+  "license": "MIT",
+  "packageManager": "pnpm@12.3.4",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "test:integration": "turbo run test:integration",
+    "test:e2e": "pnpm --filter @repro/e2e test",
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down",
+    "db:migrate": "pnpm --filter @repro/db migrate",
+    "db:seed": "pnpm --filter @repro/db seed",
+    "db:generate": "pnpm --filter @repro/db generate",
+    "bench": "pnpm --filter @repro/bench bench",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "secrets:scan": "tsx scripts/scan-secrets.ts",
+    "verify": "bash scripts/verify.sh"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.6",
+    "tsx": "^4.23.13",
+    "turbo": "^2.10.12",
+    "typescript": "^5.9.3"
+  }
+}

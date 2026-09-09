@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: repro-db
+    environment:
+      POSTGRES_USER: repro
+      POSTGRES_PASSWORD: repro
+      POSTGRES_DB: repro
+    ports:
+      - "5432:5432"
+    volumes:
+      - repro-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U repro -d repro"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  repro-db-data:
