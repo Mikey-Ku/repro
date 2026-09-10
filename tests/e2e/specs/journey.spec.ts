@@ -59,7 +59,12 @@ test.describe.serial('Repro end to end', () => {
     await page.getByLabel('CVC').fill(canaries.cvc!);
     await page.getByLabel('Promo code').fill('WELCOME10');
     await page.getByLabel('Save card for next time').check();
+    // The failure happens after the order request resolves, so wait for both before moving on.
+    const orderResponse = page.waitForResponse((response) => response.url().includes('/api/orders'));
+    const pageError = page.waitForEvent('pageerror', { timeout: 15_000 }).catch(() => null);
     await page.getByTestId('place-order').click();
+    await orderResponse;
+    await pageError;
   };
 
   test('1. the SDK records a user hitting the broken checkout', async ({ page }) => {
@@ -118,7 +123,8 @@ test.describe.serial('Repro end to end', () => {
     expect(detail.session.errorCount).toBeGreaterThanOrEqual(1);
     expect(detail.session.initialRoute).toBe('/login');
     expect(detail.session.routes).toContain('/checkout');
-    expect(detail.incidents[0]!.kind).toBe('exception');
+    // The demo throws inside an async handler, so the browser reports an unhandled rejection.
+    expect(['exception', 'unhandledrejection']).toContain(detail.incidents[0]!.kind);
     expect(detail.incidents[0]!.message).toContain('toUpperCase');
   });
 
@@ -152,7 +158,7 @@ test.describe.serial('Repro end to end', () => {
   test('6. a readable Playwright test is generated from the recording', async ({ page }) => {
     await page.goto(`${env.webUrl}/projects/demo/sessions/${sessionId}`);
     await page.getByRole('tab', { name: /test/i }).click();
-    await page.getByLabel(/test id/i).fill('order-confirmation');
+    await page.getByRole('textbox', { name: /test id/i }).fill('order-confirmation');
     await page.getByRole('button', { name: /generate playwright test/i }).click();
 
     const tests = await waitFor(
@@ -166,8 +172,11 @@ test.describe.serial('Repro end to end', () => {
     generatedTestId = generated.id;
     expect(generated.code).toContain("import { test, expect } from '@playwright/test'");
     expect(generated.code).toContain("page.goto('/login')");
-    expect(generated.code).toContain("getByLabel('Card number')");
-    expect(generated.code).toContain("getByRole('button', { name: 'Place order' })");
+    // Selector priority: test id first, then accessible role and name, then label.
+    expect(generated.code).toContain("{ name: 'Card number', exact: true }).fill(fixture('cardNumber'))");
+    expect(generated.code).toContain("getByTestId('place-order').click()");
+    expect(generated.code).toContain("fill(fixture('password'))");
+    expect(generated.code).not.toContain('WELCOME10x');
     expect(generated.code).toContain("selectOption('express')");
     expect(generated.code).toContain("getByTestId('order-confirmation')");
     expect(generated.code).toContain('pageErrors');
@@ -201,8 +210,9 @@ test.describe.serial('Repro end to end', () => {
 
     await page.goto(`${env.webUrl}/projects/demo/sessions/${sessionId}`);
     await page.getByRole('tab', { name: /runs/i }).click();
-    await expect(page.getByText(/failed/i).first()).toBeVisible();
-    await expect(page.getByText(/broken/i).first()).toBeVisible();
+    const runsPanel = page.getByRole('tabpanel');
+    await expect(runsPanel.getByText(/failed/i).first()).toBeVisible();
+    await expect(runsPanel.getByText(/broken/i).first()).toBeVisible();
   });
 
   test('8. the same test passes against fixed mode', async ({ page }) => {
@@ -211,7 +221,7 @@ test.describe.serial('Repro end to end', () => {
 
     await page.goto(`${env.webUrl}/projects/demo/sessions/${sessionId}`);
     await page.getByRole('tab', { name: /runs/i }).click();
-    await expect(page.getByText(/passed/i).first()).toBeVisible();
+    await expect(page.getByRole('tabpanel').getByText(/passed/i).first()).toBeVisible();
     await setDemoMode('broken');
   });
 });

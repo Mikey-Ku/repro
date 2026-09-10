@@ -163,7 +163,13 @@ export function ExpectationBuilder({
         )}
       </fieldset>
 
-      <input type="hidden" name="expectations" value={JSON.stringify(rows.map((row) => row.value))} />
+      {/* A complete draft that was never explicitly added still counts: typing a test id and pressing
+          Generate is the common path, and silently dropping it would be surprising. */}
+      <input
+        type="hidden"
+        name="expectations"
+        value={JSON.stringify([...rows.map((row) => row.value), ...(isComplete(draft) && rows.length < 5 ? [draft] : [])])}
+      />
 
       <div className="flex flex-wrap items-end gap-2">
         <label className="flex min-w-0 flex-1 flex-col gap-1">

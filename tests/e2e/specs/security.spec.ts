@@ -60,13 +60,15 @@ test('XSS-shaped recorded content is rendered as text in the dashboard', async (
     void d.dismiss();
   });
 
-  for (const url of [
-    `${env.webUrl}/projects/demo/sessions/${sessionId}`,
-    `${env.webUrl}/projects/demo/sessions`,
-    `${env.webUrl}/projects/demo/incidents`,
-  ]) {
+  const pages: [string, RegExp][] = [
+    [`${env.webUrl}/projects/demo/sessions/${sessionId}`, /img src=x|Boom/],
+    // The list shows the route, which is URL-encoded by the SDK contract, so it is inert by construction.
+    [`${env.webUrl}/projects/demo/sessions`, /%3Cimg%20src%3Dx/],
+    [`${env.webUrl}/projects/demo/incidents`, /Boom/],
+  ];
+  for (const [url, expected] of pages) {
     await page.goto(url);
-    await expect(page.getByText(/img src=x|Boom/).first()).toBeVisible();
+    await expect(page.getByText(expected).first()).toBeVisible();
     expect(await page.evaluate(() => window.__xss)).toBeUndefined();
     expect(await page.locator('img[src="x"]').count()).toBe(0);
     expect(dialogs).toEqual([]);
@@ -75,7 +77,7 @@ test('XSS-shaped recorded content is rendered as text in the dashboard', async (
   // The evidence tab renders the stack trace and console args too.
   await page.goto(`${env.webUrl}/projects/demo/sessions/${sessionId}`);
   await page.getByRole('tab', { name: /evidence/i }).click();
-  await expect(page.getByText(/Boom/).first()).toBeVisible();
+  await expect(page.getByRole('tabpanel').getByText(/Boom/).first()).toBeVisible();
   expect(await page.evaluate(() => window.__xss)).toBeUndefined();
   expect(await page.locator('img[src="x"]').count()).toBe(0);
 });

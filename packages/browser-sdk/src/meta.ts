@@ -20,7 +20,7 @@ export function parseUserAgent(ua: string): ParsedUserAgent {
   let version = '';
   const edge = pick(/\bEdg(?:e|A|iOS)?\/(\d+(?:\.\d+)*)/);
   const firefox = pick(/\b(?:Firefox|FxiOS)\/(\d+(?:\.\d+)*)/);
-  const chrome = pick(/\b(?:Chrome|CriOS)\/(\d+(?:\.\d+)*)/);
+  const chrome = pick(/(?:\bChrome|HeadlessChrome|\bCriOS)\/(\d+(?:\.\d+)*)/);
   const safari = /\bSafari\//.test(ua) ? pick(/\bVersion\/(\d+(?:\.\d+)*)/) : null;
   if (edge) {
     name = 'Edge';

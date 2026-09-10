@@ -40,7 +40,8 @@ export async function enqueueJob(
 /** Claim the next runnable job using SKIP LOCKED so several workers can poll safely. */
 export async function claimJob(db: Db, workerId: string, kinds?: string[]): Promise<JobRow | null> {
   return db.transaction(async (tx) => {
-    const kindFilter = kinds && kinds.length ? sql`AND kind = ANY(${kinds})` : sql``;
+    // Drizzle expands a JS array parameter to `($1, $2, ...)`, which fits IN but not ANY.
+    const kindFilter = kinds && kinds.length ? sql`AND kind IN ${kinds}` : sql``;
     const rows = await tx.execute<JobRow>(sql`
       SELECT * FROM jobs
       WHERE status = 'queued' AND run_after <= now() ${kindFilter}

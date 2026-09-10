@@ -1,4 +1,4 @@
-import { routeFromPath, sanitizePath, sanitizeUrl, scrubText, type IngestBatch, type RecordedEvent, type SessionMeta } from '@repro/contracts';
+import { routeFromPath, sanitizePath, sanitizeRrwebEvent, sanitizeUrl, scrubText, type IngestBatch, type RecordedEvent, type SessionMeta } from '@repro/contracts';
 
 /**
  * Server-side defence in depth. The SDK already sanitises URLs and scrubs free text before
@@ -41,6 +41,7 @@ export function sanitizeEvent(event: RecordedEvent): RecordedEvent {
       }
       return event;
     case 'rrweb':
+      return { ...event, data: sanitizeRrwebEvent(event.data) };
     case 'annotation':
     case 'identify':
       return event;

@@ -4,6 +4,7 @@
  */
 import { record, type recordOptions } from 'rrweb';
 import type { eventWithTime } from '@rrweb/types';
+import { sanitizeRrwebEvent } from '@repro/contracts';
 import {
   DEFAULT_BLOCK_SELECTOR,
   DEFAULT_IGNORE_SELECTOR,
@@ -49,7 +50,8 @@ export function buildRecordOptions(ctx: CaptureContext): RecordOptions {
   const { redaction } = ctx;
   const options: RecordOptions = {
     emit: (event: eventWithTime) => {
-      ctx.emit({ type: 'rrweb', data: event });
+      // rrweb copies the page URL and link/form URLs verbatim; redact their query strings first.
+      ctx.emit({ type: 'rrweb', data: sanitizeRrwebEvent(event) });
     },
     checkoutEveryNms: CHECKOUT_EVERY_MS,
     maskTextSelector: joinSelectors(DEFAULT_MASK_SELECTOR, redaction.maskSelector),
