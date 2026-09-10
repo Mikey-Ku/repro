@@ -83,8 +83,13 @@ Filter semantics: `status` exact; `release` exact; `route` matches `initialRoute
 | Method | Path | Response |
 | --- | --- | --- |
 | GET | `/api/projects/:projectId/incidents` | query `?status=open&limit=50` → `{ items: Incident[] }` |
+| GET | `/api/projects/:projectId/incidents/groups` | query `?status=open&limit=50` → `{ items: IncidentGroup[] }` |
 | GET | `/api/projects/:projectId/incidents/:incidentId` | `{ incident: Incident, session: SessionSummary, tests: GeneratedTest[] }` |
 | PATCH | `/api/projects/:projectId/incidents/:incidentId` | body `{ status }` → `Incident` |
+
+Incidents are one row per fingerprint per session. `/incidents/groups` folds them across sessions: one `IncidentGroup` per fingerprint with `sessionCount`, `firstSeen`, `lastSeen`, distinct `releases` and `routes`, `openCount`, and `latestIncidentId` and `latestSessionId` (the newest incident by `firstTs`, whose `kind`, `title` and `message` label the group). Ordered by `lastSeen desc`. It is one grouped query over `incidents`; there is no groups table.
+
+Group status is derived: `status=open` returns groups with at least one open incident, `status=resolved` returns groups whose incidents are all resolved. Counts always cover the whole group regardless of the filter. `ProjectStats.openIncidentGroups` is the number of groups that `status=open` would return.
 
 ### Generated tests
 

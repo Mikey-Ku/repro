@@ -7,7 +7,7 @@ Honest list for the first release. Items marked (roadmap) have a planned directi
 - **Reproduction runs only target the bundled demo application.** The runner refuses any URL outside `DEMO_URL`. Running generated tests against your own application means copying the file into your own Playwright project. (roadmap)
 - **Expected success state is partly manual.** The recording captures a failure, so the intended outcome is not in the data. By default the generated test asserts "no uncaught errors and the last request succeeded"; a visible-element or URL expectation must be added by the engineer in the Test tab.
 - **Single local user, shared internal token.** There is no login, no roles, no audit log. Do not expose the dashboard or the internal API beyond localhost.
-- **Incidents are per session.** The same bug in ten sessions is ten incidents with the same fingerprint, not one grouped issue. (roadmap)
+- **Incident groups are computed, not stored.** The incidents page groups rows by fingerprint at query time. There is no group-level status, assignment or notes yet. (roadmap)
 - **No source maps.** Stack traces show bundled file positions.
 - **The AI investigator is unproven.** It is wired, tested with a fake model, and off by default. Its output quality has not been evaluated.
 

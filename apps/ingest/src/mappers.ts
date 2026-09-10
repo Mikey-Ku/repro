@@ -4,6 +4,7 @@ import type {
   Expectation,
   GeneratedTest,
   Incident,
+  IncidentGroup,
   IngestionKey,
   Investigation,
   Project,
@@ -11,6 +12,7 @@ import type {
   SessionSummary,
 } from '@repro/contracts';
 import type { FindingRow, GeneratedTestRow, IncidentRow, IngestionKeyRow, ProjectRow, RunRow, SessionRow } from '@repro/db';
+import type { IncidentGroupRow } from './services/incidents.js';
 
 /**
  * Database rows to API DTOs. The rules are simple and the same everywhere: dates become ISO
@@ -81,6 +83,23 @@ export function toIncidentDto(row: IncidentRow): Incident {
     release: row.release,
     status: row.status,
     createdAt: iso(row.createdAt),
+  };
+}
+
+export function toIncidentGroupDto(row: IncidentGroupRow): IncidentGroup {
+  return {
+    fingerprint: row.fingerprint,
+    kind: row.kind,
+    title: row.title,
+    message: row.message,
+    sessionCount: row.sessionCount,
+    firstSeen: iso(row.firstSeen),
+    lastSeen: iso(row.lastSeen),
+    releases: row.releases,
+    routes: row.routes,
+    openCount: row.openCount,
+    latestIncidentId: row.latestIncidentId,
+    latestSessionId: row.latestSessionId,
   };
 }
 

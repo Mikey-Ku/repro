@@ -2,8 +2,8 @@ import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import type { AppContext } from '../context.js';
 import { notFound } from '../errors.js';
-import { toGeneratedTestDto, toIncidentDto, toSessionDto } from '../mappers.js';
-import { getIncident, listIncidents, updateIncidentStatus } from '../services/incidents.js';
+import { toGeneratedTestDto, toIncidentDto, toIncidentGroupDto, toSessionDto } from '../mappers.js';
+import { getIncident, listIncidentGroups, listIncidents, updateIncidentStatus } from '../services/incidents.js';
 import { getSession } from '../services/sessions.js';
 import { listTestsForSession } from '../services/tests.js';
 import { idParam, parseWith, requireProject } from './shared.js';
@@ -26,6 +26,14 @@ export function registerIncidentRoutes(app: FastifyInstance, ctx: AppContext): v
     const query = parseWith(ListQuerySchema, request.query, 'Incident filters');
     const rows = await listIncidents(ctx.db, project.id, query);
     return { items: rows.map(toIncidentDto) };
+  });
+
+  // Registered before the /:incidentId route so the literal segment "groups" is never read as an id.
+  app.get<ProjectParams>('/projects/:projectId/incidents/groups', async (request) => {
+    const project = await requireProject(ctx, request, request.params.projectId);
+    const query = parseWith(ListQuerySchema, request.query, 'Incident group filters');
+    const rows = await listIncidentGroups(ctx.db, project.id, query);
+    return { items: rows.map(toIncidentGroupDto) };
   });
 
   app.get<IncidentParams>('/projects/:projectId/incidents/:incidentId', async (request) => {

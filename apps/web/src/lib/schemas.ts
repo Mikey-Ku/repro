@@ -3,6 +3,7 @@ import {
   DiagnosticFindingSchema,
   EvidenceSummarySchema,
   GeneratedTestSchema,
+  IncidentGroupSchema,
   IncidentSchema,
   ProjectSchema,
   ProjectStatsSchema,
@@ -54,6 +55,7 @@ export const TimelineResponseSchema = z.object({
 export type TimelineResponse = z.infer<typeof TimelineResponseSchema>;
 
 export const IncidentListSchema = z.object({ items: z.array(IncidentSchema) });
+export const IncidentGroupListSchema = z.object({ items: z.array(IncidentGroupSchema) });
 
 export const IncidentDetailSchema = z.object({
   incident: IncidentSchema,

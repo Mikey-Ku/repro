@@ -6,7 +6,7 @@ Ordered by the value it adds to the working vertical slice. Nothing here is prom
 
 1. **Object storage for chunks.** `event_chunks.location` already exists. Add an S3-compatible writer and a reader that streams by `batch_seq`, keep Postgres for metadata.
 2. **Run against your own app.** The runner already validates generated code with a syntax-tree allowlist; what is missing is per-project allowed origins, a hosted browser pool, and fixture secrets stored encrypted so `REPRO_FIXTURE_*` values do not live in shell env.
-3. **Incident grouping across sessions.** Fingerprints exist per session. Add a project-level incident table with counts, first seen, last seen and affected releases.
+3. **Group-level incident state.** Groups by fingerprint exist as a query (`GET /incidents/groups`). Add a stored group with status, assignee and notes so a fix can be tracked across releases.
 4. **Sampling and rate controls in the SDK.** `sampleRate` exists; add error-triggered "record on incident" mode with a ring buffer so healthy sessions cost nothing.
 
 ## Later

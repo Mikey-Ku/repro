@@ -35,7 +35,7 @@ export default async function OverviewPage({ params }: Props) {
       <dl className="grid grid-cols-2 gap-3 md:grid-cols-5">
         <StatTile label="Sessions" value={stats.sessions} href={projectPath(slug, 'sessions')} />
         <StatTile label="Sessions with errors" value={stats.sessionsWithErrors} tone="danger" href={`${projectPath(slug, 'sessions')}?hasErrors=true`} />
-        <StatTile label="Open incidents" value={stats.openIncidents} tone="warning" href={projectPath(slug, 'incidents')} />
+        <StatTile label="Open incidents" value={stats.openIncidentGroups} tone="warning" href={projectPath(slug, 'incidents')} />
         <StatTile label="Generated tests" value={stats.generatedTests} />
         <StatTile label="Runs" value={stats.runs} />
       </dl>

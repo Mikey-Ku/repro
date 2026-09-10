@@ -23,6 +23,7 @@ import { z as zod } from 'zod';
 import { ingestUrl, internalToken } from './env';
 import {
   IncidentDetailSchema,
+  IncidentGroupListSchema,
   IncidentListSchema,
   OkSchema,
   ProjectWithStatsSchema,
@@ -219,6 +220,14 @@ export async function listIncidents(projectId: string, options: { status?: 'open
     query: { status: options.status, limit: options.limit },
   });
   return options.kind ? items.filter((incident) => incident.kind === options.kind) : items;
+}
+
+/** One row per fingerprint across sessions. `status` filters by the derived group status, see docs/API.md. */
+export async function listIncidentGroups(projectId: string, options: { status?: 'open' | 'resolved'; limit?: number } = {}) {
+  const { items } = await request(`/api/projects/${projectId}/incidents/groups`, IncidentGroupListSchema, {
+    query: { status: options.status, limit: options.limit },
+  });
+  return items;
 }
 
 export async function getIncident(projectId: string, incidentId: string) {

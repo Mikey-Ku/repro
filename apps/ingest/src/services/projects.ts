@@ -84,7 +84,11 @@ export async function projectStats(db: Db, projectId: string): Promise<ProjectSt
       .from(sessions)
       .where(eq(sessions.projectId, projectId)),
     db
-      .select({ openIncidents: count() })
+      .select({
+        openIncidents: count(),
+        // Groups, not rows: the same fingerprint seen in ten sessions is one open group.
+        openIncidentGroups: sql<number>`count(distinct ${incidents.fingerprint})`.mapWith(Number),
+      })
       .from(incidents)
       .where(and(eq(incidents.projectId, projectId), eq(incidents.status, 'open'))),
     db.select({ generatedTests: count() }).from(generatedTests).where(eq(generatedTests.projectId, projectId)),
@@ -95,6 +99,7 @@ export async function projectStats(db: Db, projectId: string): Promise<ProjectSt
     sessions: sessionStats[0]?.sessions ?? 0,
     sessionsWithErrors: sessionStats[0]?.sessionsWithErrors ?? 0,
     openIncidents: incidentStats[0]?.openIncidents ?? 0,
+    openIncidentGroups: incidentStats[0]?.openIncidentGroups ?? 0,
     generatedTests: testStats[0]?.generatedTests ?? 0,
     runs: runStats[0]?.runs ?? 0,
     lastSessionAt: last ? new Date(last).toISOString() : null,

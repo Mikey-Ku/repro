@@ -18,6 +18,8 @@ export const ProjectStatsSchema = z.object({
   sessions: z.number().int(),
   sessionsWithErrors: z.number().int(),
   openIncidents: z.number().int(),
+  /** Distinct fingerprints with at least one open incident: what the dashboard shows as open groups. */
+  openIncidentGroups: z.number().int(),
   generatedTests: z.number().int(),
   runs: z.number().int(),
   lastSessionAt: z.string().nullable(),
@@ -106,6 +108,26 @@ export const IncidentSchema = z.object({
   createdAt: z.string(),
 });
 export type Incident = z.infer<typeof IncidentSchema>;
+
+/**
+ * One row per fingerprint across every session in a project. The same bug seen in ten sessions
+ * is one group with sessionCount 10. kind, title and message come from the latest incident.
+ */
+export const IncidentGroupSchema = z.object({
+  fingerprint: z.string(),
+  kind: IncidentKind,
+  title: z.string(),
+  message: z.string(),
+  sessionCount: z.number().int(),
+  firstSeen: z.string(),
+  lastSeen: z.string(),
+  releases: z.array(z.string()),
+  routes: z.array(z.string()),
+  openCount: z.number().int(),
+  latestIncidentId: z.string(),
+  latestSessionId: z.string(),
+});
+export type IncidentGroup = z.infer<typeof IncidentGroupSchema>;
 
 export const ExpectationSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('no-errors') }),
