@@ -5,19 +5,19 @@ Running checklist for the first release. Updated as work lands.
 ## 1. Architecture, contracts, acceptance tests
 - [x] Toolchain: pnpm, Docker Compose plugin, Postgres image
 - [x] Monorepo skeleton (pnpm workspaces, turbo, shared config)
-- [ ] Event contracts and Zod schemas (`packages/contracts`)
-- [ ] Normalisation and timeline model
-- [ ] Acceptance test plan written (`tests/e2e`)
+- [x] Event contracts and Zod schemas (`packages/contracts`)
+- [x] Normalisation and timeline model
+- [x] Acceptance test plan written (`tests/e2e`)
 
 ## 2. Local environment
-- [ ] docker-compose Postgres
-- [ ] Drizzle schema, migrations, seed (`packages/db`)
-- [ ] `.env.example` with placeholders only
+- [x] docker-compose Postgres
+- [x] Drizzle schema, migrations, seed (`packages/db`)
+- [x] `.env.example` with placeholders only
 
 ## 3. Demo application
-- [ ] Login and checkout workflow, broken/fixed mode switch
-- [ ] Canary secrets seeded (password, card, token, header, cookie, query string, hidden input, masked text, blocked region, response body)
-- [ ] Failing E2E scenario
+- [x] Login and checkout workflow, broken/fixed mode switch
+- [x] Canary secrets seeded (password, card, token, header, cookie, query string, hidden input, masked text, blocked region, response body)
+- [x] Failing E2E scenario
 
 ## 4. Browser SDK
 - [ ] Public API: init, start, stop, captureException, identify, annotate, flush
@@ -46,11 +46,11 @@ Running checklist for the first release. Updated as work lands.
 - [ ] Keyboard access and responsive layout
 
 ## 7. Deterministic test generation
-- [ ] Selector strategy (testid, role+name, label, stable attrs, css)
-- [ ] Action translation (navigate, click, fill, select, check, submit, wait, expect)
-- [ ] Sanitised literals, redacted secrets as fixture placeholders
-- [ ] Omitted-event explanations and metadata header
-- [ ] Fixture-based tests, determinism test
+- [x] Selector strategy (testid, role+name, label, stable attrs, css)
+- [x] Action translation (navigate, click, fill, select, check, submit, wait, expect)
+- [x] Sanitised literals, redacted secrets as fixture placeholders
+- [x] Omitted-event explanations and metadata header
+- [x] Fixture-based tests, determinism test
 
 ## 8. Reproduction runner
 - [ ] Worker job queue
@@ -58,8 +58,8 @@ Running checklist for the first release. Updated as work lands.
 - [ ] Result, logs, trace, screenshot stored and shown
 
 ## 9. Diagnostics
-- [ ] Deterministic evidence summary
-- [ ] Investigator interface, fake provider, optional AI SDK adapter
+- [x] Deterministic evidence summary
+- [x] Investigator interface, fake provider, optional AI SDK adapter
 
 ## 10. Reviews and verification
 - [ ] Security, accessibility, TypeScript, React reviews

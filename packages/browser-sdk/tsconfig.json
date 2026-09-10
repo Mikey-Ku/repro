@@ -1,0 +1,5 @@
+{
+  "extends": "@repro/config/tsconfig.library.json",
+  "compilerOptions": { "rootDir": ".", "noEmit": true, "lib": ["ES2023", "DOM", "DOM.Iterable"] },
+  "include": ["src", "test", "tsup.config.ts", "vitest.config.ts"]
+}

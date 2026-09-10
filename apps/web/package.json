@@ -1,0 +1,44 @@
+{
+  "name": "@repro/web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Repro dashboard: sessions, replay, timeline, evidence and generated tests.",
+  "type": "module",
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev --port ${WEB_PORT:-3000}",
+    "start": "next start --port ${WEB_PORT:-3000}",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint src",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@repro/contracts": "workspace:*",
+    "@rrweb/replay": "^2.1.4",
+    "@rrweb/types": "^2.1.4",
+    "next": "^16.3.4",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "rrweb-player": "^2.1.4",
+    "shiki": "^4.4.3",
+    "server-only": "^0.0.1",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@repro/config": "workspace:*",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@types/node": "^22.20.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^5.1.0",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "@next/eslint-plugin-next": "^16.3.4",
+    "jsdom": "^30.0.1",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11"
+  }
+}

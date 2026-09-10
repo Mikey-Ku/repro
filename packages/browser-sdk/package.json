@@ -1,0 +1,41 @@
+{
+  "name": "@repro/browser-sdk",
+  "version": "0.1.0",
+  "description": "Repro browser SDK: privacy-first session recording with rrweb, interaction and error capture.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./iife": "./dist/repro.iife.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint src test",
+    "test": "vitest run",
+    "size": "node scripts/size.mjs"
+  },
+  "dependencies": {
+    "@repro/contracts": "workspace:*",
+    "rrweb": "^2.1.4",
+    "@rrweb/types": "^2.1.4"
+  },
+  "devDependencies": {
+    "@repro/config": "workspace:*",
+    "eslint": "^9.39.5",
+    "happy-dom": "^20.14.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11"
+  }
+}
