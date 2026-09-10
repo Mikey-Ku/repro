@@ -17,12 +17,6 @@ import { env } from './env.js';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const internal = { 'x-repro-internal-token': env.internalToken, 'content-type': 'application/json' };
 
-declare global {
-  interface Window {
-    Repro: { getSessionId(): string | null; flush(): Promise<void>; stop(): void };
-  }
-}
-
 interface Variant {
   name: string;
   description: string;
@@ -94,11 +88,11 @@ async function main(): Promise<void> {
     const context = await browser.newContext();
     const page = await context.newPage();
     await variant.run(page);
-    const sessionId = await page.evaluate(() => window.Repro.getSessionId());
+    const sessionId = await page.evaluate(() => window.Repro?.getSessionId() ?? null);
     await page.evaluate(async () => {
-      await window.Repro.flush();
-      window.Repro.stop();
-      await window.Repro.flush();
+      await window.Repro?.flush();
+      window.Repro?.stop();
+      await window.Repro?.flush();
     });
     await page.waitForTimeout(1000);
     await context.close();

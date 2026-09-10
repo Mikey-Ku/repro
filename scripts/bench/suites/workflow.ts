@@ -4,13 +4,6 @@ import { canaries } from '../canaries.js';
 import { env, percentile, round } from '../env.js';
 import type { WorkflowResult } from '../report.js';
 
-declare global {
-  interface Window {
-    Repro?: { getSessionId(): string | null; flush(): Promise<void>; stop(): void };
-    __longTasks?: number;
-  }
-}
-
 async function setMode(mode: 'broken' | 'fixed'): Promise<void> {
   await fetch(`${env.demoUrl}/__demo/mode`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ mode }) });
 }
