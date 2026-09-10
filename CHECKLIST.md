@@ -63,7 +63,7 @@ Running checklist for the first release. Updated as work lands.
 
 ## 10. Reviews and verification
 - [x] Security, accessibility, TypeScript, React reviews
-- [ ] Clean-checkout verification script run from a clean clone
+- [x] Clean-checkout verification script run from a clean clone (2026-09-10, exit 0)
 - [x] Lint, typecheck, unit, integration, E2E, production builds green
 
 ## 11. Measurement and docs
