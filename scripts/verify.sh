@@ -25,7 +25,7 @@ pnpm install --frozen-lockfile
 step "Start Postgres"
 docker compose up -d db
 for i in $(seq 1 30); do
-  docker exec repro-db pg_isready -U repro -d repro >/dev/null 2>&1 && break
+  docker compose exec -T db pg_isready -U repro -d repro >/dev/null 2>&1 && break
   sleep 1
 done
 
