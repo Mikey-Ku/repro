@@ -57,7 +57,7 @@ export function SessionFilterForm({ slug, form, facets }: { slug: string; form: 
       </Field>
       <div className="col-span-2 flex flex-wrap items-end gap-3 sm:col-span-3 lg:col-span-1">
         <label className="flex min-h-8 items-center gap-2 text-xs text-muted">
-          <input type="checkbox" name="hasErrors" value="true" defaultChecked={form.hasErrors} className="h-4 w-4 accent-accent" />
+          <input type="checkbox" name="hasErrors" value="true" defaultChecked={form.hasErrors} className="h-5 w-5 accent-accent" />
           With errors
         </label>
         <button type="submit" className={buttonClasses('primary', 'md')}>

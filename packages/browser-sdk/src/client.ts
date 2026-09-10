@@ -2,7 +2,8 @@
  * Session lifecycle and batching. One client owns one session: it stamps seq numbers, buffers
  * events, packs them into IngestBatch uploads, and starts or stops the capture modules.
  */
-import { LIMITS, SCHEMA_VERSION, sanitizeUrl, truncate, type IngestBatch, type RecordedEvent, type SessionMeta } from '@repro/contracts';
+import { LIMITS, SCHEMA_VERSION, sanitizeUrl, truncate } from '@repro/contracts/runtime';
+import type { IngestBatch, RecordedEvent, SessionMeta } from '@repro/contracts';
 import { startConsole } from './capture/console.js';
 import { errorFields } from './capture/errors.js';
 import { startErrors } from './capture/errors.js';

@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useState } from 'react';
+import { useActionState, useRef, useState } from 'react';
 import type { Expectation, Incident } from '@repro/contracts';
 import { IconClose } from '@/components/icons';
 import { Button } from '@/components/ui';
@@ -48,13 +48,14 @@ export function ExpectationBuilder({
   submitLabel?: string;
 }) {
   const [rows, setRows] = useState<Row[]>([]);
+  const nextId = useRef(1);
   const [draft, setDraft] = useState<Draft>({ kind: 'visible', testId: '' });
   const [visibleBy, setVisibleBy] = useState<'testId' | 'role' | 'text'>('testId');
   const [result, formAction, pending] = useActionState<ActionResult | null, FormData>(generateTestAction.bind(null, slug, sessionId), null);
 
   const add = () => {
     if (!isComplete(draft) || rows.length >= 5) return;
-    setRows((previous) => [...previous, { id: Date.now(), value: draft }]);
+    setRows((previous) => [...previous, { id: nextId.current++, value: draft }]);
     setDraft(draft.kind === 'url' ? { kind: 'url', pathPrefix: '' } : { kind: 'visible', testId: '' });
   };
 

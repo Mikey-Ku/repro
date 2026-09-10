@@ -134,6 +134,7 @@ export function TimelinePanel({ entries }: { entries: TimelineEntry[] }) {
                   <Icon size={14} className={cn('mt-0.5 shrink-0', SEVERITY[entry.severity])} />
                   <span className="min-w-0 flex-1">
                     <span className={cn('block truncate text-xs', entry.severity === 'error' ? 'text-danger' : 'text-text')} title={entry.title}>
+                      {entry.severity !== 'info' ? <span className="sr-only">{entry.severity === 'error' ? 'Error: ' : 'Warning: '}</span> : null}
                       {entry.title}
                     </span>
                     {detail ? (

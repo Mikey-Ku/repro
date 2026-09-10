@@ -1,4 +1,4 @@
-import { routeFromPath, sanitizePath, sanitizeRrwebEvent, sanitizeUrl, scrubText, type IngestBatch, type RecordedEvent, type SessionMeta } from '@repro/contracts';
+import { isSensitiveFieldHint, routeFromPath, sanitizePath, sanitizeRrwebEvent, sanitizeUrl, scrubText, type IngestBatch, type RecordedEvent, type SessionMeta } from '@repro/contracts';
 
 /**
  * Server-side defence in depth. The SDK already sanitises URLs and scrubs free text before
@@ -43,9 +43,26 @@ export function sanitizeEvent(event: RecordedEvent): RecordedEvent {
     case 'rrweb':
       return { ...event, data: sanitizeRrwebEvent(event.data) };
     case 'annotation':
+      return { ...event, data: { ...event.data, ...(event.data.data ? { data: sanitizeRecord(event.data.data) } : {}) } };
     case 'identify':
-      return event;
+      return {
+        ...event,
+        data: {
+          ...(event.data.userId !== undefined && !/@/.test(event.data.userId) ? { userId: scrubText(event.data.userId) } : {}),
+          ...(event.data.traits ? { traits: sanitizeRecord(event.data.traits) } : {}),
+        },
+      };
   }
+}
+
+/** Drop keys that look like secrets and scrub string values. Used for identify traits and annotations. */
+export function sanitizeRecord<T extends Record<string, string | number | boolean>>(record: T): T {
+  const out: Record<string, string | number | boolean> = {};
+  for (const [key, value] of Object.entries(record)) {
+    if (isSensitiveFieldHint(key)) continue;
+    out[key] = typeof value === 'string' ? scrubText(value) : value;
+  }
+  return out as T;
 }
 
 export function sanitizeMeta(meta: SessionMeta): SessionMeta {

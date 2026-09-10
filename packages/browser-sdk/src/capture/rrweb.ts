@@ -4,7 +4,7 @@
  */
 import { record, type recordOptions } from 'rrweb';
 import type { eventWithTime } from '@rrweb/types';
-import { sanitizeRrwebEvent } from '@repro/contracts';
+import { sanitizeRrwebEvent } from '@repro/contracts/runtime';
 import {
   DEFAULT_BLOCK_SELECTOR,
   DEFAULT_IGNORE_SELECTOR,

@@ -3,7 +3,8 @@
  * status, duration) and nothing that could carry a credential: no headers, no bodies, no cookies.
  * The Response and Request objects are only read for `url`, `method`, `status` and `ok`.
  */
-import { sanitizePath, sanitizeUrl, truncate, LIMITS, type NetworkEvent } from '@repro/contracts';
+import { sanitizePath, sanitizeUrl, truncate, LIMITS } from '@repro/contracts/runtime';
+import type { NetworkEvent } from '@repro/contracts';
 import { scrubAndTruncate } from '../redact.js';
 import type { CaptureContext, Stop } from '../types.js';
 

@@ -2,7 +2,7 @@
  * console.error and console.warn capture. The original method always runs first so the
  * developer tools output is unchanged; we only observe the arguments.
  */
-import { LIMITS } from '@repro/contracts';
+import { LIMITS } from '@repro/contracts/runtime';
 import { formatConsoleArg } from '../redact.js';
 import type { CaptureContext, Stop } from '../types.js';
 

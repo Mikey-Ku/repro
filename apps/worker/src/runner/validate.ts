@@ -107,6 +107,17 @@ export function validateTestCode(code: string, demoUrl: string): ValidationResul
     [/\beval\s*\(/, 'eval()'],
     [/\bFunction\s*\(/, 'Function()'],
     [/\bfetch\s*\(/, 'fetch()'],
+    // Indirect routes to globals, the network or the host from inside the browser context.
+    [/\bwindow\s*\[/, 'window[...] indexing'],
+    [/\bglobalThis\b/, 'globalThis'],
+    [/\.constructor\b/, '.constructor'],
+    [/\bimport\s*\.\s*meta\b/, 'import.meta'],
+    [/\b(?:page|context)\s*\.\s*request\b/, 'page.request'],
+    [/\.\s*route\s*\(/, 'route()'],
+    [/\.\s*(?:addInitScript|exposeFunction|exposeBinding|setExtraHTTPHeaders|routeFromHAR)\s*\(/, 'page instrumentation APIs'],
+    [/\bXMLHttpRequest\b/, 'XMLHttpRequest'],
+    [/\bWebSocket\b/, 'WebSocket'],
+    [/\bnavigator\s*\.\s*sendBeacon\b/, 'sendBeacon'],
   ];
   for (const [pattern, label] of banned) {
     const hit = pattern.exec(codeOnly)?.[0];

@@ -2,7 +2,8 @@
  * Click, change and submit capture. Listeners run in the capture phase on `document` so a
  * page calling stopPropagation cannot hide an interaction from the recording.
  */
-import { truncate, LIMITS, type InputKind } from '@repro/contracts';
+import { truncate, LIMITS } from '@repro/contracts/runtime';
+import type { InputKind } from '@repro/contracts';
 import { describeElement } from '../descriptor.js';
 import { cleanText, isInsideIgnored, isSensitiveElement, isTextRedacted, redactedText } from '../redact.js';
 import type { CaptureContext, Stop } from '../types.js';

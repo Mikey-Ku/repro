@@ -109,3 +109,17 @@ denylist over a known dialect, not a sandbox:
 
 Run the worker as an unprivileged user on a machine that holds nothing you would not want a
 generated test to read.
+
+
+## Review note: what the validator is and is not
+
+The validator is a denylist over source text plus a restricted target. It blocks the direct
+routes out of the browser context (`require`, dynamic `import`, `eval`, `Function`, `fetch`,
+`XMLHttpRequest`, `WebSocket`, `sendBeacon`, `page.request`, `route()`, `addInitScript`,
+`exposeFunction`, `exposeBinding`, `setExtraHTTPHeaders`, `window[...]`, `globalThis`,
+`.constructor`, `import.meta`, absolute URLs outside the demo origin) and only lets a generated
+test read `process.env.REPRO_FIXTURE_*`. A determined author could still reach the network from
+inside `page.evaluate` through an obfuscated path the denylist does not name. That is why the
+runner only runs against the bundled demo application, why generated tests come from the
+deterministic generator rather than from a model, and why the roadmap replaces this check with an
+AST allowlist before any other target is supported.

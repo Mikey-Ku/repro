@@ -1,0 +1,3883 @@
+{
+  "name": "checkout-express-promo",
+  "description": "Mouse-driven login, express shipping, promo code, save card.",
+  "recordedFrom": "2d98e622-5d8b-4505-9b34-49d1c65403f2",
+  "expectations": [
+    {
+      "kind": "visible",
+      "testId": "order-confirmation"
+    }
+  ],
+  "batch": {
+    "meta": {
+      "startedAt": 1789005464771,
+      "sdkVersion": "0.1.0",
+      "release": "demo@1.4.2",
+      "environment": "demo",
+      "browser": {
+        "name": "Chrome",
+        "version": "153.0.8010.12",
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36"
+      },
+      "os": "macOS",
+      "viewport": {
+        "width": 1280,
+        "height": 720,
+        "devicePixelRatio": 1
+      },
+      "page": {
+        "url": "http://localhost:4100/login",
+        "title": "Sign in · Northwind Supply"
+      },
+      "locale": "en-US",
+      "timezone": "America/New_York"
+    },
+    "events": [
+      {
+        "seq": 0,
+        "ts": 1789005464771,
+        "type": "navigation",
+        "data": {
+          "url": "http://localhost:4100/login",
+          "kind": "load",
+          "title": "Sign in · Northwind Supply"
+        }
+      },
+      {
+        "seq": 1,
+        "ts": 1789005464771,
+        "type": "rrweb",
+        "data": {
+          "type": 4,
+          "timestamp": 1789005464771,
+          "data": {
+            "href": "http://localhost:4100/login",
+            "width": 1280,
+            "height": 720
+          }
+        }
+      },
+      {
+        "seq": 2,
+        "ts": 1789005464776,
+        "type": "rrweb",
+        "data": {
+          "type": 2,
+          "timestamp": 1789005464776,
+          "data": {
+            "node": {
+              "type": 0,
+              "childNodes": [
+                {
+                  "type": 1,
+                  "name": "html",
+                  "publicId": "",
+                  "systemId": "",
+                  "id": 2
+                },
+                {
+                  "type": 2,
+                  "tagName": "html",
+                  "attributes": {
+                    "lang": "en"
+                  },
+                  "childNodes": [
+                    {
+                      "type": 2,
+                      "tagName": "head",
+                      "attributes": {},
+                      "childNodes": [
+                        {
+                          "type": 3,
+                          "textContent": "\n",
+                          "id": 5
+                        },
+                        {
+                          "type": 2,
+                          "tagName": "meta",
+                          "attributes": {
+                            "charset": "utf-8"
+                          },
+                          "childNodes": [],
+                          "id": 6
+                        },
+                        {
+                          "type": 3,
+                          "textContent": "\n",
+                          "id": 7
+                        },
+                        {
+                          "type": 2,
+                          "tagName": "meta",
+                          "attributes": {
+                            "name": "viewport",
+                            "content": "width=device-width, initial-scale=1"
+                          },
+                          "childNodes": [],
+                          "id": 8
+                        },
+                        {
+                          "type": 3,
+                          "textContent": "\n",
+                          "id": 9
+                        },
+                        {
+                          "type": 2,
+                          "tagName": "title",
+                          "attributes": {},
+                          "childNodes": [
+                            {
+                              "type": 3,
+                              "textContent": "Sign in · Northwind Supply",
+                              "id": 11
+                            }
+                          ],
+                          "id": 10
+                        },
+                        {
+                          "type": 3,
+                          "textContent": "\n",
+                          "id": 12
+                        },
+                        {
+                          "type": 2,
+                          "tagName": "style",
+                          "attributes": {
+                            "_cssText": ":root { --bg: #f4f2ee; --surface: #ffffff; --border: #d9d4cc; --text: #1f2429; --muted: #5b6470; --accent: #1d5c4b; --accent-strong: #154536; --accent-soft: #e4efe9; --danger: #a3271d; --danger-soft: #fbe9e7; --ring: 0 0 0 3px rgba(29, 92, 75, 0.35); --radius: 8px; }* { box-sizing: border-box; }html { background: var(--bg); color: var(--text); }body { margin: 0px; font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }a { color: var(--accent); }a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: none; box-shadow: var(--ring); border-color: var(--accent); }.topbar { background: var(--surface); border-bottom: 1px solid var(--border); }.topbar-inner { max-width: 640px; margin: 0px auto; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; }.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: 0.01em; color: var(--text); text-decoration: none; }.brand-mark { width: 28px; height: 28px; border-radius: 7px; background: var(--accent); color: rgb(255, 255, 255); display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; }.topbar nav { font-size: 14px; color: var(--muted); }.topbar nav a { margin-left: 16px; color: var(--muted); text-decoration: none; }.topbar nav a:hover { color: var(--text); text-decoration: underline; }main { max-width: 640px; margin: 32px auto; padding: 0px 20px; }.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; box-shadow: rgba(20, 24, 30, 0.04) 0px 1px 2px, rgba(20, 24, 30, 0.05) 0px 8px 24px; }h1 { font-size: 26px; margin: 0px 0px 4px; letter-spacing: -0.01em; }h2 { font-size: 17px; margin: 0px 0px 12px; }.lede { margin: 0px 0px 24px; color: var(--muted); }fieldset { border: 0px; padding: 0px; margin: 0px 0px 20px; }legend { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; padding: 0px; margin-bottom: 12px; }.field { display: flex; flex-direction: column; margin-bottom: 14px; }.field label { font-size: 14px; font-weight: 600; margin-bottom: 6px; }.field .hint { font-size: 13px; color: var(--muted); margin-top: 4px; }.row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }.row-3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px; }@media (max-width: 480px) {\n  .row, .row-3 { grid-template-columns: 1fr; }\n}input[type=\"text\"], input[type=\"email\"], input[type=\"password\"], input[type=\"tel\"], select { font: inherit; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius); background: rgb(255, 255, 255); color: var(--text); width: 100%; }select { appearance: auto; }.check { display: flex; align-items: center; gap: 10px; font-size: 14px; }.check input { width: 18px; height: 18px; accent-color: var(--accent); }.btn { font-style: inherit; font-variant: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; font-family: inherit; font-optical-sizing: inherit; font-size-adjust: inherit; font-kerning: inherit; font-feature-settings: inherit; font-variation-settings: inherit; font-language-override: inherit; font-weight: 600; padding: 12px 18px; border-radius: var(--radius); border: 1px solid var(--accent-strong); background: var(--accent); color: rgb(255, 255, 255); cursor: pointer; width: 100%; }.btn:hover { background: var(--accent-strong); }.btn[disabled] { opacity: 0.65; cursor: progress; }.alert { display: none; margin: 0px 0px 16px; padding: 10px 12px; border-radius: var(--radius); background: var(--danger-soft); color: var(--danger); font-size: 14px; }.alert[data-visible=\"true\"] { display: block; }.summary { border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin: 0px 0px 24px; background: rgb(251, 250, 248); }.summary-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }.summary-head h2 { margin: 0px; }.account { font-size: 13px; color: var(--muted); }.summary ul { list-style: none; margin: 0px; padding: 0px; }.summary li { display: flex; justify-content: space-between; padding: 6px 0px; font-size: 15px; }.summary li .qty { color: var(--muted); margin-left: 6px; }.summary .totals { border-top: 1px solid var(--border); margin-top: 8px; padding-top: 8px; }.summary .totals li.total { font-weight: 700; font-size: 16px; }.skeleton { color: var(--muted); font-size: 14px; }.confirmation { border: 1px solid rgb(185, 217, 201); background: var(--accent-soft); border-radius: 10px; padding: 20px; margin-bottom: 16px; }.confirmation h2 { margin: 0px 0px 6px; color: var(--accent-strong); }.confirmation p { margin: 0px 0px 6px; }.support { position: fixed; right: 20px; bottom: 20px; width: 260px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: rgba(20, 24, 30, 0.12) 0px 10px 30px; font-size: 13px; overflow: hidden; }.support-head { background: var(--accent); color: rgb(255, 255, 255); padding: 8px 12px; font-weight: 600; }.support-body { padding: 10px 12px; color: var(--muted); }.support-body .bubble { background: var(--bg); border-radius: 8px; padding: 8px 10px; margin-top: 6px; color: var(--text); }@media (max-width: 720px) {\n  .support { display: none; }\n}footer { max-width: 640px; margin: 0px auto 40px; padding: 0px 20px; font-size: 13px; color: var(--muted); }footer code { background: rgb(235, 232, 226); padding: 1px 6px; border-radius: 4px; }.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); }"
+                          },
+                          "childNodes": [
+                            {
+                              "type": 3,
+                              "textContent": "",
+                              "id": 14
+                            }
+                          ],
+                          "id": 13
+                        },
+                        {
+                          "type": 3,
+                          "textContent": "\n",
+                          "id": 15
+                        },
+                        {
+                          "type": 3,
+                          "textContent": "\n",
+                          "id": 16
+                        },
+                        {
+                          "type": 3,
+                          "textContent": "\n",
+                          "id": 17
+                        }
+                      ],
+                      "id": 4
+                    },
+                    {
+                      "type": 3,
+                      "textContent": "\n",
+                      "id": 18
+                    },
+                    {
+                      "type": 2,
+                      "tagName": "body",
+                      "attributes": {
+                        "data-page": "login",
+                        "data-mode": "broken"
+                      },
+                      "childNodes": [
+                        {
+                          "type": 3,
+                          "textContent": "\n",
+                          "id": 20
+                        },
+                        {
+                          "type": 2,
+                          "tagName": "header",
+                          "attributes": {
+                            "class": "topbar"
+                          },
+                          "childNodes": [
+                            {
+                              "type": 3,
+                              "textContent": "\n  ",
+                              "id": 22
+                            },
+                            {
+                              "type": 2,
+                              "tagName": "div",
+                              "attributes": {
+                                "class": "topbar-inner"
+                              },
+                              "childNodes": [
+                                {
+                                  "type": 3,
+                                  "textContent": "\n    ",
+                                  "id": 24
+                                },
+                                {
+                                  "type": 2,
+                                  "tagName": "a",
+                                  "attributes": {
+                                    "class": "brand",
+                                    "href": "http://localhost:4100/checkout"
+                                  },
+                                  "childNodes": [
+                                    {
+                                      "type": 2,
+                                      "tagName": "span",
+                                      "attributes": {
+                                        "class": "brand-mark",
+                                        "aria-hidden": "true"
+                                      },
+                                      "childNodes": [
+                                        {
+                                          "type": 3,
+                                          "textContent": "N",
+                                          "id": 27
+                                        }
+                                      ],
+                                      "id": 26
+                                    },
+                                    {
+                                      "type": 3,
+                                      "textContent": "Northwind Supply",
+                                      "id": 28
+                                    }
+                                  ],
+                                  "id": 25
+                                },
+                                {
+                                  "type": 3,
+                                  "textContent": "\n    ",
+                                  "id": 29
+                                },
+                                {
+                                  "type": 2,
+                                  "tagName": "nav",
+                                  "attributes": {
+                                    "aria-label": "Primary"
+                                  },
+                                  "childNodes": [
+                                    {
+                                      "type": 3,
+                                      "textContent": "\n      ",
+                                      "id": 31
+                                    },
+                                    {
+                                      "type": 2,
+                                      "tagName": "a",
+                                      "attributes": {
+                                        "href": "http://localhost:4100/login"
+                                      },
+                                      "childNodes": [
+                                        {
+                                          "type": 3,
+                                          "textContent": "Sign in",
+                                          "id": 33
+                                        }
+                                      ],
+                                      "id": 32
+                                    },
+                                    {
+                                      "type": 3,
+                                      "textContent": "\n      ",
+                                      "id": 34
+                                    },
+                                    {
+                                      "type": 2,
+                                      "tagName": "a",
+                                      "attributes": {
+                                        "href": "http://localhost:4100/checkout"
+                                      },
+                                      "childNodes": [
+                                        {
+                                          "type": 3,
+                                          "textContent": "Checkout",
+                                          "id": 36
+                                        }
+                                      ],
+                                      "id": 35
+                                    },
+                                    {
+                                      "type": 3,
+                                      "textContent": "\n    ",
+                                      "id": 37
+                                    }
+                                  ],
+                                  "id": 30
+                                },
+                                {
+                                  "type": 3,
+                                  "textContent": "\n  ",
+                                  "id": 38
+                                }
+                              ],
+                              "id": 23
+                            },
+                            {
+                              "type": 3,
+                              "textContent": "\n",
+                              "id": 39
+                            }
+                          ],
+                          "id": 21
+                        },
+                        {
+                          "type": 3,
+                          "textContent": "\n",
+                          "id": 40
+                        },
+                        {
+                          "type": 2,
+                          "tagName": "main",
+                          "attributes": {},
+                          "childNodes": [
+                            {
+                              "type": 3,
+                              "textContent": "\n  ",
+                              "id": 42
+                            },
+                            {
+                              "type": 2,
+                              "tagName": "div",
+                              "attributes": {
+                                "class": "card"
+                              },
+                              "childNodes": [
+                                {
+                                  "type": 3,
+                                  "textContent": "\n\n    ",
+                                  "id": 44
+                                },
+                                {
+                                  "type": 2,
+                                  "tagName": "h1",
+                                  "attributes": {},
+                                  "childNodes": [
+                                    {
+                                      "type": 3,
+                                      "textContent": "Sign in",
+                                      "id": 46
+                                    }
+                                  ],
+                                  "id": 45
+                                },
+                                {
+                                  "type": 3,
+                                  "textContent": "\n    ",
+                                  "id": 47
+                                },
+                                {
+                                  "type": 2,
+                                  "tagName": "p",
+                                  "attributes": {
+                                    "class": "lede"
+                                  },
+                                  "childNodes": [
+                                    {
+                                      "type": 3,
+                                      "textContent": "Welcome back. Sign in to finish your order.",
+                                      "id": 49
+                                    }
+                                  ],
+                                  "id": 48
+                                },
+                                {
+                                  "type": 3,
+                                  "textContent": "\n    ",
+                                  "id": 50
+                                },
+                                {
+                                  "type": 2,
+                                  "tagName": "p",
+                                  "attributes": {
+                                    "class": "alert",
+                                    "role": "alert",
+                                    "data-testid": "login-error",
+                                    "data-visible": "false"
+                                  },
+                                  "childNodes": [],
+                                  "id": 51
+                                },
+                                {
+                                  "type": 3,
+                                  "textContent": "\n    ",
+                                  "id": 52
+                                },
+                                {
+                                  "type": 2,
+                                  "tagName": "form",
+                                  "attributes": {
+                                    "data-testid": "login-form",
+                                    "id": "login-form",
+                                    "method": "post",
+                                    "action": "/api/login",
+                                    "novalidate": ""
+                                  },
+                                  "childNodes": [
+                                    {
+                                      "type": 3,
+                                      "textContent": "\n      ",
+                                      "id": 54
+                                    },
+                                    {
+                                      "type": 2,
+                                      "tagName": "div",
+                                      "attributes": {
+                                        "class": "field"
+                                      },
+                                      "childNodes": [
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n        ",
+                                          "id": 56
+                                        },
+                                        {
+                                          "type": 2,
+                                          "tagName": "label",
+                                          "attributes": {
+                                            "for": "email"
+                                          },
+                                          "childNodes": [
+                                            {
+                                              "type": 3,
+                                              "textContent": "Email",
+                                              "id": 58
+                                            }
+                                          ],
+                                          "id": 57
+                                        },
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n        ",
+                                          "id": 59
+                                        },
+                                        {
+                                          "type": 2,
+                                          "tagName": "input",
+                                          "attributes": {
+                                            "type": "email",
+                                            "name": "email",
+                                            "id": "email",
+                                            "autocomplete": "email",
+                                            "required": ""
+                                          },
+                                          "childNodes": [],
+                                          "id": 60
+                                        },
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n      ",
+                                          "id": 61
+                                        }
+                                      ],
+                                      "id": 55
+                                    },
+                                    {
+                                      "type": 3,
+                                      "textContent": "\n      ",
+                                      "id": 62
+                                    },
+                                    {
+                                      "type": 2,
+                                      "tagName": "div",
+                                      "attributes": {
+                                        "class": "field"
+                                      },
+                                      "childNodes": [
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n        ",
+                                          "id": 64
+                                        },
+                                        {
+                                          "type": 2,
+                                          "tagName": "label",
+                                          "attributes": {
+                                            "for": "password"
+                                          },
+                                          "childNodes": [
+                                            {
+                                              "type": 3,
+                                              "textContent": "Password",
+                                              "id": 66
+                                            }
+                                          ],
+                                          "id": 65
+                                        },
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n        ",
+                                          "id": 67
+                                        },
+                                        {
+                                          "type": 2,
+                                          "tagName": "input",
+                                          "attributes": {
+                                            "type": "password",
+                                            "name": "password",
+                                            "id": "password",
+                                            "autocomplete": "current-password",
+                                            "required": "",
+                                            "minlength": "8"
+                                          },
+                                          "childNodes": [],
+                                          "id": 68
+                                        },
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n        ",
+                                          "id": 69
+                                        },
+                                        {
+                                          "type": 2,
+                                          "tagName": "span",
+                                          "attributes": {
+                                            "class": "hint"
+                                          },
+                                          "childNodes": [
+                                            {
+                                              "type": 3,
+                                              "textContent": "At least 8 characters.",
+                                              "id": 71
+                                            }
+                                          ],
+                                          "id": 70
+                                        },
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n      ",
+                                          "id": 72
+                                        }
+                                      ],
+                                      "id": 63
+                                    },
+                                    {
+                                      "type": 3,
+                                      "textContent": "\n      ",
+                                      "id": 73
+                                    },
+                                    {
+                                      "type": 2,
+                                      "tagName": "button",
+                                      "attributes": {
+                                        "class": "btn",
+                                        "type": "submit",
+                                        "data-testid": "sign-in"
+                                      },
+                                      "childNodes": [
+                                        {
+                                          "type": 3,
+                                          "textContent": "Sign in",
+                                          "id": 75
+                                        }
+                                      ],
+                                      "id": 74
+                                    },
+                                    {
+                                      "type": 3,
+                                      "textContent": "\n    ",
+                                      "id": 76
+                                    }
+                                  ],
+                                  "id": 53
+                                },
+                                {
+                                  "type": 3,
+                                  "textContent": "\n  ",
+                                  "id": 77
+                                }
+                              ],
+                              "id": 43
+                            },
+                            {
+                              "type": 3,
+                              "textContent": "\n",
+                              "id": 78
+                            }
+                          ],
+                          "id": 41
+                        },
+                        {
+                          "type": 3,
+                          "textContent": "\n\n",
+                          "id": 79
+                        },
+                        {
+                          "type": 2,
+                          "tagName": "footer",
+                          "attributes": {},
+                          "childNodes": [
+                            {
+                              "type": 3,
+                              "textContent": "\n  ",
+                              "id": 81
+                            },
+                            {
+                              "type": 2,
+                              "tagName": "p",
+                              "attributes": {},
+                              "childNodes": [
+                                {
+                                  "type": 3,
+                                  "textContent": "Demo store used by Repro. Mode: ",
+                                  "id": 83
+                                },
+                                {
+                                  "type": 2,
+                                  "tagName": "code",
+                                  "attributes": {
+                                    "data-testid": "demo-mode"
+                                  },
+                                  "childNodes": [
+                                    {
+                                      "type": 3,
+                                      "textContent": "broken",
+                                      "id": 85
+                                    }
+                                  ],
+                                  "id": 84
+                                },
+                                {
+                                  "type": 3,
+                                  "textContent": " · Release ",
+                                  "id": 86
+                                },
+                                {
+                                  "type": 2,
+                                  "tagName": "code",
+                                  "attributes": {},
+                                  "childNodes": [
+                                    {
+                                      "type": 3,
+                                      "textContent": "demo@1.4.2",
+                                      "id": 88
+                                    }
+                                  ],
+                                  "id": 87
+                                }
+                              ],
+                              "id": 82
+                            },
+                            {
+                              "type": 3,
+                              "textContent": "\n",
+                              "id": 89
+                            }
+                          ],
+                          "id": 80
+                        },
+                        {
+                          "type": 3,
+                          "textContent": "\n",
+                          "id": 90
+                        },
+                        {
+                          "type": 3,
+                          "textContent": "\n\n\n",
+                          "id": 91
+                        }
+                      ],
+                      "id": 19
+                    }
+                  ],
+                  "id": 3
+                }
+              ],
+              "id": 1
+            },
+            "initialOffset": {
+              "left": 0,
+              "top": 0
+            }
+          }
+        }
+      },
+      {
+        "seq": 3,
+        "ts": 1789005464787,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005464787,
+          "data": {
+            "source": 2,
+            "type": 5,
+            "id": 60
+          }
+        }
+      },
+      {
+        "seq": 4,
+        "ts": 1789005464793,
+        "type": "input",
+        "data": {
+          "target": {
+            "tag": "input",
+            "id": "email",
+            "name": "email",
+            "type": "email",
+            "role": "textbox",
+            "accessibleName": "Email",
+            "label": "Email",
+            "autocomplete": "email",
+            "cssPath": "input#email",
+            "sensitive": false,
+            "formId": "login-form",
+            "formTestId": "login-form"
+          },
+          "kind": "text",
+          "value": "ada@example.com",
+          "masked": false
+        }
+      },
+      {
+        "seq": 5,
+        "ts": 1789005464794,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005464794,
+          "data": {
+            "source": 5,
+            "text": "ada@example.com",
+            "isChecked": false,
+            "id": 60
+          }
+        }
+      },
+      {
+        "seq": 6,
+        "ts": 1789005464794,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005464794,
+          "data": {
+            "source": 2,
+            "type": 6,
+            "id": 60
+          }
+        }
+      },
+      {
+        "seq": 7,
+        "ts": 1789005464794,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005464794,
+          "data": {
+            "source": 2,
+            "type": 5,
+            "id": 68
+          }
+        }
+      },
+      {
+        "seq": 8,
+        "ts": 1789005464833,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005464833,
+          "data": {
+            "source": 1,
+            "positions": [
+              {
+                "x": 640,
+                "y": 431,
+                "id": 74,
+                "timeOffset": 0
+              }
+            ]
+          }
+        }
+      },
+      {
+        "seq": 9,
+        "ts": 1789005464833,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005464833,
+          "data": {
+            "source": 2,
+            "type": 1,
+            "id": 74,
+            "x": 640,
+            "y": 431.5
+          }
+        }
+      },
+      {
+        "seq": 10,
+        "ts": 1789005464833,
+        "type": "input",
+        "data": {
+          "target": {
+            "tag": "input",
+            "id": "password",
+            "name": "password",
+            "type": "password",
+            "role": "textbox",
+            "accessibleName": "Password",
+            "label": "Password",
+            "autocomplete": "current-password",
+            "cssPath": "input#password",
+            "sensitive": true,
+            "formId": "login-form",
+            "formTestId": "login-form"
+          },
+          "kind": "text",
+          "value": null,
+          "masked": true
+        }
+      },
+      {
+        "seq": 11,
+        "ts": 1789005464833,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005464833,
+          "data": {
+            "source": 5,
+            "text": "******************************",
+            "isChecked": false,
+            "id": 68
+          }
+        }
+      },
+      {
+        "seq": 12,
+        "ts": 1789005464833,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005464833,
+          "data": {
+            "source": 2,
+            "type": 6,
+            "id": 68
+          }
+        }
+      },
+      {
+        "seq": 13,
+        "ts": 1789005464833,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005464833,
+          "data": {
+            "source": 2,
+            "type": 5,
+            "id": 74
+          }
+        }
+      },
+      {
+        "seq": 14,
+        "ts": 1789005464833,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005464833,
+          "data": {
+            "source": 2,
+            "type": 0,
+            "id": 74,
+            "x": 640,
+            "y": 431.5
+          }
+        }
+      },
+      {
+        "seq": 15,
+        "ts": 1789005464833,
+        "type": "click",
+        "data": {
+          "target": {
+            "tag": "button",
+            "testId": "sign-in",
+            "type": "submit",
+            "role": "button",
+            "accessibleName": "Sign in",
+            "text": "Sign in",
+            "cssPath": "form#login-form > button",
+            "sensitive": false,
+            "formId": "login-form",
+            "formTestId": "login-form"
+          },
+          "x": 640,
+          "y": 431
+        }
+      },
+      {
+        "seq": 16,
+        "ts": 1789005464833,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005464833,
+          "data": {
+            "source": 2,
+            "type": 2,
+            "id": 74,
+            "x": 640,
+            "y": 431,
+            "pointerType": 0
+          }
+        }
+      },
+      {
+        "seq": 17,
+        "ts": 1789005464833,
+        "type": "submit",
+        "data": {
+          "target": {
+            "tag": "form",
+            "testId": "login-form",
+            "id": "login-form",
+            "cssPath": "form#login-form",
+            "sensitive": false
+          }
+        }
+      },
+      {
+        "seq": 18,
+        "ts": 1789005464834,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005464834,
+          "data": {
+            "source": 0,
+            "texts": [],
+            "attributes": [
+              {
+                "id": 74,
+                "attributes": {
+                  "disabled": ""
+                }
+              }
+            ],
+            "removes": [],
+            "adds": []
+          }
+        }
+      },
+      {
+        "seq": 19,
+        "ts": 1789005464848,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005464848,
+          "data": {
+            "source": 2,
+            "type": 6,
+            "id": 74
+          }
+        }
+      },
+      {
+        "seq": 20,
+        "ts": 1789005464983,
+        "type": "network",
+        "data": {
+          "kind": "fetch",
+          "method": "POST",
+          "url": "http://localhost:4100/api/login",
+          "path": "/api/login",
+          "status": 200,
+          "ok": true,
+          "durationMs": 150,
+          "requestId": "175a2e48d194"
+        }
+      },
+      {
+        "seq": 21,
+        "ts": 1789005464987,
+        "type": "annotation",
+        "data": {
+          "name": "login:success"
+        }
+      },
+      {
+        "seq": 22,
+        "ts": 1789005465018,
+        "type": "navigation",
+        "data": {
+          "url": "http://localhost:4100/checkout?ref=email&token=%5Bredacted%5D",
+          "kind": "load",
+          "title": "Checkout · Northwind Supply"
+        }
+      },
+      {
+        "seq": 23,
+        "ts": 1789005465020,
+        "type": "rrweb",
+        "data": {
+          "type": 4,
+          "timestamp": 1789005465020,
+          "data": {
+            "href": "http://localhost:4100/checkout?ref=email&token=%5Bredacted%5D",
+            "width": 1280,
+            "height": 720
+          }
+        }
+      },
+      {
+        "seq": 24,
+        "ts": 1789005465023,
+        "type": "rrweb",
+        "data": {
+          "type": 2,
+          "timestamp": 1789005465023,
+          "data": {
+            "node": {
+              "type": 0,
+              "childNodes": [
+                {
+                  "type": 1,
+                  "name": "html",
+                  "publicId": "",
+                  "systemId": "",
+                  "id": 2
+                },
+                {
+                  "type": 2,
+                  "tagName": "html",
+                  "attributes": {
+                    "lang": "en"
+                  },
+                  "childNodes": [
+                    {
+                      "type": 2,
+                      "tagName": "head",
+                      "attributes": {},
+                      "childNodes": [
+                        {
+                          "type": 3,
+                          "textContent": "\n",
+                          "id": 5
+                        },
+                        {
+                          "type": 2,
+                          "tagName": "meta",
+                          "attributes": {
+                            "charset": "utf-8"
+                          },
+                          "childNodes": [],
+                          "id": 6
+                        },
+                        {
+                          "type": 3,
+                          "textContent": "\n",
+                          "id": 7
+                        },
+                        {
+                          "type": 2,
+                          "tagName": "meta",
+                          "attributes": {
+                            "name": "viewport",
+                            "content": "width=device-width, initial-scale=1"
+                          },
+                          "childNodes": [],
+                          "id": 8
+                        },
+                        {
+                          "type": 3,
+                          "textContent": "\n",
+                          "id": 9
+                        },
+                        {
+                          "type": 2,
+                          "tagName": "title",
+                          "attributes": {},
+                          "childNodes": [
+                            {
+                              "type": 3,
+                              "textContent": "Checkout · Northwind Supply",
+                              "id": 11
+                            }
+                          ],
+                          "id": 10
+                        },
+                        {
+                          "type": 3,
+                          "textContent": "\n",
+                          "id": 12
+                        },
+                        {
+                          "type": 2,
+                          "tagName": "style",
+                          "attributes": {
+                            "_cssText": ":root { --bg: #f4f2ee; --surface: #ffffff; --border: #d9d4cc; --text: #1f2429; --muted: #5b6470; --accent: #1d5c4b; --accent-strong: #154536; --accent-soft: #e4efe9; --danger: #a3271d; --danger-soft: #fbe9e7; --ring: 0 0 0 3px rgba(29, 92, 75, 0.35); --radius: 8px; }* { box-sizing: border-box; }html { background: var(--bg); color: var(--text); }body { margin: 0px; font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }a { color: var(--accent); }a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: none; box-shadow: var(--ring); border-color: var(--accent); }.topbar { background: var(--surface); border-bottom: 1px solid var(--border); }.topbar-inner { max-width: 640px; margin: 0px auto; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; }.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: 0.01em; color: var(--text); text-decoration: none; }.brand-mark { width: 28px; height: 28px; border-radius: 7px; background: var(--accent); color: rgb(255, 255, 255); display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; }.topbar nav { font-size: 14px; color: var(--muted); }.topbar nav a { margin-left: 16px; color: var(--muted); text-decoration: none; }.topbar nav a:hover { color: var(--text); text-decoration: underline; }main { max-width: 640px; margin: 32px auto; padding: 0px 20px; }.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; box-shadow: rgba(20, 24, 30, 0.04) 0px 1px 2px, rgba(20, 24, 30, 0.05) 0px 8px 24px; }h1 { font-size: 26px; margin: 0px 0px 4px; letter-spacing: -0.01em; }h2 { font-size: 17px; margin: 0px 0px 12px; }.lede { margin: 0px 0px 24px; color: var(--muted); }fieldset { border: 0px; padding: 0px; margin: 0px 0px 20px; }legend { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; padding: 0px; margin-bottom: 12px; }.field { display: flex; flex-direction: column; margin-bottom: 14px; }.field label { font-size: 14px; font-weight: 600; margin-bottom: 6px; }.field .hint { font-size: 13px; color: var(--muted); margin-top: 4px; }.row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }.row-3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px; }@media (max-width: 480px) {\n  .row, .row-3 { grid-template-columns: 1fr; }\n}input[type=\"text\"], input[type=\"email\"], input[type=\"password\"], input[type=\"tel\"], select { font: inherit; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius); background: rgb(255, 255, 255); color: var(--text); width: 100%; }select { appearance: auto; }.check { display: flex; align-items: center; gap: 10px; font-size: 14px; }.check input { width: 18px; height: 18px; accent-color: var(--accent); }.btn { font-style: inherit; font-variant: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; font-family: inherit; font-optical-sizing: inherit; font-size-adjust: inherit; font-kerning: inherit; font-feature-settings: inherit; font-variation-settings: inherit; font-language-override: inherit; font-weight: 600; padding: 12px 18px; border-radius: var(--radius); border: 1px solid var(--accent-strong); background: var(--accent); color: rgb(255, 255, 255); cursor: pointer; width: 100%; }.btn:hover { background: var(--accent-strong); }.btn[disabled] { opacity: 0.65; cursor: progress; }.alert { display: none; margin: 0px 0px 16px; padding: 10px 12px; border-radius: var(--radius); background: var(--danger-soft); color: var(--danger); font-size: 14px; }.alert[data-visible=\"true\"] { display: block; }.summary { border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin: 0px 0px 24px; background: rgb(251, 250, 248); }.summary-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }.summary-head h2 { margin: 0px; }.account { font-size: 13px; color: var(--muted); }.summary ul { list-style: none; margin: 0px; padding: 0px; }.summary li { display: flex; justify-content: space-between; padding: 6px 0px; font-size: 15px; }.summary li .qty { color: var(--muted); margin-left: 6px; }.summary .totals { border-top: 1px solid var(--border); margin-top: 8px; padding-top: 8px; }.summary .totals li.total { font-weight: 700; font-size: 16px; }.skeleton { color: var(--muted); font-size: 14px; }.confirmation { border: 1px solid rgb(185, 217, 201); background: var(--accent-soft); border-radius: 10px; padding: 20px; margin-bottom: 16px; }.confirmation h2 { margin: 0px 0px 6px; color: var(--accent-strong); }.confirmation p { margin: 0px 0px 6px; }.support { position: fixed; right: 20px; bottom: 20px; width: 260px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: rgba(20, 24, 30, 0.12) 0px 10px 30px; font-size: 13px; overflow: hidden; }.support-head { background: var(--accent); color: rgb(255, 255, 255); padding: 8px 12px; font-weight: 600; }.support-body { padding: 10px 12px; color: var(--muted); }.support-body .bubble { background: var(--bg); border-radius: 8px; padding: 8px 10px; margin-top: 6px; color: var(--text); }@media (max-width: 720px) {\n  .support { display: none; }\n}footer { max-width: 640px; margin: 0px auto 40px; padding: 0px 20px; font-size: 13px; color: var(--muted); }footer code { background: rgb(235, 232, 226); padding: 1px 6px; border-radius: 4px; }.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); }"
+                          },
+                          "childNodes": [
+                            {
+                              "type": 3,
+                              "textContent": "",
+                              "id": 14
+                            }
+                          ],
+                          "id": 13
+                        },
+                        {
+                          "type": 3,
+                          "textContent": "\n",
+                          "id": 15
+                        },
+                        {
+                          "type": 3,
+                          "textContent": "\n",
+                          "id": 16
+                        },
+                        {
+                          "type": 3,
+                          "textContent": "\n",
+                          "id": 17
+                        }
+                      ],
+                      "id": 4
+                    },
+                    {
+                      "type": 3,
+                      "textContent": "\n",
+                      "id": 18
+                    },
+                    {
+                      "type": 2,
+                      "tagName": "body",
+                      "attributes": {
+                        "data-page": "checkout",
+                        "data-mode": "broken"
+                      },
+                      "childNodes": [
+                        {
+                          "type": 3,
+                          "textContent": "\n",
+                          "id": 20
+                        },
+                        {
+                          "type": 2,
+                          "tagName": "header",
+                          "attributes": {
+                            "class": "topbar"
+                          },
+                          "childNodes": [
+                            {
+                              "type": 3,
+                              "textContent": "\n  ",
+                              "id": 22
+                            },
+                            {
+                              "type": 2,
+                              "tagName": "div",
+                              "attributes": {
+                                "class": "topbar-inner"
+                              },
+                              "childNodes": [
+                                {
+                                  "type": 3,
+                                  "textContent": "\n    ",
+                                  "id": 24
+                                },
+                                {
+                                  "type": 2,
+                                  "tagName": "a",
+                                  "attributes": {
+                                    "class": "brand",
+                                    "href": "http://localhost:4100/checkout"
+                                  },
+                                  "childNodes": [
+                                    {
+                                      "type": 2,
+                                      "tagName": "span",
+                                      "attributes": {
+                                        "class": "brand-mark",
+                                        "aria-hidden": "true"
+                                      },
+                                      "childNodes": [
+                                        {
+                                          "type": 3,
+                                          "textContent": "N",
+                                          "id": 27
+                                        }
+                                      ],
+                                      "id": 26
+                                    },
+                                    {
+                                      "type": 3,
+                                      "textContent": "Northwind Supply",
+                                      "id": 28
+                                    }
+                                  ],
+                                  "id": 25
+                                },
+                                {
+                                  "type": 3,
+                                  "textContent": "\n    ",
+                                  "id": 29
+                                },
+                                {
+                                  "type": 2,
+                                  "tagName": "nav",
+                                  "attributes": {
+                                    "aria-label": "Primary"
+                                  },
+                                  "childNodes": [
+                                    {
+                                      "type": 3,
+                                      "textContent": "\n      ",
+                                      "id": 31
+                                    },
+                                    {
+                                      "type": 2,
+                                      "tagName": "a",
+                                      "attributes": {
+                                        "href": "http://localhost:4100/login"
+                                      },
+                                      "childNodes": [
+                                        {
+                                          "type": 3,
+                                          "textContent": "Sign in",
+                                          "id": 33
+                                        }
+                                      ],
+                                      "id": 32
+                                    },
+                                    {
+                                      "type": 3,
+                                      "textContent": "\n      ",
+                                      "id": 34
+                                    },
+                                    {
+                                      "type": 2,
+                                      "tagName": "a",
+                                      "attributes": {
+                                        "href": "http://localhost:4100/checkout"
+                                      },
+                                      "childNodes": [
+                                        {
+                                          "type": 3,
+                                          "textContent": "Checkout",
+                                          "id": 36
+                                        }
+                                      ],
+                                      "id": 35
+                                    },
+                                    {
+                                      "type": 3,
+                                      "textContent": "\n    ",
+                                      "id": 37
+                                    }
+                                  ],
+                                  "id": 30
+                                },
+                                {
+                                  "type": 3,
+                                  "textContent": "\n  ",
+                                  "id": 38
+                                }
+                              ],
+                              "id": 23
+                            },
+                            {
+                              "type": 3,
+                              "textContent": "\n",
+                              "id": 39
+                            }
+                          ],
+                          "id": 21
+                        },
+                        {
+                          "type": 3,
+                          "textContent": "\n",
+                          "id": 40
+                        },
+                        {
+                          "type": 2,
+                          "tagName": "main",
+                          "attributes": {},
+                          "childNodes": [
+                            {
+                              "type": 3,
+                              "textContent": "\n  ",
+                              "id": 42
+                            },
+                            {
+                              "type": 2,
+                              "tagName": "div",
+                              "attributes": {
+                                "class": "card"
+                              },
+                              "childNodes": [
+                                {
+                                  "type": 3,
+                                  "textContent": "\n\n    ",
+                                  "id": 44
+                                },
+                                {
+                                  "type": 2,
+                                  "tagName": "h1",
+                                  "attributes": {},
+                                  "childNodes": [
+                                    {
+                                      "type": 3,
+                                      "textContent": "Checkout",
+                                      "id": 46
+                                    }
+                                  ],
+                                  "id": 45
+                                },
+                                {
+                                  "type": 3,
+                                  "textContent": "\n    ",
+                                  "id": 47
+                                },
+                                {
+                                  "type": 2,
+                                  "tagName": "p",
+                                  "attributes": {
+                                    "class": "lede"
+                                  },
+                                  "childNodes": [
+                                    {
+                                      "type": 3,
+                                      "textContent": "Review your order and enter your shipping and payment details.",
+                                      "id": 49
+                                    }
+                                  ],
+                                  "id": 48
+                                },
+                                {
+                                  "type": 3,
+                                  "textContent": "\n\n    ",
+                                  "id": 50
+                                },
+                                {
+                                  "type": 2,
+                                  "tagName": "section",
+                                  "attributes": {
+                                    "class": "summary",
+                                    "data-testid": "order-summary",
+                                    "aria-labelledby": "summary-heading"
+                                  },
+                                  "childNodes": [
+                                    {
+                                      "type": 3,
+                                      "textContent": "\n      ",
+                                      "id": 52
+                                    },
+                                    {
+                                      "type": 2,
+                                      "tagName": "div",
+                                      "attributes": {
+                                        "class": "summary-head"
+                                      },
+                                      "childNodes": [
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n        ",
+                                          "id": 54
+                                        },
+                                        {
+                                          "type": 2,
+                                          "tagName": "h2",
+                                          "attributes": {
+                                            "id": "summary-heading"
+                                          },
+                                          "childNodes": [
+                                            {
+                                              "type": 3,
+                                              "textContent": "Order summary",
+                                              "id": 56
+                                            }
+                                          ],
+                                          "id": 55
+                                        },
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n        ",
+                                          "id": 57
+                                        },
+                                        {
+                                          "type": 2,
+                                          "tagName": "span",
+                                          "attributes": {
+                                            "class": "account",
+                                            "data-repro-mask": "",
+                                            "data-testid": "account-label"
+                                          },
+                                          "childNodes": [
+                                            {
+                                              "type": 3,
+                                              "textContent": "******* ******************************",
+                                              "id": 59
+                                            }
+                                          ],
+                                          "id": 58
+                                        },
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n      ",
+                                          "id": 60
+                                        }
+                                      ],
+                                      "id": 53
+                                    },
+                                    {
+                                      "type": 3,
+                                      "textContent": "\n      ",
+                                      "id": 61
+                                    },
+                                    {
+                                      "type": 2,
+                                      "tagName": "ul",
+                                      "attributes": {
+                                        "id": "summary-items"
+                                      },
+                                      "childNodes": [
+                                        {
+                                          "type": 2,
+                                          "tagName": "li",
+                                          "attributes": {
+                                            "class": "skeleton"
+                                          },
+                                          "childNodes": [
+                                            {
+                                              "type": 3,
+                                              "textContent": "Loading your cart…",
+                                              "id": 64
+                                            }
+                                          ],
+                                          "id": 63
+                                        }
+                                      ],
+                                      "id": 62
+                                    },
+                                    {
+                                      "type": 3,
+                                      "textContent": "\n      ",
+                                      "id": 65
+                                    },
+                                    {
+                                      "type": 2,
+                                      "tagName": "ul",
+                                      "attributes": {
+                                        "class": "totals"
+                                      },
+                                      "childNodes": [
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n        ",
+                                          "id": 67
+                                        },
+                                        {
+                                          "type": 2,
+                                          "tagName": "li",
+                                          "attributes": {},
+                                          "childNodes": [
+                                            {
+                                              "type": 2,
+                                              "tagName": "span",
+                                              "attributes": {},
+                                              "childNodes": [
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "Subtotal",
+                                                  "id": 70
+                                                }
+                                              ],
+                                              "id": 69
+                                            },
+                                            {
+                                              "type": 2,
+                                              "tagName": "span",
+                                              "attributes": {
+                                                "id": "summary-subtotal",
+                                                "data-testid": "subtotal"
+                                              },
+                                              "childNodes": [
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "…",
+                                                  "id": 72
+                                                }
+                                              ],
+                                              "id": 71
+                                            }
+                                          ],
+                                          "id": 68
+                                        },
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n        ",
+                                          "id": 73
+                                        },
+                                        {
+                                          "type": 2,
+                                          "tagName": "li",
+                                          "attributes": {},
+                                          "childNodes": [
+                                            {
+                                              "type": 2,
+                                              "tagName": "span",
+                                              "attributes": {},
+                                              "childNodes": [
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "Shipping",
+                                                  "id": 76
+                                                }
+                                              ],
+                                              "id": 75
+                                            },
+                                            {
+                                              "type": 2,
+                                              "tagName": "span",
+                                              "attributes": {
+                                                "id": "summary-shipping",
+                                                "data-testid": "shipping-cost"
+                                              },
+                                              "childNodes": [
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "…",
+                                                  "id": 78
+                                                }
+                                              ],
+                                              "id": 77
+                                            }
+                                          ],
+                                          "id": 74
+                                        },
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n        ",
+                                          "id": 79
+                                        },
+                                        {
+                                          "type": 2,
+                                          "tagName": "li",
+                                          "attributes": {
+                                            "class": "total"
+                                          },
+                                          "childNodes": [
+                                            {
+                                              "type": 2,
+                                              "tagName": "span",
+                                              "attributes": {},
+                                              "childNodes": [
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "Total",
+                                                  "id": 82
+                                                }
+                                              ],
+                                              "id": 81
+                                            },
+                                            {
+                                              "type": 2,
+                                              "tagName": "span",
+                                              "attributes": {
+                                                "id": "summary-total",
+                                                "data-testid": "total"
+                                              },
+                                              "childNodes": [
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "…",
+                                                  "id": 84
+                                                }
+                                              ],
+                                              "id": 83
+                                            }
+                                          ],
+                                          "id": 80
+                                        },
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n      ",
+                                          "id": 85
+                                        }
+                                      ],
+                                      "id": 66
+                                    },
+                                    {
+                                      "type": 3,
+                                      "textContent": "\n    ",
+                                      "id": 86
+                                    }
+                                  ],
+                                  "id": 51
+                                },
+                                {
+                                  "type": 3,
+                                  "textContent": "\n\n    ",
+                                  "id": 87
+                                },
+                                {
+                                  "type": 2,
+                                  "tagName": "div",
+                                  "attributes": {
+                                    "id": "confirmation-slot"
+                                  },
+                                  "childNodes": [],
+                                  "id": 88
+                                },
+                                {
+                                  "type": 3,
+                                  "textContent": "\n    ",
+                                  "id": 89
+                                },
+                                {
+                                  "type": 2,
+                                  "tagName": "p",
+                                  "attributes": {
+                                    "class": "alert",
+                                    "role": "alert",
+                                    "data-testid": "checkout-error",
+                                    "data-visible": "false"
+                                  },
+                                  "childNodes": [],
+                                  "id": 90
+                                },
+                                {
+                                  "type": 3,
+                                  "textContent": "\n\n    ",
+                                  "id": 91
+                                },
+                                {
+                                  "type": 2,
+                                  "tagName": "form",
+                                  "attributes": {
+                                    "data-testid": "checkout-form",
+                                    "id": "checkout-form",
+                                    "method": "post",
+                                    "action": "/api/orders",
+                                    "novalidate": ""
+                                  },
+                                  "childNodes": [
+                                    {
+                                      "type": 3,
+                                      "textContent": "\n      ",
+                                      "id": 93
+                                    },
+                                    {
+                                      "type": 2,
+                                      "tagName": "fieldset",
+                                      "attributes": {},
+                                      "childNodes": [
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n        ",
+                                          "id": 95
+                                        },
+                                        {
+                                          "type": 2,
+                                          "tagName": "legend",
+                                          "attributes": {},
+                                          "childNodes": [
+                                            {
+                                              "type": 3,
+                                              "textContent": "Contact",
+                                              "id": 97
+                                            }
+                                          ],
+                                          "id": 96
+                                        },
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n        ",
+                                          "id": 98
+                                        },
+                                        {
+                                          "type": 2,
+                                          "tagName": "div",
+                                          "attributes": {
+                                            "class": "field"
+                                          },
+                                          "childNodes": [
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n          ",
+                                              "id": 100
+                                            },
+                                            {
+                                              "type": 2,
+                                              "tagName": "label",
+                                              "attributes": {
+                                                "for": "full-name"
+                                              },
+                                              "childNodes": [
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "Full name",
+                                                  "id": 102
+                                                }
+                                              ],
+                                              "id": 101
+                                            },
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n          ",
+                                              "id": 103
+                                            },
+                                            {
+                                              "type": 2,
+                                              "tagName": "input",
+                                              "attributes": {
+                                                "type": "text",
+                                                "name": "fullName",
+                                                "id": "full-name",
+                                                "autocomplete": "name",
+                                                "required": ""
+                                              },
+                                              "childNodes": [],
+                                              "id": 104
+                                            },
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n        ",
+                                              "id": 105
+                                            }
+                                          ],
+                                          "id": 99
+                                        },
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n        ",
+                                          "id": 106
+                                        },
+                                        {
+                                          "type": 2,
+                                          "tagName": "div",
+                                          "attributes": {
+                                            "class": "field"
+                                          },
+                                          "childNodes": [
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n          ",
+                                              "id": 108
+                                            },
+                                            {
+                                              "type": 2,
+                                              "tagName": "label",
+                                              "attributes": {
+                                                "for": "email"
+                                              },
+                                              "childNodes": [
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "Email",
+                                                  "id": 110
+                                                }
+                                              ],
+                                              "id": 109
+                                            },
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n          ",
+                                              "id": 111
+                                            },
+                                            {
+                                              "type": 2,
+                                              "tagName": "input",
+                                              "attributes": {
+                                                "type": "email",
+                                                "name": "email",
+                                                "id": "email",
+                                                "autocomplete": "email",
+                                                "required": ""
+                                              },
+                                              "childNodes": [],
+                                              "id": 112
+                                            },
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n        ",
+                                              "id": 113
+                                            }
+                                          ],
+                                          "id": 107
+                                        },
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n      ",
+                                          "id": 114
+                                        }
+                                      ],
+                                      "id": 94
+                                    },
+                                    {
+                                      "type": 3,
+                                      "textContent": "\n\n      ",
+                                      "id": 115
+                                    },
+                                    {
+                                      "type": 2,
+                                      "tagName": "fieldset",
+                                      "attributes": {},
+                                      "childNodes": [
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n        ",
+                                          "id": 117
+                                        },
+                                        {
+                                          "type": 2,
+                                          "tagName": "legend",
+                                          "attributes": {},
+                                          "childNodes": [
+                                            {
+                                              "type": 3,
+                                              "textContent": "Shipping address",
+                                              "id": 119
+                                            }
+                                          ],
+                                          "id": 118
+                                        },
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n        ",
+                                          "id": 120
+                                        },
+                                        {
+                                          "type": 2,
+                                          "tagName": "div",
+                                          "attributes": {
+                                            "class": "field"
+                                          },
+                                          "childNodes": [
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n          ",
+                                              "id": 122
+                                            },
+                                            {
+                                              "type": 2,
+                                              "tagName": "label",
+                                              "attributes": {
+                                                "for": "address"
+                                              },
+                                              "childNodes": [
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "Address",
+                                                  "id": 124
+                                                }
+                                              ],
+                                              "id": 123
+                                            },
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n          ",
+                                              "id": 125
+                                            },
+                                            {
+                                              "type": 2,
+                                              "tagName": "input",
+                                              "attributes": {
+                                                "type": "text",
+                                                "name": "address",
+                                                "id": "address",
+                                                "autocomplete": "street-address",
+                                                "required": ""
+                                              },
+                                              "childNodes": [],
+                                              "id": 126
+                                            },
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n        ",
+                                              "id": 127
+                                            }
+                                          ],
+                                          "id": 121
+                                        },
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n        ",
+                                          "id": 128
+                                        },
+                                        {
+                                          "type": 2,
+                                          "tagName": "div",
+                                          "attributes": {
+                                            "class": "row"
+                                          },
+                                          "childNodes": [
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n          ",
+                                              "id": 130
+                                            },
+                                            {
+                                              "type": 2,
+                                              "tagName": "div",
+                                              "attributes": {
+                                                "class": "field"
+                                              },
+                                              "childNodes": [
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "\n            ",
+                                                  "id": 132
+                                                },
+                                                {
+                                                  "type": 2,
+                                                  "tagName": "label",
+                                                  "attributes": {
+                                                    "for": "city"
+                                                  },
+                                                  "childNodes": [
+                                                    {
+                                                      "type": 3,
+                                                      "textContent": "City",
+                                                      "id": 134
+                                                    }
+                                                  ],
+                                                  "id": 133
+                                                },
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "\n            ",
+                                                  "id": 135
+                                                },
+                                                {
+                                                  "type": 2,
+                                                  "tagName": "input",
+                                                  "attributes": {
+                                                    "type": "text",
+                                                    "name": "city",
+                                                    "id": "city",
+                                                    "autocomplete": "address-level2",
+                                                    "required": ""
+                                                  },
+                                                  "childNodes": [],
+                                                  "id": 136
+                                                },
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "\n          ",
+                                                  "id": 137
+                                                }
+                                              ],
+                                              "id": 131
+                                            },
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n          ",
+                                              "id": 138
+                                            },
+                                            {
+                                              "type": 2,
+                                              "tagName": "div",
+                                              "attributes": {
+                                                "class": "field"
+                                              },
+                                              "childNodes": [
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "\n            ",
+                                                  "id": 140
+                                                },
+                                                {
+                                                  "type": 2,
+                                                  "tagName": "label",
+                                                  "attributes": {
+                                                    "for": "postal-code"
+                                                  },
+                                                  "childNodes": [
+                                                    {
+                                                      "type": 3,
+                                                      "textContent": "Postal code",
+                                                      "id": 142
+                                                    }
+                                                  ],
+                                                  "id": 141
+                                                },
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "\n            ",
+                                                  "id": 143
+                                                },
+                                                {
+                                                  "type": 2,
+                                                  "tagName": "input",
+                                                  "attributes": {
+                                                    "type": "text",
+                                                    "name": "postalCode",
+                                                    "id": "postal-code",
+                                                    "autocomplete": "postal-code",
+                                                    "required": ""
+                                                  },
+                                                  "childNodes": [],
+                                                  "id": 144
+                                                },
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "\n          ",
+                                                  "id": 145
+                                                }
+                                              ],
+                                              "id": 139
+                                            },
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n        ",
+                                              "id": 146
+                                            }
+                                          ],
+                                          "id": 129
+                                        },
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n        ",
+                                          "id": 147
+                                        },
+                                        {
+                                          "type": 2,
+                                          "tagName": "div",
+                                          "attributes": {
+                                            "class": "field"
+                                          },
+                                          "childNodes": [
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n          ",
+                                              "id": 149
+                                            },
+                                            {
+                                              "type": 2,
+                                              "tagName": "label",
+                                              "attributes": {
+                                                "for": "shipping"
+                                              },
+                                              "childNodes": [
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "Shipping method",
+                                                  "id": 151
+                                                }
+                                              ],
+                                              "id": 150
+                                            },
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n          ",
+                                              "id": 152
+                                            },
+                                            {
+                                              "type": 2,
+                                              "tagName": "select",
+                                              "attributes": {
+                                                "name": "shipping",
+                                                "id": "shipping",
+                                                "value": "standard"
+                                              },
+                                              "childNodes": [
+                                                {
+                                                  "type": 2,
+                                                  "tagName": "option",
+                                                  "attributes": {
+                                                    "value": "standard",
+                                                    "data-price": "0"
+                                                  },
+                                                  "childNodes": [
+                                                    {
+                                                      "type": 3,
+                                                      "textContent": "Standard (free)",
+                                                      "id": 155
+                                                    }
+                                                  ],
+                                                  "id": 154
+                                                },
+                                                {
+                                                  "type": 2,
+                                                  "tagName": "option",
+                                                  "attributes": {
+                                                    "value": "express",
+                                                    "data-price": "900"
+                                                  },
+                                                  "childNodes": [
+                                                    {
+                                                      "type": 3,
+                                                      "textContent": "Express ($9.00)",
+                                                      "id": 157
+                                                    }
+                                                  ],
+                                                  "id": 156
+                                                }
+                                              ],
+                                              "id": 153
+                                            },
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n        ",
+                                              "id": 158
+                                            }
+                                          ],
+                                          "id": 148
+                                        },
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n      ",
+                                          "id": 159
+                                        }
+                                      ],
+                                      "id": 116
+                                    },
+                                    {
+                                      "type": 3,
+                                      "textContent": "\n\n      ",
+                                      "id": 160
+                                    },
+                                    {
+                                      "type": 2,
+                                      "tagName": "fieldset",
+                                      "attributes": {},
+                                      "childNodes": [
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n        ",
+                                          "id": 162
+                                        },
+                                        {
+                                          "type": 2,
+                                          "tagName": "legend",
+                                          "attributes": {},
+                                          "childNodes": [
+                                            {
+                                              "type": 3,
+                                              "textContent": "Payment",
+                                              "id": 164
+                                            }
+                                          ],
+                                          "id": 163
+                                        },
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n        ",
+                                          "id": 165
+                                        },
+                                        {
+                                          "type": 2,
+                                          "tagName": "div",
+                                          "attributes": {
+                                            "class": "field"
+                                          },
+                                          "childNodes": [
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n          ",
+                                              "id": 167
+                                            },
+                                            {
+                                              "type": 2,
+                                              "tagName": "label",
+                                              "attributes": {
+                                                "for": "card-number"
+                                              },
+                                              "childNodes": [
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "Card number",
+                                                  "id": 169
+                                                }
+                                              ],
+                                              "id": 168
+                                            },
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n          ",
+                                              "id": 170
+                                            },
+                                            {
+                                              "type": 2,
+                                              "tagName": "input",
+                                              "attributes": {
+                                                "type": "text",
+                                                "name": "cardNumber",
+                                                "id": "card-number",
+                                                "autocomplete": "cc-number",
+                                                "inputmode": "numeric",
+                                                "required": ""
+                                              },
+                                              "childNodes": [],
+                                              "id": 171
+                                            },
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n        ",
+                                              "id": 172
+                                            }
+                                          ],
+                                          "id": 166
+                                        },
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n        ",
+                                          "id": 173
+                                        },
+                                        {
+                                          "type": 2,
+                                          "tagName": "div",
+                                          "attributes": {
+                                            "class": "row-3"
+                                          },
+                                          "childNodes": [
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n          ",
+                                              "id": 175
+                                            },
+                                            {
+                                              "type": 2,
+                                              "tagName": "div",
+                                              "attributes": {
+                                                "class": "field"
+                                              },
+                                              "childNodes": [
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "\n            ",
+                                                  "id": 177
+                                                },
+                                                {
+                                                  "type": 2,
+                                                  "tagName": "label",
+                                                  "attributes": {
+                                                    "for": "expiry"
+                                                  },
+                                                  "childNodes": [
+                                                    {
+                                                      "type": 3,
+                                                      "textContent": "Expiry",
+                                                      "id": 179
+                                                    }
+                                                  ],
+                                                  "id": 178
+                                                },
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "\n            ",
+                                                  "id": 180
+                                                },
+                                                {
+                                                  "type": 2,
+                                                  "tagName": "input",
+                                                  "attributes": {
+                                                    "type": "text",
+                                                    "name": "expiry",
+                                                    "id": "expiry",
+                                                    "autocomplete": "cc-exp",
+                                                    "placeholder": "MM/YY",
+                                                    "required": ""
+                                                  },
+                                                  "childNodes": [],
+                                                  "id": 181
+                                                },
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "\n          ",
+                                                  "id": 182
+                                                }
+                                              ],
+                                              "id": 176
+                                            },
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n          ",
+                                              "id": 183
+                                            },
+                                            {
+                                              "type": 2,
+                                              "tagName": "div",
+                                              "attributes": {
+                                                "class": "field"
+                                              },
+                                              "childNodes": [
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "\n            ",
+                                                  "id": 185
+                                                },
+                                                {
+                                                  "type": 2,
+                                                  "tagName": "label",
+                                                  "attributes": {
+                                                    "for": "cvc"
+                                                  },
+                                                  "childNodes": [
+                                                    {
+                                                      "type": 3,
+                                                      "textContent": "CVC",
+                                                      "id": 187
+                                                    }
+                                                  ],
+                                                  "id": 186
+                                                },
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "\n            ",
+                                                  "id": 188
+                                                },
+                                                {
+                                                  "type": 2,
+                                                  "tagName": "input",
+                                                  "attributes": {
+                                                    "type": "text",
+                                                    "name": "cvc",
+                                                    "id": "cvc",
+                                                    "autocomplete": "cc-csc",
+                                                    "inputmode": "numeric",
+                                                    "required": ""
+                                                  },
+                                                  "childNodes": [],
+                                                  "id": 189
+                                                },
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "\n          ",
+                                                  "id": 190
+                                                }
+                                              ],
+                                              "id": 184
+                                            },
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n          ",
+                                              "id": 191
+                                            },
+                                            {
+                                              "type": 2,
+                                              "tagName": "div",
+                                              "attributes": {
+                                                "class": "field"
+                                              },
+                                              "childNodes": [
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "\n            ",
+                                                  "id": 193
+                                                },
+                                                {
+                                                  "type": 2,
+                                                  "tagName": "label",
+                                                  "attributes": {
+                                                    "for": "promo-code"
+                                                  },
+                                                  "childNodes": [
+                                                    {
+                                                      "type": 3,
+                                                      "textContent": "Promo code",
+                                                      "id": 195
+                                                    }
+                                                  ],
+                                                  "id": 194
+                                                },
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "\n            ",
+                                                  "id": 196
+                                                },
+                                                {
+                                                  "type": 2,
+                                                  "tagName": "input",
+                                                  "attributes": {
+                                                    "type": "text",
+                                                    "name": "promoCode",
+                                                    "id": "promo-code",
+                                                    "autocomplete": "off"
+                                                  },
+                                                  "childNodes": [],
+                                                  "id": 197
+                                                },
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "\n          ",
+                                                  "id": 198
+                                                }
+                                              ],
+                                              "id": 192
+                                            },
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n        ",
+                                              "id": 199
+                                            }
+                                          ],
+                                          "id": 174
+                                        },
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n        ",
+                                          "id": 200
+                                        },
+                                        {
+                                          "type": 2,
+                                          "tagName": "div",
+                                          "attributes": {
+                                            "class": "field check"
+                                          },
+                                          "childNodes": [
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n          ",
+                                              "id": 202
+                                            },
+                                            {
+                                              "type": 2,
+                                              "tagName": "input",
+                                              "attributes": {
+                                                "type": "checkbox",
+                                                "name": "saveCard",
+                                                "id": "save-card"
+                                              },
+                                              "childNodes": [],
+                                              "id": 203
+                                            },
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n          ",
+                                              "id": 204
+                                            },
+                                            {
+                                              "type": 2,
+                                              "tagName": "label",
+                                              "attributes": {
+                                                "for": "save-card"
+                                              },
+                                              "childNodes": [
+                                                {
+                                                  "type": 3,
+                                                  "textContent": "Save card for next time",
+                                                  "id": 206
+                                                }
+                                              ],
+                                              "id": 205
+                                            },
+                                            {
+                                              "type": 3,
+                                              "textContent": "\n        ",
+                                              "id": 207
+                                            }
+                                          ],
+                                          "id": 201
+                                        },
+                                        {
+                                          "type": 3,
+                                          "textContent": "\n      ",
+                                          "id": 208
+                                        }
+                                      ],
+                                      "id": 161
+                                    },
+                                    {
+                                      "type": 3,
+                                      "textContent": "\n\n      ",
+                                      "id": 209
+                                    },
+                                    {
+                                      "type": 2,
+                                      "tagName": "input",
+                                      "attributes": {
+                                        "type": "hidden",
+                                        "name": "apiKey",
+                                        "id": "api-key",
+                                        "value": "******************************"
+                                      },
+                                      "childNodes": [],
+                                      "id": 210
+                                    },
+                                    {
+                                      "type": 3,
+                                      "textContent": "\n      ",
+                                      "id": 211
+                                    },
+                                    {
+                                      "type": 2,
+                                      "tagName": "button",
+                                      "attributes": {
+                                        "class": "btn",
+                                        "type": "submit",
+                                        "data-testid": "place-order"
+                                      },
+                                      "childNodes": [
+                                        {
+                                          "type": 3,
+                                          "textContent": "Place order",
+                                          "id": 213
+                                        }
+                                      ],
+                                      "id": 212
+                                    },
+                                    {
+                                      "type": 3,
+                                      "textContent": "\n    ",
+                                      "id": 214
+                                    }
+                                  ],
+                                  "id": 92
+                                },
+                                {
+                                  "type": 3,
+                                  "textContent": "\n  ",
+                                  "id": 215
+                                }
+                              ],
+                              "id": 43
+                            },
+                            {
+                              "type": 3,
+                              "textContent": "\n",
+                              "id": 216
+                            }
+                          ],
+                          "id": 41
+                        },
+                        {
+                          "type": 3,
+                          "textContent": "\n\n",
+                          "id": 217
+                        },
+                        {
+                          "type": 2,
+                          "tagName": "aside",
+                          "attributes": {
+                            "class": "support",
+                            "rr_width": "260px",
+                            "rr_height": "177px"
+                          },
+                          "childNodes": [],
+                          "id": 218
+                        },
+                        {
+                          "type": 3,
+                          "textContent": "\n",
+                          "id": 219
+                        },
+                        {
+                          "type": 2,
+                          "tagName": "footer",
+                          "attributes": {},
+                          "childNodes": [
+                            {
+                              "type": 3,
+                              "textContent": "\n  ",
+                              "id": 221
+                            },
+                            {
+                              "type": 2,
+                              "tagName": "p",
+                              "attributes": {},
+                              "childNodes": [
+                                {
+                                  "type": 3,
+                                  "textContent": "Demo store used by Repro. Mode: ",
+                                  "id": 223
+                                },
+                                {
+                                  "type": 2,
+                                  "tagName": "code",
+                                  "attributes": {
+                                    "data-testid": "demo-mode"
+                                  },
+                                  "childNodes": [
+                                    {
+                                      "type": 3,
+                                      "textContent": "broken",
+                                      "id": 225
+                                    }
+                                  ],
+                                  "id": 224
+                                },
+                                {
+                                  "type": 3,
+                                  "textContent": " · Release ",
+                                  "id": 226
+                                },
+                                {
+                                  "type": 2,
+                                  "tagName": "code",
+                                  "attributes": {},
+                                  "childNodes": [
+                                    {
+                                      "type": 3,
+                                      "textContent": "demo@1.4.2",
+                                      "id": 228
+                                    }
+                                  ],
+                                  "id": 227
+                                }
+                              ],
+                              "id": 222
+                            },
+                            {
+                              "type": 3,
+                              "textContent": "\n",
+                              "id": 229
+                            }
+                          ],
+                          "id": 220
+                        },
+                        {
+                          "type": 3,
+                          "textContent": "\n",
+                          "id": 230
+                        },
+                        {
+                          "type": 3,
+                          "textContent": "\n\n\n",
+                          "id": 231
+                        }
+                      ],
+                      "id": 19
+                    }
+                  ],
+                  "id": 3
+                }
+              ],
+              "id": 1
+            },
+            "initialOffset": {
+              "left": 0,
+              "top": 0
+            }
+          }
+        }
+      },
+      {
+        "seq": 25,
+        "ts": 1789005465024,
+        "type": "identify",
+        "data": {
+          "userId": "usr_1042",
+          "traits": {
+            "plan": "retail"
+          }
+        }
+      },
+      {
+        "seq": 26,
+        "ts": 1789005465024,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465024,
+          "data": {
+            "source": 5,
+            "text": "Ada Lovelace",
+            "isChecked": false,
+            "id": 104
+          }
+        }
+      },
+      {
+        "seq": 27,
+        "ts": 1789005465024,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465024,
+          "data": {
+            "source": 5,
+            "text": "ada@example.com",
+            "isChecked": false,
+            "id": 112
+          }
+        }
+      },
+      {
+        "seq": 28,
+        "ts": 1789005465142,
+        "type": "network",
+        "data": {
+          "kind": "fetch",
+          "method": "GET",
+          "url": "http://localhost:4100/api/cart",
+          "path": "/api/cart",
+          "status": 200,
+          "ok": true,
+          "durationMs": 118,
+          "requestId": "8e6662dd5fcc"
+        }
+      },
+      {
+        "seq": 29,
+        "ts": 1789005465143,
+        "type": "annotation",
+        "data": {
+          "name": "checkout:viewed",
+          "data": {
+            "items": 2
+          }
+        }
+      },
+      {
+        "seq": 30,
+        "ts": 1789005465144,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465144,
+          "data": {
+            "source": 0,
+            "texts": [],
+            "attributes": [],
+            "removes": [
+              {
+                "parentId": 62,
+                "id": 63
+              },
+              {
+                "parentId": 71,
+                "id": 72
+              },
+              {
+                "parentId": 77,
+                "id": 78
+              },
+              {
+                "parentId": 83,
+                "id": 84
+              }
+            ],
+            "adds": [
+              {
+                "parentId": 62,
+                "nextId": null,
+                "node": {
+                  "type": 2,
+                  "tagName": "li",
+                  "attributes": {},
+                  "childNodes": [],
+                  "id": 232
+                }
+              },
+              {
+                "parentId": 232,
+                "nextId": null,
+                "node": {
+                  "type": 2,
+                  "tagName": "span",
+                  "attributes": {},
+                  "childNodes": [],
+                  "id": 233
+                }
+              },
+              {
+                "parentId": 233,
+                "nextId": null,
+                "node": {
+                  "type": 3,
+                  "textContent": "$38.00",
+                  "id": 234
+                }
+              },
+              {
+                "parentId": 71,
+                "nextId": null,
+                "node": {
+                  "type": 3,
+                  "textContent": "$74.00",
+                  "id": 235
+                }
+              },
+              {
+                "parentId": 77,
+                "nextId": null,
+                "node": {
+                  "type": 3,
+                  "textContent": "Free",
+                  "id": 236
+                }
+              },
+              {
+                "parentId": 83,
+                "nextId": null,
+                "node": {
+                  "type": 3,
+                  "textContent": "$74.00",
+                  "id": 237
+                }
+              },
+              {
+                "parentId": 62,
+                "nextId": 232,
+                "node": {
+                  "type": 2,
+                  "tagName": "li",
+                  "attributes": {},
+                  "childNodes": [],
+                  "id": 238
+                }
+              },
+              {
+                "parentId": 238,
+                "nextId": null,
+                "node": {
+                  "type": 2,
+                  "tagName": "span",
+                  "attributes": {},
+                  "childNodes": [],
+                  "id": 239
+                }
+              },
+              {
+                "parentId": 238,
+                "nextId": 239,
+                "node": {
+                  "type": 2,
+                  "tagName": "span",
+                  "attributes": {},
+                  "childNodes": [],
+                  "id": 240
+                }
+              },
+              {
+                "parentId": 240,
+                "nextId": null,
+                "node": {
+                  "type": 2,
+                  "tagName": "span",
+                  "attributes": {
+                    "class": "qty"
+                  },
+                  "childNodes": [],
+                  "id": 241
+                }
+              },
+              {
+                "parentId": 240,
+                "nextId": 241,
+                "node": {
+                  "type": 3,
+                  "textContent": "Field notebook, dotted",
+                  "id": 242
+                }
+              },
+              {
+                "parentId": 241,
+                "nextId": null,
+                "node": {
+                  "type": 3,
+                  "textContent": "x 3",
+                  "id": 243
+                }
+              },
+              {
+                "parentId": 239,
+                "nextId": null,
+                "node": {
+                  "type": 3,
+                  "textContent": "$36.00",
+                  "id": 244
+                }
+              },
+              {
+                "parentId": 232,
+                "nextId": 233,
+                "node": {
+                  "type": 2,
+                  "tagName": "span",
+                  "attributes": {},
+                  "childNodes": [],
+                  "id": 245
+                }
+              },
+              {
+                "parentId": 245,
+                "nextId": null,
+                "node": {
+                  "type": 2,
+                  "tagName": "span",
+                  "attributes": {
+                    "class": "qty"
+                  },
+                  "childNodes": [],
+                  "id": 246
+                }
+              },
+              {
+                "parentId": 245,
+                "nextId": 246,
+                "node": {
+                  "type": 3,
+                  "textContent": "Brass mechanical pencil",
+                  "id": 247
+                }
+              },
+              {
+                "parentId": 246,
+                "nextId": null,
+                "node": {
+                  "type": 3,
+                  "textContent": "x 1",
+                  "id": 248
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "seq": 31,
+        "ts": 1789005465209,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465209,
+          "data": {
+            "source": 2,
+            "type": 5,
+            "id": 126
+          }
+        }
+      },
+      {
+        "seq": 32,
+        "ts": 1789005465212,
+        "type": "input",
+        "data": {
+          "target": {
+            "tag": "input",
+            "id": "address",
+            "name": "address",
+            "type": "text",
+            "role": "textbox",
+            "accessibleName": "Address",
+            "label": "Address",
+            "autocomplete": "street-address",
+            "cssPath": "input#address",
+            "sensitive": false,
+            "formId": "checkout-form",
+            "formTestId": "checkout-form"
+          },
+          "kind": "text",
+          "value": "12 Analytical Engine Way",
+          "masked": false
+        }
+      },
+      {
+        "seq": 33,
+        "ts": 1789005465212,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465212,
+          "data": {
+            "source": 5,
+            "text": "12 Analytical Engine Way",
+            "isChecked": false,
+            "id": 126
+          }
+        }
+      },
+      {
+        "seq": 34,
+        "ts": 1789005465212,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465212,
+          "data": {
+            "source": 2,
+            "type": 6,
+            "id": 126
+          }
+        }
+      },
+      {
+        "seq": 35,
+        "ts": 1789005465212,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465212,
+          "data": {
+            "source": 2,
+            "type": 5,
+            "id": 136
+          }
+        }
+      },
+      {
+        "seq": 36,
+        "ts": 1789005465215,
+        "type": "input",
+        "data": {
+          "target": {
+            "tag": "input",
+            "id": "city",
+            "name": "city",
+            "type": "text",
+            "role": "textbox",
+            "accessibleName": "City",
+            "label": "City",
+            "autocomplete": "address-level2",
+            "cssPath": "input#city",
+            "sensitive": false,
+            "formId": "checkout-form",
+            "formTestId": "checkout-form"
+          },
+          "kind": "text",
+          "value": "London",
+          "masked": false
+        }
+      },
+      {
+        "seq": 37,
+        "ts": 1789005465215,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465215,
+          "data": {
+            "source": 5,
+            "text": "London",
+            "isChecked": false,
+            "id": 136
+          }
+        }
+      },
+      {
+        "seq": 38,
+        "ts": 1789005465215,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465215,
+          "data": {
+            "source": 2,
+            "type": 6,
+            "id": 136
+          }
+        }
+      },
+      {
+        "seq": 39,
+        "ts": 1789005465215,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465215,
+          "data": {
+            "source": 2,
+            "type": 5,
+            "id": 144
+          }
+        }
+      },
+      {
+        "seq": 40,
+        "ts": 1789005465217,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465217,
+          "data": {
+            "source": 3,
+            "id": 1,
+            "x": 0,
+            "y": 177
+          }
+        }
+      },
+      {
+        "seq": 41,
+        "ts": 1789005465219,
+        "type": "input",
+        "data": {
+          "target": {
+            "tag": "select",
+            "id": "shipping",
+            "name": "shipping",
+            "role": "combobox",
+            "accessibleName": "Shipping method",
+            "label": "Shipping method",
+            "text": "Express ($9.00)",
+            "cssPath": "select#shipping",
+            "sensitive": false,
+            "formId": "checkout-form",
+            "formTestId": "checkout-form"
+          },
+          "kind": "select",
+          "value": "express",
+          "masked": false
+        }
+      },
+      {
+        "seq": 42,
+        "ts": 1789005465219,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465219,
+          "data": {
+            "source": 5,
+            "text": "express",
+            "isChecked": false,
+            "id": 153
+          }
+        }
+      },
+      {
+        "seq": 43,
+        "ts": 1789005465219,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465219,
+          "data": {
+            "source": 0,
+            "texts": [],
+            "attributes": [],
+            "removes": [
+              {
+                "parentId": 71,
+                "id": 235
+              },
+              {
+                "parentId": 77,
+                "id": 236
+              },
+              {
+                "parentId": 83,
+                "id": 237
+              }
+            ],
+            "adds": [
+              {
+                "parentId": 71,
+                "nextId": null,
+                "node": {
+                  "type": 3,
+                  "textContent": "$74.00",
+                  "id": 249
+                }
+              },
+              {
+                "parentId": 77,
+                "nextId": null,
+                "node": {
+                  "type": 3,
+                  "textContent": "$9.00",
+                  "id": 250
+                }
+              },
+              {
+                "parentId": 83,
+                "nextId": null,
+                "node": {
+                  "type": 3,
+                  "textContent": "$83.00",
+                  "id": 251
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "seq": 44,
+        "ts": 1789005465221,
+        "type": "input",
+        "data": {
+          "target": {
+            "tag": "input",
+            "id": "postal-code",
+            "name": "postalCode",
+            "type": "text",
+            "role": "textbox",
+            "accessibleName": "Postal code",
+            "label": "Postal code",
+            "autocomplete": "postal-code",
+            "cssPath": "input#postal-code",
+            "sensitive": false,
+            "formId": "checkout-form",
+            "formTestId": "checkout-form"
+          },
+          "kind": "text",
+          "value": "N1 9GU",
+          "masked": false
+        }
+      },
+      {
+        "seq": 45,
+        "ts": 1789005465221,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465221,
+          "data": {
+            "source": 5,
+            "text": "N1 9GU",
+            "isChecked": false,
+            "id": 144
+          }
+        }
+      },
+      {
+        "seq": 46,
+        "ts": 1789005465221,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465221,
+          "data": {
+            "source": 2,
+            "type": 6,
+            "id": 144
+          }
+        }
+      },
+      {
+        "seq": 47,
+        "ts": 1789005465221,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465221,
+          "data": {
+            "source": 2,
+            "type": 5,
+            "id": 171
+          }
+        }
+      },
+      {
+        "seq": 48,
+        "ts": 1789005465223,
+        "type": "input",
+        "data": {
+          "target": {
+            "tag": "input",
+            "id": "card-number",
+            "name": "cardNumber",
+            "type": "text",
+            "role": "textbox",
+            "accessibleName": "Card number",
+            "label": "Card number",
+            "autocomplete": "cc-number",
+            "cssPath": "input#card-number",
+            "sensitive": true,
+            "formId": "checkout-form",
+            "formTestId": "checkout-form"
+          },
+          "kind": "text",
+          "value": null,
+          "masked": true
+        }
+      },
+      {
+        "seq": 49,
+        "ts": 1789005465223,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465223,
+          "data": {
+            "source": 5,
+            "text": "****************************",
+            "isChecked": false,
+            "id": 171
+          }
+        }
+      },
+      {
+        "seq": 50,
+        "ts": 1789005465223,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465223,
+          "data": {
+            "source": 2,
+            "type": 6,
+            "id": 171
+          }
+        }
+      },
+      {
+        "seq": 51,
+        "ts": 1789005465223,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465223,
+          "data": {
+            "source": 2,
+            "type": 5,
+            "id": 181
+          }
+        }
+      },
+      {
+        "seq": 52,
+        "ts": 1789005465225,
+        "type": "input",
+        "data": {
+          "target": {
+            "tag": "input",
+            "id": "expiry",
+            "name": "expiry",
+            "type": "text",
+            "role": "textbox",
+            "accessibleName": "Expiry",
+            "label": "Expiry",
+            "placeholder": "MM/YY",
+            "autocomplete": "cc-exp",
+            "cssPath": "input#expiry",
+            "sensitive": true,
+            "formId": "checkout-form",
+            "formTestId": "checkout-form"
+          },
+          "kind": "text",
+          "value": null,
+          "masked": true
+        }
+      },
+      {
+        "seq": 53,
+        "ts": 1789005465225,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465225,
+          "data": {
+            "source": 5,
+            "text": "*******************",
+            "isChecked": false,
+            "id": 181
+          }
+        }
+      },
+      {
+        "seq": 54,
+        "ts": 1789005465225,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465225,
+          "data": {
+            "source": 2,
+            "type": 6,
+            "id": 181
+          }
+        }
+      },
+      {
+        "seq": 55,
+        "ts": 1789005465225,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465225,
+          "data": {
+            "source": 2,
+            "type": 5,
+            "id": 189
+          }
+        }
+      },
+      {
+        "seq": 56,
+        "ts": 1789005465227,
+        "type": "input",
+        "data": {
+          "target": {
+            "tag": "input",
+            "id": "cvc",
+            "name": "cvc",
+            "type": "text",
+            "role": "textbox",
+            "accessibleName": "CVC",
+            "label": "CVC",
+            "autocomplete": "cc-csc",
+            "cssPath": "input#cvc",
+            "sensitive": true,
+            "formId": "checkout-form",
+            "formTestId": "checkout-form"
+          },
+          "kind": "text",
+          "value": null,
+          "masked": true
+        }
+      },
+      {
+        "seq": 57,
+        "ts": 1789005465227,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465227,
+          "data": {
+            "source": 5,
+            "text": "***************",
+            "isChecked": false,
+            "id": 189
+          }
+        }
+      },
+      {
+        "seq": 58,
+        "ts": 1789005465227,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465227,
+          "data": {
+            "source": 2,
+            "type": 6,
+            "id": 189
+          }
+        }
+      },
+      {
+        "seq": 59,
+        "ts": 1789005465227,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465227,
+          "data": {
+            "source": 2,
+            "type": 5,
+            "id": 197
+          }
+        }
+      },
+      {
+        "seq": 60,
+        "ts": 1789005465252,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465252,
+          "data": {
+            "source": 1,
+            "positions": [
+              {
+                "x": 640,
+                "y": 466,
+                "id": 203,
+                "timeOffset": 0
+              }
+            ]
+          }
+        }
+      },
+      {
+        "seq": 61,
+        "ts": 1789005465252,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465252,
+          "data": {
+            "source": 2,
+            "type": 1,
+            "id": 203,
+            "x": 640.5,
+            "y": 466
+          }
+        }
+      },
+      {
+        "seq": 62,
+        "ts": 1789005465252,
+        "type": "input",
+        "data": {
+          "target": {
+            "tag": "input",
+            "id": "promo-code",
+            "name": "promoCode",
+            "type": "text",
+            "role": "textbox",
+            "accessibleName": "Promo code",
+            "label": "Promo code",
+            "autocomplete": "off",
+            "cssPath": "input#promo-code",
+            "sensitive": false,
+            "formId": "checkout-form",
+            "formTestId": "checkout-form"
+          },
+          "kind": "text",
+          "value": "WELCOME10",
+          "masked": false
+        }
+      },
+      {
+        "seq": 63,
+        "ts": 1789005465252,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465252,
+          "data": {
+            "source": 5,
+            "text": "WELCOME10",
+            "isChecked": false,
+            "id": 197
+          }
+        }
+      },
+      {
+        "seq": 64,
+        "ts": 1789005465252,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465252,
+          "data": {
+            "source": 2,
+            "type": 6,
+            "id": 197
+          }
+        }
+      },
+      {
+        "seq": 65,
+        "ts": 1789005465252,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465252,
+          "data": {
+            "source": 2,
+            "type": 5,
+            "id": 203
+          }
+        }
+      },
+      {
+        "seq": 66,
+        "ts": 1789005465252,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465252,
+          "data": {
+            "source": 2,
+            "type": 0,
+            "id": 203,
+            "x": 640.5,
+            "y": 466
+          }
+        }
+      },
+      {
+        "seq": 67,
+        "ts": 1789005465252,
+        "type": "click",
+        "data": {
+          "target": {
+            "tag": "input",
+            "id": "save-card",
+            "name": "saveCard",
+            "type": "checkbox",
+            "role": "checkbox",
+            "accessibleName": "Save card for next time",
+            "label": "Save card for next time",
+            "cssPath": "input#save-card",
+            "sensitive": true,
+            "formId": "checkout-form",
+            "formTestId": "checkout-form"
+          },
+          "x": 640,
+          "y": 466
+        }
+      },
+      {
+        "seq": 68,
+        "ts": 1789005465252,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465252,
+          "data": {
+            "source": 2,
+            "type": 2,
+            "id": 203,
+            "x": 640,
+            "y": 466,
+            "pointerType": 0
+          }
+        }
+      },
+      {
+        "seq": 69,
+        "ts": 1789005465252,
+        "type": "input",
+        "data": {
+          "target": {
+            "tag": "input",
+            "id": "save-card",
+            "name": "saveCard",
+            "type": "checkbox",
+            "role": "checkbox",
+            "accessibleName": "Save card for next time",
+            "label": "Save card for next time",
+            "cssPath": "input#save-card",
+            "sensitive": true,
+            "formId": "checkout-form",
+            "formTestId": "checkout-form"
+          },
+          "kind": "checkbox",
+          "value": null,
+          "masked": true,
+          "checked": true
+        }
+      },
+      {
+        "seq": 70,
+        "ts": 1789005465252,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465252,
+          "data": {
+            "source": 5,
+            "text": "on",
+            "isChecked": true,
+            "id": 203
+          }
+        }
+      },
+      {
+        "seq": 71,
+        "ts": 1789005465285,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465285,
+          "data": {
+            "source": 2,
+            "type": 1,
+            "id": 212,
+            "x": 640,
+            "y": 574
+          }
+        }
+      },
+      {
+        "seq": 72,
+        "ts": 1789005465285,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465285,
+          "data": {
+            "source": 2,
+            "type": 6,
+            "id": 203
+          }
+        }
+      },
+      {
+        "seq": 73,
+        "ts": 1789005465285,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465285,
+          "data": {
+            "source": 2,
+            "type": 5,
+            "id": 212
+          }
+        }
+      },
+      {
+        "seq": 74,
+        "ts": 1789005465285,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465285,
+          "data": {
+            "source": 2,
+            "type": 0,
+            "id": 212,
+            "x": 640,
+            "y": 574
+          }
+        }
+      },
+      {
+        "seq": 75,
+        "ts": 1789005465285,
+        "type": "click",
+        "data": {
+          "target": {
+            "tag": "button",
+            "testId": "place-order",
+            "type": "submit",
+            "role": "button",
+            "accessibleName": "Place order",
+            "text": "Place order",
+            "cssPath": "form#checkout-form > button",
+            "sensitive": false,
+            "formId": "checkout-form",
+            "formTestId": "checkout-form"
+          },
+          "x": 640,
+          "y": 574
+        }
+      },
+      {
+        "seq": 76,
+        "ts": 1789005465285,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465285,
+          "data": {
+            "source": 2,
+            "type": 2,
+            "id": 212,
+            "x": 640,
+            "y": 574,
+            "pointerType": 0
+          }
+        }
+      },
+      {
+        "seq": 77,
+        "ts": 1789005465285,
+        "type": "submit",
+        "data": {
+          "target": {
+            "tag": "form",
+            "testId": "checkout-form",
+            "id": "checkout-form",
+            "cssPath": "form#checkout-form",
+            "sensitive": false
+          }
+        }
+      },
+      {
+        "seq": 78,
+        "ts": 1789005465286,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465286,
+          "data": {
+            "source": 0,
+            "texts": [],
+            "attributes": [
+              {
+                "id": 212,
+                "attributes": {
+                  "disabled": ""
+                }
+              }
+            ],
+            "removes": [
+              {
+                "parentId": 212,
+                "id": 213
+              }
+            ],
+            "adds": [
+              {
+                "parentId": 212,
+                "nextId": null,
+                "node": {
+                  "type": 3,
+                  "textContent": "Placing order…",
+                  "id": 252
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "seq": 79,
+        "ts": 1789005465301,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465301,
+          "data": {
+            "source": 2,
+            "type": 6,
+            "id": 212
+          }
+        }
+      },
+      {
+        "seq": 80,
+        "ts": 1789005465369,
+        "type": "rrweb",
+        "data": {
+          "type": 3,
+          "timestamp": 1789005465369,
+          "data": {
+            "source": 3,
+            "id": 1,
+            "x": 0,
+            "y": 779
+          }
+        }
+      },
+      {
+        "seq": 81,
+        "ts": 1789005465405,
+        "type": "network",
+        "data": {
+          "kind": "fetch",
+          "method": "POST",
+          "url": "http://localhost:4100/api/orders",
+          "path": "/api/orders",
+          "status": 200,
+          "ok": true,
+          "durationMs": 119,
+          "requestId": "2f54f368078b"
+        }
+      },
+      {
+        "seq": 82,
+        "ts": 1789005465405,
+        "type": "annotation",
+        "data": {
+          "name": "order:placed"
+        }
+      },
+      {
+        "seq": 83,
+        "ts": 1789005465406,
+        "type": "console",
+        "data": {
+          "level": "error",
+          "args": [
+            "Order confirmation failed",
+            "TypeError: Cannot read properties of undefined (reading 'toUpperCase')"
+          ]
+        }
+      },
+      {
+        "seq": 84,
+        "ts": 1789005465406,
+        "type": "error",
+        "data": {
+          "kind": "unhandledrejection",
+          "name": "TypeError",
+          "message": "Cannot read properties of undefined (reading 'toUpperCase')",
+          "stack": "TypeError: Cannot read properties of undefined (reading 'toUpperCase')\n    at showConfirmation (http://localhost:4100/app.js:195:38)\n    at placeOrder (http://localhost:4100/app.js:189:5)",
+          "handled": false
+        }
+      }
+    ]
+  }
+}

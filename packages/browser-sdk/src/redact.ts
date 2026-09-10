@@ -3,15 +3,8 @@
  * Everything here answers one of two questions: "is this element secret?" and
  * "is this piece of text safe to send?". The capture modules never decide on their own.
  */
-import {
-  isSensitiveField,
-  isSensitiveFieldHint,
-  scrubText,
-  truncate,
-  LIMITS,
-  REDACTED,
-  type FieldSensitivityInput,
-} from '@repro/contracts';
+import { isSensitiveField, isSensitiveFieldHint, scrubText, truncate, LIMITS, REDACTED } from '@repro/contracts/runtime';
+import type { FieldSensitivityInput } from '@repro/contracts';
 
 export const MASK_ATTRIBUTE = 'data-repro-mask';
 export const BLOCK_ATTRIBUTE = 'data-repro-block';

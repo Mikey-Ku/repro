@@ -1,4 +1,5 @@
-import { sanitizeUrl, truncate, LIMITS, type SessionMeta } from '@repro/contracts';
+import { sanitizeUrl, truncate, LIMITS } from '@repro/contracts/runtime';
+import type { SessionMeta } from '@repro/contracts';
 
 export interface ParsedUserAgent {
   name: string;

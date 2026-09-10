@@ -2,7 +2,8 @@
  * Navigation capture: the initial load plus SPA route changes. History methods are wrapped
  * (and restored on stop) because the browser fires no event for pushState/replaceState.
  */
-import { sanitizeUrl, truncate, LIMITS, type NavigationKind } from '@repro/contracts';
+import { sanitizeUrl, truncate, LIMITS } from '@repro/contracts/runtime';
+import type { NavigationKind } from '@repro/contracts';
 import type { CaptureContext, Stop } from '../types.js';
 
 export function currentUrl(): string {

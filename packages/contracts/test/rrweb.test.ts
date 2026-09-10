@@ -67,6 +67,28 @@ describe('sanitizeRrwebEvent', () => {
   });
 });
 
+describe('sanitizeCssUrls', () => {
+  it('redacts query strings inside url() in inline styles and inlined stylesheets', () => {
+    const event = {
+      type: 2,
+      timestamp: 1,
+      data: {
+        node: {
+          type: 2,
+          tagName: 'div',
+          attributes: { style: 'background-image: url("https://cdn/x.png?token=CANARY_F"); color: red' },
+          childNodes: [{ type: 2, tagName: 'style', attributes: { _cssText: ".a{background:url('/i.png?sig=CANARY_G')}" }, childNodes: [] }],
+        },
+        initialOffset: { left: 0, top: 0 },
+      },
+    };
+    const json = JSON.stringify(sanitizeRrwebEvent(event));
+    expect(json).not.toContain('CANARY_F');
+    expect(json).not.toContain('CANARY_G');
+    expect(json).toContain('color: red');
+  });
+});
+
 describe('sanitizeUrlAttribute', () => {
   it('keeps relative references relative', () => {
     expect(sanitizeUrlAttribute('/checkout?token=x&page=2')).toBe('/checkout?token=%5Bredacted%5D&page=2');

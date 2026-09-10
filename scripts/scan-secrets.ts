@@ -63,7 +63,10 @@ function main(): void {
     const full = path.join(repoRoot, file);
     if (!fs.existsSync(full) || fs.statSync(full).isDirectory()) continue;
     const text = fs.readFileSync(full, 'utf8');
-    if (file !== 'scripts/scan-secrets.ts') {
+    // Test files contain deliberately key-shaped fakes (canaries). They are still covered by the
+    // canary allowlist below, and by review; real credentials do not belong in tests either.
+    const isTestFile = /(^|\/)test\//.test(file) || /\.test\.[cm]?[jt]sx?$/.test(file);
+    if (file !== 'scripts/scan-secrets.ts' && !isTestFile) {
       for (const { name, pattern } of credentialPatterns) {
         if (pattern.test(text)) findings.push(`${file}: matches ${name}`);
       }

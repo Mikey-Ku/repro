@@ -2,7 +2,8 @@
  * Uncaught exceptions and unhandled promise rejections. Only strings derived from the error
  * are kept (name, message, stack); the error object itself is never stored or referenced.
  */
-import { sanitizeUrl, truncate, LIMITS, type ErrorEvent as ReproErrorEvent } from '@repro/contracts';
+import { sanitizeUrl, truncate, LIMITS } from '@repro/contracts/runtime';
+import type { ErrorEvent as ReproErrorEvent } from '@repro/contracts';
 import { safeStringify, scrubAndTruncate } from '../redact.js';
 import type { CaptureContext, Stop } from '../types.js';
 

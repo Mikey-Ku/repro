@@ -30,11 +30,21 @@ export function sanitizeUrlAttribute(value: string): string {
   return absolute.startsWith(base) ? absolute.slice(base.length) : absolute;
 }
 
+/** Redact query strings inside CSS url(...) references, as found in inline styles and stylesheets. */
+export function sanitizeCssUrls(css: string): string {
+  if (!css.includes('url(')) return css;
+  return css.replace(/url\(\s*(['"]?)([^'")]+)\1\s*\)/gi, (_m, quote: string, target: string) => `url(${quote}${sanitizeUrlAttribute(target)}${quote})`);
+}
+
 function sanitizeAttributes(attributes: Record<string, unknown> | undefined): void {
   if (!attributes) return;
   for (const [name, value] of Object.entries(attributes)) {
-    if (typeof value === 'string' && URL_ATTRIBUTES.has(name.toLowerCase())) {
+    if (typeof value !== 'string') continue;
+    const lower = name.toLowerCase();
+    if (URL_ATTRIBUTES.has(lower)) {
       attributes[name] = sanitizeUrlAttribute(value);
+    } else if (lower === 'style' || lower === '_csstext') {
+      attributes[name] = sanitizeCssUrls(value);
     }
   }
 }

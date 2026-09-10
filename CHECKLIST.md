@@ -20,30 +20,30 @@ Running checklist for the first release. Updated as work lands.
 - [x] Failing E2E scenario
 
 ## 4. Browser SDK
-- [ ] Public API: init, start, stop, captureException, identify, annotate, flush
-- [ ] rrweb recording with masking defaults and strict mode
-- [ ] Interaction capture with element descriptors (no rrweb node ids)
-- [ ] Navigation, errors, rejections, console, fetch/XHR capture
-- [ ] URL sanitisation, no headers, no bodies, no cookies
-- [ ] Batching, gzip, bounded retry
-- [ ] Payload-level privacy tests with canary corpus
+- [x] Public API: init, start, stop, captureException, identify, annotate, flush
+- [x] rrweb recording with masking defaults and strict mode
+- [x] Interaction capture with element descriptors (no rrweb node ids)
+- [x] Navigation, errors, rejections, console, fetch/XHR capture
+- [x] URL sanitisation, no headers, no bodies, no cookies
+- [x] Batching, gzip, bounded retry
+- [x] Payload-level privacy tests with canary corpus
 
 ## 5. Ingestion and persistence
-- [ ] Project-scoped hashed keys
-- [ ] Validated, size-limited, gzip-aware ingest endpoint
-- [ ] Idempotent batches, chunk ordering, duplicate handling
-- [ ] Session creation and completion, job enqueue
-- [ ] Internal API for the dashboard
-- [ ] Health endpoints, structured logs, clear errors
-- [ ] Integration tests (idempotency, isolation, malformed rejection)
+- [x] Project-scoped hashed keys
+- [x] Validated, size-limited, gzip-aware ingest endpoint
+- [x] Idempotent batches, chunk ordering, duplicate handling
+- [x] Session creation and completion, job enqueue
+- [x] Internal API for the dashboard
+- [x] Health endpoints, structured logs, clear errors
+- [x] Integration tests (idempotency, isolation, malformed rejection)
 
 ## 6. Dashboard
-- [ ] Project overview, session list with filters
-- [ ] Session detail: rrweb player, unified timeline, jump to error
-- [ ] Evidence panel, generated test panel (highlighting, copy, download)
-- [ ] Incident list and detail
-- [ ] Empty, loading, error, disconnected states
-- [ ] Keyboard access and responsive layout
+- [x] Project overview, session list with filters
+- [x] Session detail: rrweb player, unified timeline, jump to error
+- [x] Evidence panel, generated test panel (highlighting, copy, download)
+- [x] Incident list and detail
+- [x] Empty, loading, error, disconnected states
+- [x] Keyboard access and responsive layout
 
 ## 7. Deterministic test generation
 - [x] Selector strategy (testid, role+name, label, stable attrs, css)
@@ -53,19 +53,19 @@ Running checklist for the first release. Updated as work lands.
 - [x] Fixture-based tests, determinism test
 
 ## 8. Reproduction runner
-- [ ] Worker job queue
-- [ ] Restricted Playwright runner (demo only, timeouts, no shell)
-- [ ] Result, logs, trace, screenshot stored and shown
+- [x] Worker job queue
+- [x] Restricted Playwright runner (demo only, timeouts, no shell)
+- [x] Result, logs, trace, screenshot stored and shown
 
 ## 9. Diagnostics
 - [x] Deterministic evidence summary
 - [x] Investigator interface, fake provider, optional AI SDK adapter
 
 ## 10. Reviews and verification
-- [ ] Security, accessibility, TypeScript, React reviews
-- [ ] Clean-checkout verification script
-- [ ] Lint, typecheck, unit, integration, E2E, production builds green
+- [x] Security, accessibility, TypeScript, React reviews
+- [ ] Clean-checkout verification script run from a clean clone
+- [x] Lint, typecheck, unit, integration, E2E, production builds green
 
 ## 11. Measurement and docs
-- [ ] Benchmark command and measured results
-- [ ] README, architecture, quick start, demo script, SDK guide, privacy, schema, generation design, limitations, roadmap, contributing
+- [x] Benchmark command and measured results
+- [ ] README results section filled from measured benchmarks

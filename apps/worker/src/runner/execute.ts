@@ -115,7 +115,10 @@ export function executePlaywright(options: ExecuteOptions): Promise<ExecuteResul
       }
       hardKill = setTimeout(() => killTree(child.pid), KILL_GRACE_MS);
     }, options.timeoutMs);
+    let finished = false;
     const finish = (exitCode: number | null, spawnError = ''): void => {
+      if (finished) return;
+      finished = true;
       clearTimeout(timer);
       if (hardKill) clearTimeout(hardKill);
       resolve({ stdout, stderr: spawnError + stderr, exitCode, timedOut });
@@ -124,6 +127,20 @@ export function executePlaywright(options: ExecuteOptions): Promise<ExecuteResul
       // A spawn failure (for example ENOENT) never reaches 'close' with a code.
       finish(null, `${error.code ?? 'SPAWN_ERROR'}: ${error.message}\n`);
     });
-    child.once('close', (code) => finish(code));
+    // Resolve on 'exit' rather than 'close': a browser process that inherited the stdio pipes and
+    // lingers after Playwright exits would otherwise hold the run open until it dies. The report
+    // is read from disk, so a late stdout tail is not needed. Streams get one second to drain.
+    let exited = false;
+    child.once('exit', (code) => {
+      exited = true;
+      const grace = setTimeout(() => finish(code), 1000);
+      child.once('close', () => {
+        clearTimeout(grace);
+        finish(code);
+      });
+    });
+    child.once('close', (code) => {
+      if (!exited) finish(code);
+    });
   });
 }

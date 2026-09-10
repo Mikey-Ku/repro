@@ -39,6 +39,8 @@ export interface IngestEnv {
   logLevel: string;
   artifactsDir: string;
   appUrl: string;
+  /** Ingestion requests per minute per key. Benchmarks raise this. */
+  rateLimitPerMinute: number;
 }
 
 /** Read and validate the variables this service needs. Throws with a clear message on misconfiguration. */
@@ -62,5 +64,6 @@ export function readEnv(env: NodeJS.ProcessEnv = process.env, repoRoot: string =
     logLevel: env.LOG_LEVEL ?? 'info',
     artifactsDir: env.REPRO_ARTIFACTS_DIR ?? path.join(repoRoot, '.repro', 'artifacts'),
     appUrl: env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000',
+    rateLimitPerMinute: Number(env.INGEST_RATE_LIMIT_PER_MINUTE ?? 600),
   };
 }

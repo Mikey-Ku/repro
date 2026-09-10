@@ -3,7 +3,8 @@
  * test generator can turn into a selector. Never contains the element's value and never
  * contains rrweb node ids.
  */
-import { sanitizeUrl, truncate, LIMITS, type ElementDescriptor } from '@repro/contracts';
+import { sanitizeUrl, truncate, LIMITS } from '@repro/contracts/runtime';
+import type { ElementDescriptor } from '@repro/contracts';
 import {
   cleanText,
   isSensitiveElement,

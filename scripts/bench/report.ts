@@ -48,7 +48,7 @@ export function renderMarkdown(r: BenchResults): string {
     lines.push(`| Redaction across the canary corpus | ${workflow.redaction.canaries - workflow.redaction.leaked.length}/${workflow.redaction.canaries} canaries absent from every outbound batch${workflow.redaction.leaked.length ? ` (leaked: ${workflow.redaction.leaked.join(', ')})` : ''} |`);
   }
   if (ingest) {
-    lines.push(`| Ingestion throughput (${ingest.concurrency} concurrent clients, ${ingest.seconds} s, ${ingest.batchEvents} events and ${kb(ingest.batchBytes)} gzip per batch) | ${ingest.requestsPerSecond.toFixed(0)} batches/s, ${ingest.eventsPerSecond.toFixed(0)} events/s, ${ingest.errors} errors |`);
+    lines.push(`| Ingestion throughput (${ingest.concurrency} concurrent clients, ${ingest.seconds} s, ${ingest.batchEvents} events and ${kb(ingest.batchBytes)} gzip per batch) | ${ingest.requestsPerSecond.toFixed(0)} batches/s, ${ingest.eventsPerSecond.toFixed(0)} events/s, ${ingest.errors} errors${ingest.errors ? ' (raise INGEST_RATE_LIMIT_PER_MINUTE and rerun)' : ''} |`);
     lines.push(`| Ingestion latency | p50 ${ingest.p50Ms.toFixed(1)} ms, p95 ${ingest.p95Ms.toFixed(1)} ms, p99 ${ingest.p99Ms.toFixed(1)} ms |`);
   }
   if (dashboard) {

@@ -1,6 +1,5 @@
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { sql } from 'drizzle-orm';
 import { createDb } from './client.js';
 
 /**

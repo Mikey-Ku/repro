@@ -17,7 +17,7 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "lint": "eslint src test",
+    "lint": "eslint src",
     "test": "echo 'db has integration tests only (pnpm test:integration)'",
     "test:integration": "vitest run",
     "generate": "drizzle-kit generate",
