@@ -17,7 +17,17 @@ Privacy-first browser session replay and automated bug reproduction. Install a s
 7. The same test runs against fixed mode and passes.
 
 <!-- results:start -->
-Measured on the machine in `docs/BENCHMARKS.md` (numbers are filled in from `pnpm bench`).
+Measured with `pnpm bench` on an Apple M5 laptop (16 GB, Node 25). Full methodology and caveats in `docs/BENCHMARKS.md`.
+
+| What | Measured |
+| --- | --- |
+| SDK script (minified) | 204 kB raw, 66 kB gzip, 45 kB brotli |
+| Main-thread cost of recording the demo workflow | 51 ms with the SDK, 31 ms without, so about 20 ms added; no long tasks |
+| Recording payload for the demo session (2.8 s) | 2 batches, 6.6 kB on the wire, 35 kB decompressed, 66 events |
+| Redaction across the canary corpus | 12 of 12 secrets absent from every outbound batch |
+| Ingestion, 16 concurrent clients for 10 s | 625 batches/s (41,000 events/s), p50 24 ms, p95 33 ms, p99 46 ms, no errors |
+| Dashboard session page | p50 25 ms to DOM complete, p50 837 ms until the replay is rendered |
+| Generated tests across 3 recorded fixtures | 3 of 3 pass in fixed mode, 3 of 3 fail in broken mode |
 <!-- results:end -->
 
 ## Quick start

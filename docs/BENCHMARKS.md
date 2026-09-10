@@ -27,7 +27,7 @@ Caveats: this is one developer laptop with other processes running, a single Pos
 - machine: Apple M5, 10 cores, 16 GB
 - platform: Darwin 25.6.0 (arm64)
 - node: v25.8.2
-- date: 2026-09-10T02:51:35.807Z
+- date: 2026-09-10T04:00:16.901Z
 
 ### Results
 
@@ -35,16 +35,16 @@ Caveats: this is one developer laptop with other processes running, a single Pos
 | --- | --- |
 | SDK bundle (IIFE, minified) | 204.3 kB raw, 66.1 kB gzip, 44.7 kB brotli |
 | SDK bundle (ESM, unminified) | 439.8 kB raw |
-| Main-thread task time, demo workflow, median of 5 | 53 ms with SDK, 32 ms without, +21 ms added |
+| Main-thread task time, demo workflow, median of 5 | 51 ms with SDK, 31 ms without, +20 ms added |
 | Long tasks (>50 ms) during workflow | 0 with SDK, 0 without |
-| Recording payload, one demo session (2.8 s) | 2 batches, 6.6 kB on the wire, 35.0 kB decompressed, 67 events (47 rrweb) |
+| Recording payload, one demo session (2.8 s) | 2 batches, 6.6 kB on the wire, 34.8 kB decompressed, 66 events (46 rrweb) |
 | Redaction across the canary corpus | 12/12 canaries absent from every outbound batch |
-| Ingestion throughput (16 concurrent clients, 10 s, 67 events and 6.5 kB gzip per batch) | 290 batches/s, 19400 events/s, 0 errors |
-| Ingestion latency | p50 54.2 ms, p95 71.8 ms, p99 86.7 ms |
-| Dashboard session page load (10 loads) | p50 26 ms, p95 33 ms to DOM complete; p50 841 ms, p95 880 ms until replay is rendered |
-| Session list page load | p50 28 ms, p95 58 ms |
-| Timeline API (events decode + evidence) | p50 9.4 ms, p95 11.7 ms |
-| Generated-test success across committed fixtures | 3/3 generated, 2/3 pass in fixed mode, 2/3 fail in broken mode |
+| Ingestion throughput (16 concurrent clients, 10 s, 66 events and 6.5 kB gzip per batch) | 625 batches/s, 41221 events/s, 0 errors |
+| Ingestion latency | p50 24.1 ms, p95 32.8 ms, p99 46.1 ms |
+| Dashboard session page load (10 loads) | p50 25 ms, p95 30 ms to DOM complete; p50 837 ms, p95 841 ms until replay is rendered |
+| Session list page load | p50 38 ms, p95 46 ms |
+| Timeline API (events decode + evidence) | p50 7.0 ms, p95 8.5 ms |
+| Generated-test success across committed fixtures | 3/3 generated, 3/3 pass in fixed mode, 3/3 fail in broken mode |
 
 ### Generator fixtures
 
@@ -52,6 +52,6 @@ Caveats: this is one developer laptop with other processes running, a single Pos
 | --- | --- | --- |
 | checkout-enter-key-login | passed | failed |
 | checkout-express-promo | passed | failed |
-| checkout-standard | timeout | timeout |
+| checkout-standard | passed | failed |
 
 <!-- bench:end -->

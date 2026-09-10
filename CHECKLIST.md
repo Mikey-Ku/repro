@@ -68,4 +68,4 @@ Running checklist for the first release. Updated as work lands.
 
 ## 11. Measurement and docs
 - [x] Benchmark command and measured results
-- [ ] README results section filled from measured benchmarks
+- [x] README results section filled from measured benchmarks
