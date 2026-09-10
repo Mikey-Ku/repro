@@ -1,0 +1,93 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Lint, typecheck, unit, integration, E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: repro
+          POSTGRES_PASSWORD: repro
+          POSTGRES_DB: repro
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U repro -d repro"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      CI: "1"
+      DATABASE_URL: postgres://repro:repro@localhost:5432/repro
+      REPRO_INTERNAL_TOKEN: ci-internal-token
+      DEMO_PROJECT_KEY: rp_ci_demo_key_0123456789abcdefghijkl
+      INGEST_URL: http://localhost:4000
+      DEMO_URL: http://localhost:4100
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+      LOG_LEVEL: warn
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Playwright Chromium
+        run: pnpm --filter @repro/e2e exec playwright install --with-deps chromium
+
+      - name: Migrate and seed
+        run: |
+          cp .env.example .env
+          pnpm db:migrate
+          pnpm db:seed
+
+      - name: Build
+        run: pnpm build
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Unit tests
+        run: pnpm test
+
+      - name: Integration tests
+        run: pnpm test:integration
+
+      - name: Secret scan
+        run: pnpm secrets:scan
+
+      - name: End-to-end product journey
+        run: pnpm test:e2e
+
+      - name: Upload Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            tests/e2e/test-results
+            tests/e2e/playwright-report
+          retention-days: 7

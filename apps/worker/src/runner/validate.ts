@@ -7,6 +7,8 @@
  * worker into a shell. These checks are pure and unit-tested; see docs/REPRODUCTION_RUNNER.md.
  */
 
+import { checkAst } from './ast.js';
+
 export const MAX_CODE_BYTES = 64 * 1024;
 
 export type ValidationResult = { ok: true } | { ok: false; reason: string };
@@ -185,6 +187,11 @@ export function validateTestCode(code: string, demoUrl: string): ValidationResul
       return { ok: false, reason: `page.goto() must receive a relative path literal (found "${call.trim()}").` };
     }
   }
+
+  // Everything above is a denylist. The syntax-tree allowlist is the stricter check and runs last
+  // so that its messages (about constructs) do not hide the more specific ones above.
+  const ast = checkAst(code);
+  if (!ast.ok) return ast;
 
   return { ok: true };
 }

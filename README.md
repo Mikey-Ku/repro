@@ -1,5 +1,7 @@
 # Repro
 
+[![CI](https://github.com/Mikey-Ku/repro/actions/workflows/ci.yml/badge.svg)](https://github.com/Mikey-Ku/repro/actions/workflows/ci.yml)
+
 Privacy-first browser session replay and automated bug reproduction. Install a small SDK, capture a failed user session with secrets masked in the browser, replay it with its error and network timeline, and generate a Playwright test that fails on the bug and passes on the fix.
 
 **Status:** first release. The complete loop below runs end to end on a laptop and is verified by an automated test. It is not production software; see `docs/LIMITATIONS.md`.
@@ -29,6 +31,10 @@ Measured with `pnpm bench` on an Apple M5 laptop (16 GB, Node 25). Full methodol
 | Dashboard session page | p50 25 ms to DOM complete, p50 837 ms until the replay is rendered |
 | Generated tests across 3 recorded fixtures | 3 of 3 pass in fixed mode, 3 of 3 fail in broken mode |
 <!-- results:end -->
+
+![Session replay with the unified timeline, jumped to the first error](docs/images/session-timeline.png)
+
+![The generated Playwright test next to the replay](docs/images/session-test.png)
 
 ## Quick start
 

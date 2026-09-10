@@ -111,15 +111,11 @@ Run the worker as an unprivileged user on a machine that holds nothing you would
 generated test to read.
 
 
-## Review note: what the validator is and is not
+## Two validators: a denylist and a syntax-tree allowlist
 
-The validator is a denylist over source text plus a restricted target. It blocks the direct
-routes out of the browser context (`require`, dynamic `import`, `eval`, `Function`, `fetch`,
-`XMLHttpRequest`, `WebSocket`, `sendBeacon`, `page.request`, `route()`, `addInitScript`,
-`exposeFunction`, `exposeBinding`, `setExtraHTTPHeaders`, `window[...]`, `globalThis`,
-`.constructor`, `import.meta`, absolute URLs outside the demo origin) and only lets a generated
-test read `process.env.REPRO_FIXTURE_*`. A determined author could still reach the network from
-inside `page.evaluate` through an obfuscated path the denylist does not name. That is why the
-runner only runs against the bundled demo application, why generated tests come from the
-deterministic generator rather than from a model, and why the roadmap replaces this check with an
-AST allowlist before any other target is supported.
+Validation runs in two passes, both in `apps/worker/src/runner/`.
+
+1. `validate.ts` is a denylist over the source text: size cap, exactly one import (`@playwright/test`), no `require`, dynamic `import`, `eval`, `Function`, `fetch`, `XMLHttpRequest`, `WebSocket`, `sendBeacon`, `page.request`, `route()`, page instrumentation APIs, `window[...]`, `globalThis`, `.constructor`, `import.meta`, no `process` other than `process.env.REPRO_FIXTURE_*`, no absolute URLs outside the demo origin, and `page.goto` only with a relative path literal. Its messages are specific, which is why it runs first.
+2. `ast.ts` parses the file with the TypeScript compiler and walks the tree with an allowlist: only the node kinds, global identifiers (`test`, `expect`, `String`, `URL`, `RegExp`, `process`, `HTMLFormElement`), member names (`goto`, `getByRole`, `fill`, `click`, `waitForResponse`, `toBeVisible`, and the rest of what the generator emits) and operators (`&&`, `===`, `??`) that `@repro/test-generator` produces are accepted. Anything else, including loops, `throw`, string concatenation, computed member access, unknown identifiers and unknown members, is rejected by shape. `apps/worker/test/ast.test.ts` proves that every committed generator fixture and every recorded benchmark fixture passes, and that thirteen obfuscated escapes (`window['fet' + 'ch']`, `({}).constructor.constructor`, `page.request.get`, `page.route`, `process.exit`, dynamic members) fail.
+
+The allowlist means a generated test can only do what the generator can express. That is still code executed by Playwright in a browser on the operator's machine, which is why the runner stays limited to the bundled demo application in this release and why the browser is the only thing the test can talk to.
