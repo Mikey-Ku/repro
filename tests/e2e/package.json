@@ -5,7 +5,7 @@
   "description": "Complete product journey: demo session to dashboard to generated test to reproduction.",
   "type": "module",
   "scripts": {
-    "test": "playwright test",
+    "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint ."
   },
