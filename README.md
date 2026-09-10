@@ -36,6 +36,8 @@ Measured with `pnpm bench` on an Apple M5 laptop (16 GB, Node 25). Full methodol
 
 ![The generated Playwright test next to the replay](docs/images/session-test.png)
 
+![Incidents grouped by fingerprint across sessions](docs/images/incident-groups.png)
+
 ## Quick start
 
 ```bash
