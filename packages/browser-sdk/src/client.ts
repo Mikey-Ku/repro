@@ -1,25 +1,40 @@
 /**
  * Session lifecycle and batching. One client owns one session: it stamps seq numbers, buffers
  * events, packs them into IngestBatch uploads, and starts or stops the capture modules.
+ *
+ * Two modes share this file. In 'always' mode the buffer is drained on a timer. In 'on-incident'
+ * mode the buffer is a rolling window trimmed at rrweb checkout boundaries, nothing leaves the
+ * page until an incident, and the first upload is the whole window; the client then behaves as
+ * 'always' for the rest of the session.
  */
 import { LIMITS, SCHEMA_VERSION, sanitizeUrl, truncate } from '@repro/contracts/runtime';
 import type { IngestBatch, RecordedEvent, SessionMeta } from '@repro/contracts';
+import { EventType } from '@rrweb/types';
 import { startConsole } from './capture/console.js';
 import { errorFields } from './capture/errors.js';
 import { startErrors } from './capture/errors.js';
 import { startInteractions } from './capture/interactions.js';
 import { startNavigation } from './capture/navigation.js';
 import { startNetwork } from './capture/network.js';
-import { startRrweb } from './capture/rrweb.js';
+import { startRrweb, takeCheckout } from './capture/rrweb.js';
 import { buildMeta } from './meta.js';
 import { isEmailShaped, sanitizeRecord, type RedactionOptions } from './redact.js';
 import { clearSession, loadSession, saveSession, type PersistedSession } from './storage.js';
 import { createTransport, type Transport, type TransportOptions } from './transport.js';
-import type { CaptureContext, DebugLog, EventBody, ReproClient, ReproOptions, Stop } from './types.js';
+import type { CaptureContext, DebugLog, EventBody, ReproClient, ReproMode, ReproOptions, Stop } from './types.js';
 import { version as sdkVersion } from './version.js';
 
 export const DEFAULT_FLUSH_INTERVAL_MS = 2_000;
 export const DEFAULT_MAX_BATCH_EVENTS = 200;
+export const DEFAULT_BUFFER_SECONDS = 30;
+export const DEFAULT_BUFFER_EVENTS = 2_000;
+/** Below these the checkout cadence would cost more than the recording it protects. */
+const MIN_BUFFER_SECONDS = 1;
+const MIN_BUFFER_EVENTS = 10;
+/** A forced checkout that produced nothing is not retried for this long. */
+const FORCED_CHECKOUT_COOLDOWN_MS = 1_000;
+
+type Primitive = string | number | boolean;
 
 /** Test hooks. Production code never passes these. */
 export interface ClientDeps {
@@ -27,6 +42,8 @@ export interface ClientDeps {
   random?: () => number;
   /** Skip rrweb (tests that only care about the other modules). */
   rrweb?: boolean;
+  /** Extra capture modules. Tests use one to feed synthetic events through the real emit path. */
+  modules?: Array<(ctx: CaptureContext) => Stop>;
 }
 
 export function newSessionId(): string {
@@ -73,12 +90,59 @@ export function splitEvents(
   return out;
 }
 
+/**
+ * An rrweb Meta event opens a checkout (Meta, then FullSnapshot). It is the only place a rolling
+ * buffer may begin, because a replay needs both before any incremental event makes sense.
+ */
+export function isCheckoutStart(event: RecordedEvent): boolean {
+  return event.type === 'rrweb' && event.data.type === EventType.Meta;
+}
+
+/**
+ * Events that turn a buffered session into an incident: every error event (uncaught exception,
+ * unhandled rejection, captureException) and a request that failed server-side or never got a
+ * response. 4xx answers are the page's business, and a request the page cancelled is not a failure.
+ */
+export function isIncident(event: RecordedEvent): boolean {
+  if (event.type === 'error') return true;
+  if (event.type !== 'network' || event.data.ok) return false;
+  const { status, error } = event.data;
+  if (status !== null && status < 500) return false;
+  return !/abort/i.test(error ?? '');
+}
+
+/**
+ * The first index a rolling buffer should keep. Cuts land on checkout starts only: the most
+ * recent checkout that is at least `windowMs` old (so the window stays between one and one and a
+ * half times `windowMs` with checkouts every `windowMs / 2`), and, when the buffer still holds more
+ * than `maxEvents`, the earliest checkout that brings it under the limit. When no checkout does,
+ * the latest one is the best available cut; the caller may then ask rrweb for a fresh checkout.
+ */
+export function trimIndex(buffer: RecordedEvent[], checkouts: number[], now: number, windowMs: number, maxEvents: number): number {
+  let cut = 0;
+  for (let i = checkouts.length - 1; i >= 0; i -= 1) {
+    const at = checkouts[i]!;
+    if (buffer[at]!.ts <= now - windowMs) {
+      cut = at;
+      break;
+    }
+  }
+  if (buffer.length - cut > maxEvents) {
+    const fits = checkouts.find((at) => buffer.length - at <= maxEvents);
+    cut = Math.max(cut, fits ?? checkouts[checkouts.length - 1] ?? 0);
+  }
+  return cut;
+}
+
 export function createClient(options: ReproOptions, deps: ClientDeps = {}): ReproClient {
   const debug: DebugLog = options.debug ? (...args) => console.debug('[repro]', ...args) : () => {};
   const random = deps.random ?? Math.random;
   const flushIntervalMs = Math.max(250, options.flushIntervalMs ?? DEFAULT_FLUSH_INTERVAL_MS);
   const maxBatchEvents = Math.max(1, Math.min(LIMITS.maxEventsPerBatch, options.maxBatchEvents ?? DEFAULT_MAX_BATCH_EVENTS));
   const sampleRate = Math.min(1, Math.max(0, options.sampleRate ?? 1));
+  const configuredMode: ReproMode = options.mode === 'on-incident' ? 'on-incident' : 'always';
+  const bufferMs = Math.max(MIN_BUFFER_SECONDS, options.bufferSeconds ?? DEFAULT_BUFFER_SECONDS) * 1000;
+  const bufferEvents = Math.max(MIN_BUFFER_EVENTS, Math.floor(options.bufferEvents ?? DEFAULT_BUFFER_EVENTS));
   const redaction: RedactionOptions = {
     strict: options.strict === true,
     maskSelector: options.maskSelector,
@@ -97,7 +161,13 @@ export function createClient(options: ReproOptions, deps: ClientDeps = {}): Repr
   let recording = false;
   let ended = false;
   let metaPending = false;
+  let mode: ReproMode = configuredMode;
+  let triggered = false;
   let buffer: RecordedEvent[] = [];
+  /** Indices into `buffer` of rrweb Meta events, ascending. Only meaningful while buffering. */
+  let checkouts: number[] = [];
+  let forcingCheckout = false;
+  let lastForcedCheckoutAt = 0;
   let stops: Stop[] = [];
   let timer: ReturnType<typeof setInterval> | null = null;
 
@@ -114,9 +184,34 @@ export function createClient(options: ReproOptions, deps: ClientDeps = {}): Repr
       batchSeq: 0,
       sampled: random() < sampleRate,
       url: '',
+      triggered: false,
     };
     saveSession(created);
     return created;
+  }
+
+  function dropBefore(index: number): void {
+    if (index <= 0) return;
+    buffer.splice(0, index);
+    checkouts = checkouts.filter((at) => at >= index).map((at) => at - index);
+  }
+
+  /**
+   * Keep the rolling window within bufferSeconds and bufferEvents, cutting at checkouts only.
+   * When one checkout segment alone is over the count, ask rrweb for a new checkout so the next
+   * push has somewhere to cut; the nested emits land back here and trim at that checkout.
+   */
+  function trimBuffer(allowForcedCheckout: boolean): void {
+    dropBefore(trimIndex(buffer, checkouts, Date.now(), bufferMs, bufferEvents));
+    if (!allowForcedCheckout || buffer.length <= bufferEvents) return;
+    if (forcingCheckout || deps.rrweb === false || Date.now() - lastForcedCheckoutAt < FORCED_CHECKOUT_COOLDOWN_MS) return;
+    forcingCheckout = true;
+    lastForcedCheckoutAt = Date.now();
+    try {
+      takeCheckout(ctx);
+    } finally {
+      forcingCheckout = false;
+    }
   }
 
   function push(event: EventBody): void {
@@ -124,10 +219,22 @@ export function createClient(options: ReproOptions, deps: ClientDeps = {}): Repr
     const stamped = { ...event, seq: session.seq, ts: Date.now() } as RecordedEvent;
     session.seq += 1;
     buffer.push(stamped);
+    if (mode === 'on-incident') {
+      if (isCheckoutStart(stamped)) checkouts.push(buffer.length - 1);
+      if (isIncident(stamped)) trigger(describeIncident(stamped));
+      else trimBuffer(true);
+      return;
+    }
     if (buffer.length >= maxBatchEvents) void flush(false);
   }
 
   const ctx: CaptureContext = { emit: push, redaction, endpoint: options.endpoint, debug };
+
+  function describeIncident(event: RecordedEvent): string {
+    if (event.type === 'error') return `error:${event.data.kind}`;
+    if (event.type === 'network') return `network:${event.data.status ?? event.data.error ?? 'failed'}`;
+    return event.type;
+  }
 
   function buildBatches(events: RecordedEvent[], final: boolean): IngestBatch[] {
     if (!session) return [];
@@ -163,7 +270,8 @@ export function createClient(options: ReproOptions, deps: ClientDeps = {}): Repr
   }
 
   function flush(final: boolean): Promise<void> {
-    if (!session) return transport.flush();
+    // While buffering nothing leaves the page, so a healthy session never gets a server row.
+    if (!session || mode === 'on-incident') return transport.flush();
     const batches = buildBatches(buffer, final);
     buffer = [];
     for (const batch of batches) transport.enqueue(batch);
@@ -173,6 +281,10 @@ export function createClient(options: ReproOptions, deps: ClientDeps = {}): Repr
   /** Unload path: everything pending goes through sendBeacon, and the seq state is persisted. */
   function flushViaBeacon(): void {
     if (!session) return;
+    if (mode === 'on-incident') {
+      saveSession(session);
+      return;
+    }
     const batches = buildBatches(buffer, false);
     buffer = [];
     if (batches.length === 0) {
@@ -181,6 +293,27 @@ export function createClient(options: ReproOptions, deps: ClientDeps = {}): Repr
     }
     for (const batch of batches.slice(0, -1)) transport.enqueue(batch);
     transport.beacon(batches[batches.length - 1]);
+  }
+
+  /**
+   * Leave buffering for good: the retained window becomes the session's first batches (batchSeq
+   * from 0, meta on the first), then the ordinary upload cadence takes over until stop().
+   */
+  function trigger(reason: string): void {
+    if (mode !== 'on-incident' || !session || !recording) return;
+    trimBuffer(false);
+    mode = 'always';
+    triggered = true;
+    session.triggered = true;
+    checkouts = [];
+    startTimer();
+    debug(`incident (${reason}): uploading ${buffer.length} buffered events`);
+    void flush(false);
+  }
+
+  function startTimer(): void {
+    if (timer) return;
+    timer = setInterval(() => void flush(false), flushIntervalMs);
   }
 
   const onVisibility = () => {
@@ -197,17 +330,25 @@ export function createClient(options: ReproOptions, deps: ClientDeps = {}): Repr
     }
     ended = false;
     recording = true;
+    // A session that already had its incident keeps uploading across page loads.
+    triggered = session.triggered;
+    mode = triggered ? 'always' : configuredMode;
+    buffer = [];
+    checkouts = [];
     metaPending = session.batchSeq === 0 || session.url !== currentPageUrl();
+    // Checkouts twice per window keep the retained prefix between 1x and 1.5x bufferSeconds.
+    ctx.checkoutEveryMs = mode === 'on-incident' ? bufferMs / 2 : undefined;
 
     stops = [startNavigation(ctx), startErrors(ctx), startInteractions(ctx)];
     if (options.captureConsole !== false) stops.push(startConsole(ctx));
     if (options.captureNetwork !== false) stops.push(startNetwork(ctx));
     if (deps.rrweb !== false) stops.push(startRrweb(ctx));
+    for (const module of deps.modules ?? []) stops.push(module(ctx));
 
     document.addEventListener('visibilitychange', onVisibility);
     window.addEventListener('pagehide', onPageHide);
-    timer = setInterval(() => void flush(false), flushIntervalMs);
-    debug(`recording session ${session.id}`);
+    if (mode === 'always') startTimer();
+    debug(`recording session ${session.id} (${mode})`);
   }
 
   function stop(): void {
@@ -224,10 +365,28 @@ export function createClient(options: ReproOptions, deps: ClientDeps = {}): Repr
     timer = null;
     document.removeEventListener('visibilitychange', onVisibility);
     window.removeEventListener('pagehide', onPageHide);
-    void flush(true);
+    if (mode === 'on-incident') {
+      // No incident, so nothing was ever uploaded and nothing will be.
+      debug(`discarding ${buffer.length} buffered events, no incident`);
+      buffer = [];
+      checkouts = [];
+    } else {
+      void flush(true);
+    }
     clearSession();
     ended = true;
     session = null;
+    mode = configuredMode;
+    triggered = false;
+  }
+
+  function annotate(name: string, data?: Record<string, Primitive>): void {
+    const label = typeof name === 'string' ? name.trim() : '';
+    if (!label) return;
+    const payload: Extract<EventBody, { type: 'annotation' }>['data'] = { name: truncate(label, 100) };
+    const cleaned = sanitizeRecord(data, { maxKeys: LIMITS.maxAnnotationKeys, maxValueLength: 500, dropSensitiveKeys: true });
+    if (cleaned) payload.data = cleaned;
+    push({ type: 'annotation', data: payload });
   }
 
   return {
@@ -257,16 +416,16 @@ export function createClient(options: ReproOptions, deps: ClientDeps = {}): Repr
       if (cleaned) data.traits = cleaned;
       push({ type: 'identify', data });
     },
-    annotate(name, data) {
-      const label = typeof name === 'string' ? name.trim() : '';
-      if (!label) return;
-      const payload: Extract<EventBody, { type: 'annotation' }>['data'] = { name: truncate(label, 100) };
-      const cleaned = sanitizeRecord(data, { maxKeys: LIMITS.maxAnnotationKeys, maxValueLength: 500, dropSensitiveKeys: true });
-      if (cleaned) payload.data = cleaned;
-      push({ type: 'annotation', data: payload });
+    annotate,
+    flagIncident(reason, data) {
+      const label = typeof reason === 'string' && reason.trim() ? reason.trim() : 'unspecified';
+      annotate(`incident:${label}`, data);
+      trigger(`flagIncident:${label}`);
     },
     flush: () => flush(false),
     getSessionId: () => session?.id ?? null,
     isRecording: () => recording,
+    getMode: () => mode,
+    hasTriggered: () => triggered,
   };
 }

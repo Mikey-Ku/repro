@@ -16,6 +16,8 @@ export interface PersistedSession {
   sampled: boolean;
   /** Sanitised page url of the last full load, so meta is re-sent when it changes. */
   url: string;
+  /** True once on-incident mode has started uploading, so a page load keeps uploading. */
+  triggered: boolean;
 }
 
 function storage(): Storage | null {
@@ -43,6 +45,7 @@ export function loadSession(): PersistedSession | null {
       batchSeq: parsed.batchSeq,
       sampled: parsed.sampled !== false,
       url: typeof parsed.url === 'string' ? parsed.url : '',
+      triggered: parsed.triggered === true,
     };
   } catch {
     return null;

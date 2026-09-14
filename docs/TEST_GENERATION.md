@@ -83,6 +83,16 @@ This is the `no-errors` expectation and it is always applied. The caller can add
 
 Expectations are emitted in the order given, after the last step. Duplicates are dropped and an expectation with an unknown kind or no usable field is ignored with a warning rather than failing generation. When the recording captured an uncaught error, it is quoted in a comment just above the guard.
 
+### Where the success state comes from
+
+A recording of a failure shows what went wrong; it cannot show what "fixed" looks like, because that state never happened. The generator therefore never invents expectations. They come from three sources:
+
+1. **The engineer.** The Test tab's expectation builder: a test id, a role and name, a text, or a URL prefix, typed by someone who knows what the fixed page should show. Up to five per test.
+2. **A reference session.** A completed session on the same route with no uncaught errors and no failed requests is a recording of the success state. The dashboard's "Suggest from a passing session" block (backed by `GET .../reference-candidates` and `GET .../expectation-suggestions?reference=`, see `docs/API.md`) extracts DOM markers from both sessions with `extractDomMarkers` in `@repro/contracts` and proposes whatever appeared only in the passing one: a `visible` expectation per `data-testid`, per `role="status"` or `aria-live` text and per h1..h3 text, and a `url` expectation when the passing session ended on a different path. Each suggestion carries a reason; the engineer adds the ones that describe the fix and leaves the rest.
+3. **The default guard.** `no-errors` is always applied, so even a test with no other expectation fails on the broken build if the bug throws. It is the whole heuristic list: without a reference the suggestions endpoint returns nothing else.
+
+Limits of the comparison. Only four things are compared: test ids, live-region texts, h1..h3 texts and the final path. Anything else that differs between the sessions (button labels, table rows, class names, styles) is not looked at, so a fix that only changes those produces no suggestion and the expectation has to be typed. The comparison is also only as stable as the markers: test ids that embed a record id (`row-8f3a...`) or texts that include a timestamp, an order number or a user's name differ between every session and show up as noise, and a suggestion built from one will fail on the next run. Prefer stable ids and static status copy in the application, and read the reason before adding a suggestion. Markers come from rrweb snapshots and mutations, so a page that renders inside a cross-origin iframe or a shadow root contributes nothing (see `docs/LIMITATIONS.md`).
+
 ## Secrets and fixtures
 
 The browser SDK masks sensitive controls (passwords, payment fields, anything whose name, id, label, placeholder or `autocomplete` hints at a secret; see `docs/PRIVACY.md`) before serialising, so the event stream carries `value: null, masked: true` and nothing else. The generator therefore cannot leak a secret, but it still has to produce a test that types something.

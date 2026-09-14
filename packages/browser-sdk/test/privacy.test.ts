@@ -140,7 +140,11 @@ function expectNoCanary(harness: Harness): void {
   expect(text).not.toMatch(/"(headers|authorization|x-api-key|cookie|set-cookie)"/i);
 }
 
-describe('payload privacy with the canary corpus', () => {
+/**
+ * Both modes run the same scenario. In on-incident mode the uncaught exception halfway through
+ * is the trigger, so everything before it arrives from the buffer and everything after it live.
+ */
+describe.each(['always', 'on-incident'] as const)('payload privacy with the canary corpus (%s mode)', (mode) => {
   beforeEach(() => resetDom());
   afterEach(() => {
     vi.restoreAllMocks();
@@ -149,7 +153,7 @@ describe('payload privacy with the canary corpus', () => {
 
   describe.runIf(hasCompressionStream())('gzip bodies', () => {
     it('sends gzip and no canary survives in any batch', async () => {
-      const harness = makeClient();
+      const harness = makeClient({ mode });
       await runScenario(harness);
       expectRecordingHappened(harness);
       expect(harness.fetch.uploads.every((u) => u.headers['content-encoding'] === 'gzip' && u.bodyType === 'bytes')).toBe(true);
@@ -161,7 +165,7 @@ describe('payload privacy with the canary corpus', () => {
     it('falls back to JSON and no canary survives in any batch', async () => {
       vi.stubGlobal('CompressionStream', undefined);
       expect(hasCompressionStream()).toBe(false);
-      const harness = makeClient();
+      const harness = makeClient({ mode });
       await runScenario(harness);
       expectRecordingHappened(harness);
       expect(harness.fetch.uploads.every((u) => u.headers['content-encoding'] === undefined && u.bodyType === 'string')).toBe(true);
@@ -171,7 +175,7 @@ describe('payload privacy with the canary corpus', () => {
   });
 
   it('keeps the shape of what it redacts, so replays stay useful', async () => {
-    const harness = makeClient();
+    const harness = makeClient({ mode });
     await runScenario(harness);
     const events = harness.fetch.events();
     const inputs = ofType(events, 'input');

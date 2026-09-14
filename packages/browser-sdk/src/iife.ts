@@ -5,4 +5,5 @@
 import { Repro, version } from './index.js';
 
 export { Repro, version };
-export const { init, start, stop, captureException, identify, annotate, flush, getSessionId, isRecording } = Repro;
+export const { init, start, stop, captureException, identify, annotate, flagIncident, flush, getSessionId, isRecording, getMode, hasTriggered } =
+  Repro;

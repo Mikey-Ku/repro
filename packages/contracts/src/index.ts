@@ -5,3 +5,4 @@ export * from './normalize.js';
 export * from './evidence.js';
 export * from './api.js';
 export * from './rrweb.js';
+export * from './markers.js';

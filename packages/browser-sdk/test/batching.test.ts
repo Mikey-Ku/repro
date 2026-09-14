@@ -218,7 +218,19 @@ describe('public API', () => {
     expect(version).toBe(pkg.version);
     expect(Repro.version).toBe(version);
     const client = Repro.init({ projectKey: 'rp_x', endpoint: 'http://localhost:4000', autoStart: false });
-    for (const method of ['start', 'stop', 'captureException', 'identify', 'annotate', 'flush', 'getSessionId', 'isRecording'] as const) {
+    for (const method of [
+      'start',
+      'stop',
+      'captureException',
+      'identify',
+      'annotate',
+      'flagIncident',
+      'flush',
+      'getSessionId',
+      'isRecording',
+      'getMode',
+      'hasTriggered',
+    ] as const) {
       expect(typeof client[method]).toBe('function');
       expect(typeof Repro[method]).toBe('function');
     }
@@ -226,6 +238,8 @@ describe('public API', () => {
     client.start();
     expect(Repro.isRecording()).toBe(true);
     expect(Repro.getSessionId()).toBe(client.getSessionId());
+    expect(Repro.getMode()).toBe('always');
+    expect(Repro.hasTriggered()).toBe(false);
   });
 
   it('is a safe no-op outside a browser', async () => {

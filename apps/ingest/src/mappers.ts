@@ -8,6 +8,7 @@ import type {
   IngestionKey,
   Investigation,
   Project,
+  ReferenceCandidate,
   ReproductionRun,
   SessionSummary,
 } from '@repro/contracts';
@@ -65,6 +66,12 @@ export function toSessionDto(row: SessionRow): SessionSummary {
     viewportWidth: row.viewportWidth,
     viewportHeight: row.viewportHeight,
   };
+}
+
+/** The subset of a session a reference picker needs to label an option. */
+export function toReferenceCandidateDto(row: SessionRow): ReferenceCandidate {
+  const { id, startedAt, release, browserName, durationMs, errorCount } = toSessionDto(row);
+  return { id, startedAt, release, browserName, durationMs, errorCount };
 }
 
 export function toIncidentDto(row: IncidentRow): Incident {

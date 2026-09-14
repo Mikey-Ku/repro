@@ -1,34 +1,25 @@
 'use client';
 
-import { useActionState, useRef, useState } from 'react';
+import { useActionState, useState } from 'react';
 import type { Expectation, Incident } from '@repro/contracts';
 import { IconClose } from '@/components/icons';
 import { Button } from '@/components/ui';
 import { generateTestAction, type ActionResult } from '@/lib/actions';
+import { MAX_EXPECTATIONS, describeExpectation } from '@/lib/expectations';
 
 /**
  * Builds the list of success expectations for a generated test and submits it
- * to the generate server action. Rows are kept in local state and serialised
- * into one hidden JSON field; the action validates them against the contract.
+ * to the generate server action. The rows live in the parent (TestComposer) so
+ * the suggestions block can add to them too; they are serialised into one hidden
+ * JSON field and the action validates them against the contract.
  * `no-errors` is always added by the generator, so it is not offered here.
  */
 
-type Row = { id: number; value: Expectation };
+export type ExpectationRow = { id: number; value: Expectation };
 /** Only these two kinds are user-editable; `no-errors` is implicit. */
 type Draft = Extract<Expectation, { kind: 'visible' | 'url' }>;
 
 const control = 'h-7 min-w-0 rounded-md border border-border bg-raised px-2 text-xs text-text';
-
-function label(expectation: Expectation): string {
-  if (expectation.kind === 'url') return `URL starts with ${expectation.pathPrefix || '...'}`;
-  if (expectation.kind === 'visible') {
-    if (expectation.testId) return `Visible: test id "${expectation.testId}"`;
-    if (expectation.role) return `Visible: ${expectation.role}${expectation.name ? ` "${expectation.name}"` : ''}`;
-    if (expectation.text) return `Visible: text "${expectation.text}"`;
-    return 'Visible: (empty)';
-  }
-  return 'No errors';
-}
 
 function isComplete(expectation: Expectation): boolean {
   if (expectation.kind === 'url') return expectation.pathPrefix.trim().length > 0;
@@ -40,22 +31,26 @@ export function ExpectationBuilder({
   slug,
   sessionId,
   incidents,
+  rows,
+  onAdd,
+  onRemove,
   submitLabel = 'Generate Playwright test',
 }: {
   slug: string;
   sessionId: string;
   incidents: Incident[];
+  rows: ExpectationRow[];
+  onAdd: (expectation: Expectation) => void;
+  onRemove: (id: number) => void;
   submitLabel?: string;
 }) {
-  const [rows, setRows] = useState<Row[]>([]);
-  const nextId = useRef(1);
   const [draft, setDraft] = useState<Draft>({ kind: 'visible', testId: '' });
   const [visibleBy, setVisibleBy] = useState<'testId' | 'role' | 'text'>('testId');
   const [result, formAction, pending] = useActionState<ActionResult | null, FormData>(generateTestAction.bind(null, slug, sessionId), null);
 
   const add = () => {
-    if (!isComplete(draft) || rows.length >= 5) return;
-    setRows((previous) => [...previous, { id: nextId.current++, value: draft }]);
+    if (!isComplete(draft) || rows.length >= MAX_EXPECTATIONS) return;
+    onAdd(draft);
     setDraft(draft.kind === 'url' ? { kind: 'url', pathPrefix: '' } : { kind: 'visible', testId: '' });
   };
 
@@ -77,11 +72,11 @@ export function ExpectationBuilder({
           <ul className="space-y-1">
             {rows.map((row) => (
               <li key={row.id} className="flex items-center justify-between gap-2 rounded border border-border bg-raised px-2 py-1">
-                <span className="truncate">{label(row.value)}</span>
+                <span className="truncate">{describeExpectation(row.value)}</span>
                 <button
                   type="button"
-                  onClick={() => setRows((previous) => previous.filter((item) => item.id !== row.id))}
-                  aria-label={`Remove expectation: ${label(row.value)}`}
+                  onClick={() => onRemove(row.id)}
+                  aria-label={`Remove expectation: ${describeExpectation(row.value)}`}
                   className="inline-flex h-6 w-6 items-center justify-center rounded text-muted hover:text-danger"
                 >
                   <IconClose size={12} />
@@ -91,7 +86,7 @@ export function ExpectationBuilder({
           </ul>
         ) : null}
 
-        {rows.length < 5 ? (
+        {rows.length < MAX_EXPECTATIONS ? (
           <div className="flex flex-wrap items-end gap-2">
             <label className="flex flex-col gap-1">
               <span className="text-2xs text-muted">Kind</span>
@@ -169,7 +164,7 @@ export function ExpectationBuilder({
       <input
         type="hidden"
         name="expectations"
-        value={JSON.stringify([...rows.map((row) => row.value), ...(isComplete(draft) && rows.length < 5 ? [draft] : [])])}
+        value={JSON.stringify([...rows.map((row) => row.value), ...(isComplete(draft) && rows.length < MAX_EXPECTATIONS ? [draft] : [])])}
       />
 
       <div className="flex flex-wrap items-end gap-2">

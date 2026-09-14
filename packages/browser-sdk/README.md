@@ -13,14 +13,14 @@ Two builds ship in `dist/`:
 - `dist/index.js`: ESM with type declarations, for bundlers.
 - `dist/repro.iife.js`: a minified script-tag build that exposes `window.Repro`.
 
-Both inline rrweb and the shared contracts, so nothing else needs to be installed. Run `pnpm --filter @repro/browser-sdk size` after a build to print raw, gzip and brotli sizes. Measured for 0.1.0:
+Both inline rrweb and the shared contracts, so nothing else needs to be installed. Run `pnpm --filter @repro/browser-sdk size` after a build to print raw, gzip and brotli sizes. Measured for 0.1.0 with record-on-incident mode included:
 
 | File | Raw | gzip | brotli |
 | --- | --- | --- | --- |
-| `dist/repro.iife.js` | 636.0 kB | 152.5 kB | 116.0 kB |
-| `dist/index.js` | 1164.7 kB | 202.4 kB | 145.9 kB |
+| `dist/repro.iife.js` | 206.7 kB | 67.0 kB | 45.4 kB |
+| `dist/index.js` | 444.7 kB | 95.3 kB | 61.1 kB |
 
-About 180 kB of the script-tag build is rrweb's recorder. Most of the rest is Zod, which `@repro/contracts` pulls in to define the shared schemas; the SDK itself never validates at runtime, so a Zod-free entry point in the contracts package would roughly halve the bundle. See the roadmap.
+Most of the script-tag build is rrweb's recorder. The SDK imports `@repro/contracts/runtime`, a Zod-free entry that carries only the limits and redaction helpers, so no schema code ships to the browser; the ESM build is larger because it is not minified. Record-on-incident mode adds about 2.4 kB raw (1 kB gzip) to the script-tag build.
 
 ## Usage
 
@@ -67,9 +67,12 @@ interface ReproClient {
   captureException(error: unknown, context?: Record<string, string | number | boolean>): void;
   identify(userId: string, traits?: Record<string, string | number | boolean>): void;
   annotate(name: string, data?: Record<string, string | number | boolean>): void;
+  flagIncident(reason: string, data?: Record<string, string | number | boolean>): void; // annotation `incident:<reason>`, and a trigger in on-incident mode
   flush(): Promise<void>;
   getSessionId(): string | null;
-  isRecording(): boolean;
+  isRecording(): boolean; // true while buffering too
+  getMode(): 'always' | 'on-incident';
+  hasTriggered(): boolean;
 }
 ```
 
@@ -95,6 +98,46 @@ Outside a browser (SSR, workers, plain Node) `init()` returns a no-op client and
 | `sampleRate` | `1` | Fraction of sessions recorded, 0 to 1. Decided once per session. |
 | `sessionId` | none | Session id override, mainly for tests. Must be a UUID. |
 | `debug` | `false` | Log SDK activity with `console.debug('[repro]', ...)`. |
+| `mode` | `'always'` | `'on-incident'` buffers in memory and uploads only once something goes wrong. See [Record on incident](#record-on-incident). |
+| `bufferSeconds` | `30` | On-incident only. Seconds of history kept before an incident. |
+| `bufferEvents` | `2000` | On-incident only. Most events kept before an incident. |
+
+## Record on incident
+
+The default mode uploads every session. That is right when you want a replay of everything, and wrong when you only care about sessions that broke: most sessions are healthy, and each one still costs an upload every two seconds and a row on the server. `mode: 'on-incident'` turns the SDK into a flight recorder. It records exactly as before, with the same masking, but keeps the events in a rolling in-memory buffer and uploads nothing. When an incident happens the buffer is uploaded as the first batches of the session, so the replay shows what led up to the failure, and the SDK then switches to `'always'` for the rest of the session and keeps uploading until `stop()`.
+
+```ts
+Repro.init({
+  projectKey: 'rp_...',
+  endpoint: 'https://ingest.example.com',
+  mode: 'on-incident',
+  bufferSeconds: 30, // default
+  bufferEvents: 2000, // default
+});
+
+// Anything you consider an incident, for example a spinner that never resolved:
+Repro.flagIncident('checkout-stuck', { step: 3 });
+```
+
+An incident is any of:
+
+- an uncaught exception (`window.onerror`),
+- an unhandled promise rejection,
+- a `captureException()` call,
+- a network request that failed: a response with status 500 or above, or no response at all (DNS, CORS, offline). 4xx responses and requests the page aborted itself do not count,
+- a `flagIncident(reason, data?)` call, which also records an annotation named `incident:<reason>` so it shows in the timeline.
+
+How the buffer works:
+
+- rrweb takes a fresh checkout (a Meta event followed by a FullSnapshot) every `bufferSeconds / 2` instead of every 60 seconds. The buffer is only ever cut at a checkout, never between one and the events that depend on it, so the uploaded replay always starts with a snapshot it can render.
+- On every event the SDK drops everything before the most recent checkout that is at least `bufferSeconds` old. The retained history is therefore between `bufferSeconds` and 1.5 x `bufferSeconds` long; with the defaults, the replay prefix before an incident is 30 to 45 seconds. Shorter windows cost more snapshots.
+- `bufferEvents` bounds memory the same way, at checkout boundaries. If a single checkout segment outgrows it on a very busy page, the SDK asks rrweb for a fresh checkout and cuts there.
+- The upload after a trigger is ordinary: `batchSeq` starts at 0 with `meta` on the first batch, events keep the sequence numbers they were given while buffering, and batches are split by the usual size limits.
+- The triggered state is persisted in `sessionStorage` next to the session id, so a full page load after an incident keeps uploading the same session. A page load before an incident keeps buffering (the previous page's buffer is gone with the page).
+- `stop()` before any incident discards the buffer and clears the persisted session. `flush()` before an incident resolves without sending anything.
+- `isRecording()` is true while buffering. `getMode()` reports `'on-incident'` while buffering and `'always'` after the trigger; `hasTriggered()` reports whether the trigger has fired in this session.
+
+The trade-off: a healthy session costs only memory (at most `bufferEvents` events, and no requests, no server row, nothing to delete), and the price is that the replay of a broken session starts at most 1.5 x `bufferSeconds` before the incident rather than at the beginning of the session. Interactions before that window are not recoverable. If you need the whole session for a subset of users, use `mode: 'always'` with `sampleRate`.
 
 ## Markup attributes
 
@@ -109,7 +152,7 @@ These work without any configuration, alongside rrweb's `rr-mask`, `rr-block` an
 
 ## What is captured
 
-- **DOM replay** (rrweb): a full snapshot on start and every 60 seconds, then incremental mutations, mouse movement (sampled), scroll and input changes. Canvas is not recorded.
+- **DOM replay** (rrweb): a full snapshot on start and every 60 seconds (every `bufferSeconds / 2` in on-incident mode), then incremental mutations, mouse movement (sampled), scroll and input changes. Canvas is not recorded.
 - **Clicks**: an `ElementDescriptor` of the closest interactive ancestor (tag, `data-testid`, stable id, name, type, role, label, accessible name, placeholder, text, sanitised href, short CSS path, enclosing form), plus viewport coordinates. Never rrweb node ids, never the element's value.
 - **Form changes** on `change`: the descriptor, the control kind, and the value for non-sensitive controls. Sensitive controls send `value: null, masked: true`. Checkboxes and radios send `checked`.
 - **Submits**: the form descriptor.
@@ -150,7 +193,7 @@ Sessions persist across full page loads within the same tab (sessionStorage key 
 
 ## Transport
 
-Batches are uploaded every `flushIntervalMs`, when `maxBatchEvents` is reached, when the tab becomes hidden, on `pagehide` (via `sendBeacon` with the key in the query string, falling back to keepalive fetch), and on `stop()` with `final: true`. Bodies are gzip compressed with `CompressionStream` when the browser has it, otherwise sent as plain JSON. Batches larger than the shared `LIMITS.maxBatchBytes` are split. Failed uploads retry with exponential backoff from 500 ms to 8 s for up to 5 attempts on network errors, 429 and 5xx; other 4xx responses drop the batch. At most 50 batches wait in memory; older ones are discarded first.
+In the default mode, batches are uploaded every `flushIntervalMs`, when `maxBatchEvents` is reached, when the tab becomes hidden, on `pagehide` (via `sendBeacon` with the key in the query string, falling back to keepalive fetch), and on `stop()` with `final: true`. Bodies are gzip compressed with `CompressionStream` when the browser has it, otherwise sent as plain JSON. Batches larger than the shared `LIMITS.maxBatchBytes` are split. Failed uploads retry with exponential backoff from 500 ms to 8 s for up to 5 attempts on network errors, 429 and 5xx; other 4xx responses drop the batch. At most 50 batches wait in memory; older ones are discarded first.
 
 ## Development
 

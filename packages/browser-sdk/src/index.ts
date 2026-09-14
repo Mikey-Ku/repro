@@ -3,10 +3,10 @@
  * delegate to it so script-tag users never need to keep a reference.
  */
 import { createClient } from './client.js';
-import type { ReproClient, ReproOptions } from './types.js';
+import type { ReproClient, ReproMode, ReproOptions } from './types.js';
 import { version } from './version.js';
 
-export type { ReproClient, ReproOptions } from './types.js';
+export type { ReproClient, ReproMode, ReproOptions } from './types.js';
 export { version };
 
 /** True in a real browser page. False under SSR, workers and plain Node, where init() is a no-op. */
@@ -20,9 +20,12 @@ const noopClient: ReproClient = {
   captureException() {},
   identify() {},
   annotate() {},
+  flagIncident() {},
   flush: () => Promise.resolve(),
   getSessionId: () => null,
   isRecording: () => false,
+  getMode: () => 'always',
+  hasTriggered: () => false,
 };
 
 let active: ReproClient | null = null;
@@ -48,9 +51,12 @@ export const Repro = {
     active?.captureException(error, context),
   identify: (userId: string, traits?: Record<string, string | number | boolean>) => active?.identify(userId, traits),
   annotate: (name: string, data?: Record<string, string | number | boolean>) => active?.annotate(name, data),
+  flagIncident: (reason: string, data?: Record<string, string | number | boolean>) => active?.flagIncident(reason, data),
   flush: (): Promise<void> => active?.flush() ?? Promise.resolve(),
   getSessionId: (): string | null => active?.getSessionId() ?? null,
   isRecording: (): boolean => active?.isRecording() ?? false,
+  getMode: (): ReproMode => active?.getMode() ?? 'always',
+  hasTriggered: (): boolean => active?.hasTriggered() ?? false,
   version,
 };
 

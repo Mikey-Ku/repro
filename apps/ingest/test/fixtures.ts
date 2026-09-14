@@ -20,6 +20,18 @@ export function meta(overrides: Partial<SessionMeta> = {}): SessionMeta {
 
 const button = (text: string) => ({ tag: 'button', type: 'submit', role: 'button', accessibleName: text, text, sensitive: false });
 
+/** Serialized rrweb nodes (rrweb 2.x shapes): element = type 2, text = type 3. Ids are unique per fixture module. */
+export type RrwebNode = { type: 2; id: number; tagName: string; attributes: Record<string, string>; childNodes: RrwebNode[] } | { type: 3; id: number; textContent: string };
+let nextNodeId = 100;
+export const dom = {
+  el(tagName: string, attributes: Record<string, string> = {}, childNodes: RrwebNode[] = [], id = nextNodeId++): RrwebNode {
+    return { type: 2, id, tagName, attributes, childNodes };
+  },
+  text(textContent: string, id = nextNodeId++): RrwebNode {
+    return { type: 3, id, textContent };
+  },
+};
+
 export const ev = {
   nav(seq: number, url: string, kind: 'load' | 'push' | 'replace' | 'pop' | 'hash' = 'load'): RecordedEvent {
     return { seq, ts: ts(seq), type: 'navigation', data: { url, kind } };
@@ -66,6 +78,24 @@ export const ev = {
   },
   rrweb(seq: number): RecordedEvent {
     return { seq, ts: ts(seq), type: 'rrweb', data: { type: 3, timestamp: ts(seq), data: { source: 0 } } };
+  },
+  /** rrweb full snapshot (type 2) whose document holds the given serialized subtree. */
+  snapshot(seq: number, root: RrwebNode): RecordedEvent {
+    return {
+      seq,
+      ts: ts(seq),
+      type: 'rrweb',
+      data: { type: 2, timestamp: ts(seq), data: { node: { type: 0, id: 1, childNodes: [root] }, initialOffset: { left: 0, top: 0 } } },
+    };
+  },
+  /** rrweb incremental mutation (type 3, source 0) that adds subtrees under existing node ids. */
+  mutationAdds(seq: number, adds: { parentId: number; node: RrwebNode }[]): RecordedEvent {
+    return {
+      seq,
+      ts: ts(seq),
+      type: 'rrweb',
+      data: { type: 3, timestamp: ts(seq), data: { source: 0, texts: [], attributes: [], removes: [], adds: adds.map((add) => ({ ...add, nextId: null })) } },
+    };
   },
   identify(seq: number, userId: string): RecordedEvent {
     return { seq, ts: ts(seq), type: 'identify', data: { userId } };

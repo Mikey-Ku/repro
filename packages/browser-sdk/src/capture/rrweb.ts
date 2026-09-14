@@ -21,6 +21,21 @@ import type { CaptureContext, Stop } from '../types.js';
 export const CHECKOUT_EVERY_MS = 60_000;
 
 /**
+ * Ask the live recorder for a checkout (Meta then FullSnapshot) right now. On-incident mode uses
+ * it when a single checkout segment outgrows the buffer, so there is a fresh place to cut. rrweb
+ * throws when nothing is recording; that is reported and swallowed.
+ */
+export function takeCheckout(ctx: CaptureContext): boolean {
+  try {
+    record.takeFullSnapshot(true);
+    return true;
+  } catch (err) {
+    ctx.debug('rrweb checkout failed', err);
+    return false;
+  }
+}
+
+/**
  * rrweb only consults `maskInputFn` when `maskInputOptions[tagName] || maskInputOptions[type]`
  * is true. Keying on the tag names means every control reaches our function, including
  * `type="hidden"` (which rrweb's own list omits) and any input type a future browser adds.
@@ -53,7 +68,7 @@ export function buildRecordOptions(ctx: CaptureContext): RecordOptions {
       // rrweb copies the page URL and link/form URLs verbatim; redact their query strings first.
       ctx.emit({ type: 'rrweb', data: sanitizeRrwebEvent(event) });
     },
-    checkoutEveryNms: CHECKOUT_EVERY_MS,
+    checkoutEveryNms: ctx.checkoutEveryMs ?? CHECKOUT_EVERY_MS,
     maskTextSelector: joinSelectors(DEFAULT_MASK_SELECTOR, redaction.maskSelector),
     blockSelector: joinSelectors(DEFAULT_BLOCK_SELECTOR, redaction.blockSelector),
     ignoreSelector: joinSelectors(DEFAULT_IGNORE_SELECTOR, redaction.ignoreSelector),

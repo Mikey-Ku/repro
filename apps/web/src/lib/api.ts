@@ -4,11 +4,13 @@ import { cache } from 'react';
 import type { z } from 'zod';
 import {
   ErrorResponseSchema,
+  ExpectationSuggestionsResponseSchema,
   GeneratedTestSchema,
   HealthSchema,
   IncidentSchema,
   IngestionKeySchema,
   ProjectSchema,
+  ReferenceCandidateSchema,
   ReproductionRunSchema,
   DiagnosticFindingSchema,
   SessionListResponseSchema,
@@ -255,6 +257,20 @@ export async function getTest(projectId: string, testId: string) {
 /** Raw text/plain response so a route handler can stream it with its content-disposition. */
 export async function fetchTestCode(projectId: string, testId: string): Promise<Response> {
   return rawRequest(`/api/projects/${projectId}/tests/${testId}/code`);
+}
+
+// Expectation suggestions ----------------------------------------------------
+
+/** Passing sessions on the same route that can serve as the reference for suggestions. */
+export async function listReferenceCandidates(projectId: string, sessionId: string) {
+  return request(`/api/projects/${projectId}/sessions/${sessionId}/reference-candidates`, zod.array(ReferenceCandidateSchema));
+}
+
+/** What appeared only in the reference session. Without a reference, the (empty) heuristic list and a note. */
+export async function getExpectationSuggestions(projectId: string, sessionId: string, reference?: string) {
+  return request(`/api/projects/${projectId}/sessions/${sessionId}/expectation-suggestions`, ExpectationSuggestionsResponseSchema, {
+    query: { reference },
+  });
 }
 
 // Reproduction runs ----------------------------------------------------------

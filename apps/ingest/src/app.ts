@@ -15,6 +15,7 @@ import { registerIngestRoutes } from './routes/ingest.js';
 import { registerProjectRoutes } from './routes/projects.js';
 import { registerRunRoutes } from './routes/runs.js';
 import { registerSessionRoutes } from './routes/sessions.js';
+import { registerSuggestionRoutes } from './routes/suggestions.js';
 import { registerTestRoutes } from './routes/tests.js';
 import { readServiceVersion } from './version.js';
 
@@ -99,6 +100,7 @@ export async function buildApp(options: BuildAppOptions): Promise<FastifyInstanc
       registerSessionRoutes(api, ctx);
       registerIncidentRoutes(api, ctx);
       registerTestRoutes(api, ctx);
+      registerSuggestionRoutes(api, ctx);
       registerRunRoutes(api, ctx);
       registerFindingRoutes(api, ctx);
     },

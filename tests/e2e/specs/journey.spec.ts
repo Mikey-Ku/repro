@@ -224,4 +224,43 @@ test.describe.serial('Repro end to end', () => {
     await expect(page.getByRole('tabpanel').getByText(/passed/i).first()).toBeVisible();
     await setDemoMode('broken');
   });
+
+  test('9. a passing session suggests the success state for the failing one', async ({ page }) => {
+    // Record the same workflow with the fix in place. This is the reference recording.
+    await setDemoMode('fixed');
+    await walkBrokenCheckout(page);
+    await expect(page.getByTestId('order-confirmation')).toBeVisible();
+    const passingSessionId = (await page.evaluate(() => window.Repro.getSessionId())) ?? '';
+    await page.evaluate(async () => {
+      await window.Repro.flush();
+      window.Repro.stop();
+      await window.Repro.flush();
+    });
+    await setDemoMode('broken');
+    await waitFor(
+      async () => {
+        const d = await api<{ session: SessionSummary }>(`/api/projects/${projectId}/sessions/${passingSessionId}`);
+        return d.session.status === 'completed' && d.session.errorCount === 0 ? d : null;
+      },
+      { label: 'passing session completed' },
+    );
+
+    // The failing session now has the passing one as a reference candidate, and the diff
+    // proposes the element that only ever appeared in the passing run.
+    const candidates = await api<{ id: string }[]>(`/api/projects/${projectId}/sessions/${sessionId}/reference-candidates`);
+    expect(candidates.map((c) => c.id)).toContain(passingSessionId);
+    const suggested = await api<{ suggestions: { expectation: { kind: string; testId?: string } }[] }>(
+      `/api/projects/${projectId}/sessions/${sessionId}/expectation-suggestions?reference=${passingSessionId}`,
+    );
+    expect(suggested.suggestions.map((s) => s.expectation)).toContainEqual({ kind: 'visible', testId: 'order-confirmation' });
+
+    // And the dashboard offers it with one click.
+    await page.goto(`${env.webUrl}/projects/demo/sessions/${sessionId}`);
+    await page.getByRole('tab', { name: /^test/i }).click();
+    // A test already exists, so the composer sits behind the regenerate disclosure.
+    await page.getByText('Regenerate with different expectations').click();
+    await page.getByRole('combobox', { name: /passing session/i }).selectOption(passingSessionId);
+    await page.getByRole('button', { name: /^suggest$/i }).click();
+    await expect(page.getByText('order-confirmation').first()).toBeVisible();
+  });
 });

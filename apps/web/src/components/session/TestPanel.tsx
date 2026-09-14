@@ -1,12 +1,23 @@
-import type { GeneratedTest, Incident } from '@repro/contracts';
-import { ExpectationBuilder } from './ExpectationBuilder';
+import type { GeneratedTest, Incident, ReferenceCandidate } from '@repro/contracts';
+import { TestComposer } from './TestComposer';
 import { VersionSelect } from './VersionSelect';
 import { CopyButton } from '@/components/CopyButton';
 import { IconDownload } from '@/components/icons';
 import { Badge, Disclosure, EmptyState, LinkButton, type BadgeTone } from '@/components/ui';
+import { getProjectBySlug, listReferenceCandidates } from '@/lib/api';
 import { formatDateTime } from '@/lib/format';
 import { highlightTypescript } from '@/lib/highlight';
 import { apiPath } from '@/lib/paths';
+
+/** Suggestions are a convenience: if the candidate lookup fails, the Test tab still renders. */
+async function loadCandidates(slug: string, sessionId: string): Promise<ReferenceCandidate[]> {
+  try {
+    const project = await getProjectBySlug(slug);
+    return await listReferenceCandidates(project.id, sessionId);
+  } catch {
+    return [];
+  }
+}
 
 const STRATEGY_TONE: Record<GeneratedTest['selectors'][number]['strategy'], BadgeTone> = {
   testid: 'success',
@@ -24,6 +35,8 @@ const STRATEGY_TONE: Record<GeneratedTest['selectors'][number]['strategy'], Badg
  * it in spans, which is why dangerouslySetInnerHTML is acceptable for it.
  */
 export async function TestPanel({ slug, sessionId, tests, selected, incidents }: { slug: string; sessionId: string; tests: GeneratedTest[]; selected: GeneratedTest | null; incidents: Incident[] }) {
+  const candidates = await loadCandidates(slug, sessionId);
+
   if (!selected) {
     return (
       <div className="px-3 py-3">
@@ -32,7 +45,7 @@ export async function TestPanel({ slug, sessionId, tests, selected, incidents }:
           title="No test generated yet"
           description="The generator turns the recorded actions into a Playwright test deterministically: same session, same file. Add expectations for the fixed state, then generate."
         />
-        <ExpectationBuilder slug={slug} sessionId={sessionId} incidents={incidents} />
+        <TestComposer slug={slug} sessionId={sessionId} incidents={incidents} candidates={candidates} />
       </div>
     );
   }
@@ -120,7 +133,7 @@ export async function TestPanel({ slug, sessionId, tests, selected, incidents }:
 
       <Disclosure summary="Regenerate with different expectations">
         <p className="mb-2 text-muted">Creates version {Math.max(...versions) + 1} unless the input is identical to the latest version, in which case the latest is returned unchanged.</p>
-        <ExpectationBuilder slug={slug} sessionId={sessionId} incidents={incidents} submitLabel="Regenerate" />
+        <TestComposer slug={slug} sessionId={sessionId} incidents={incidents} candidates={candidates} submitLabel="Regenerate" />
       </Disclosure>
     </div>
   );

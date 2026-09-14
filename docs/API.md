@@ -102,6 +102,27 @@ Group status is derived: `status=open` returns groups with at least one open inc
 
 Generation is versioned per session: each call stores a new row with `version = previous + 1`, unless the `sourceHash` and expectations match the latest version, in which case the latest row is returned unchanged.
 
+### Expectation suggestions
+
+A recording of a failure never contains the success state, so the dashboard can propose expectations by comparing the failing session with a passing session of the same route. See `docs/TEST_GENERATION.md`, "Where the success state comes from".
+
+| Method | Path | Response |
+| --- | --- | --- |
+| GET | `/api/projects/:projectId/sessions/:sessionId/reference-candidates` | `ReferenceCandidate[]` |
+| GET | `/api/projects/:projectId/sessions/:sessionId/expectation-suggestions` | query `?reference=<sessionId>` (optional) → `ExpectationSuggestionsResponse` |
+
+`reference-candidates` lists sessions in the same project that are `completed`, have `errorCount` 0 and `networkFailureCount` 0, and share a route with the session (the same `initialRoute`, or any entry of the session's `routes` list appears in theirs). Newest 10 by `startedAt`, never the session itself. `ReferenceCandidate` is the subset of `SessionSummary` needed to label a picker: `{ id, startedAt, release, browserName, durationMs, errorCount }`.
+
+`expectation-suggestions` with `reference` decodes both sessions' events, runs `extractDomMarkers` from `@repro/contracts` on each (test ids, live-region texts, h1..h3 texts, final navigation path) and returns `{ suggestions: ExpectationSuggestion[], reference: sessionId }` where each suggestion is `{ expectation: Expectation, source: 'reference-session', reason }`:
+
+- `{ kind: 'visible', testId }` for every `data-testid` present in the reference and absent in the session, reason "Appears in the passing session but never in this one".
+- `{ kind: 'visible', text }` for every `role="status"` / `aria-live` text likewise, same reason; then for every h1..h3 text likewise, reason "Heading shown in the passing session but never in this one".
+- `{ kind: 'url', pathPrefix }` when the reference's final path differs from the session's, reason "The passing session ended on this path".
+
+Suggestions are ordered test ids first, then texts, then the path. Values longer than the `Expectation` field limits are dropped. A reference that is not a session in the project (or is not a UUID) is a 404; the session itself as reference is a 400.
+
+Without `reference` the response is the heuristic list. `no-errors` is always applied by the generator, so that list is empty: `{ suggestions: [], reference: null, note }` where `note` explains how to pick a reference.
+
 ### Reproduction runs
 
 | Method | Path | Response |

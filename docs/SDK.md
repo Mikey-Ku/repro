@@ -59,8 +59,29 @@ Password, hidden, and payment fields are masked with no markup. Fields whose nam
 ## Session lifecycle
 
 - A session starts on `init` (unless `autoStart: false`) and continues across full page loads in the same tab.
-- `stop()` sends the final batch and marks the session complete. If the tab is closed without `stop()`, the worker marks the session expired after 30 minutes of silence and processes what arrived.
+- `stop()` sends the final batch and marks the session complete. If the tab is closed without `stop()`, the worker marks the session expired after 30 minutes of silence and processes what arrived. In on-incident mode (below), `stop()` before any incident discards the buffer instead.
 - `flush()` returns a promise you can await before navigating away in code.
+
+## Record on incident
+
+By default every session is uploaded. Set `mode: 'on-incident'` to record into a rolling in-memory buffer and upload only when something goes wrong, which makes the SDK nearly free for the healthy majority of sessions.
+
+```ts
+Repro.init({
+  projectKey: import.meta.env.VITE_REPRO_KEY,
+  endpoint: 'https://repro.internal',
+  mode: 'on-incident',
+  bufferSeconds: 30, // history kept before an incident, default 30
+  bufferEvents: 2000, // memory bound, default 2000
+});
+
+// Your own definition of an incident, recorded as an `incident:<reason>` annotation:
+repro.flagIncident('payment-timeout', { attempt: 2 });
+```
+
+What counts as an incident: an uncaught exception, an unhandled promise rejection, `captureException()`, a request that failed with a 5xx status or no response at all (4xx answers and aborted requests do not count), or `flagIncident()`. On the first one the buffered events are uploaded as the session's first batches, the session row is created on the server at that moment, and the SDK behaves like `mode: 'always'` for the rest of the session, across page loads too (the triggered state lives in `sessionStorage` next to the session id).
+
+The buffer is cut only at rrweb checkouts, which happen every `bufferSeconds / 2` in this mode, so the replay always starts with a full snapshot. The retained history is between `bufferSeconds` and 1.5 x `bufferSeconds`: with the defaults, a replay shows the 30 to 45 seconds before the incident and nothing earlier. That is the trade-off. In return a healthy session costs only memory: no requests, no server row, and `stop()` before any incident discards the buffer and clears the persisted session. `isRecording()` stays true while buffering; `getMode()` and `hasTriggered()` tell you which state the client is in. Full details and the option reference are in `packages/browser-sdk/README.md`.
 
 ## Content Security Policy
 

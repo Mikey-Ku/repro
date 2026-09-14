@@ -136,6 +136,38 @@ export const ExpectationSchema = z.discriminatedUnion('kind', [
 ]);
 export type Expectation = z.infer<typeof ExpectationSchema>;
 
+/**
+ * A proposed success expectation. `reference-session` suggestions come from comparing the failing
+ * session's DOM markers with a passing session's on the same route; `heuristic` ones need no
+ * reference. The reason is shown next to the suggestion so the engineer can judge it.
+ */
+export const ExpectationSuggestionSchema = z.object({
+  expectation: ExpectationSchema,
+  source: z.enum(['reference-session', 'heuristic']),
+  reason: z.string(),
+});
+export type ExpectationSuggestion = z.infer<typeof ExpectationSuggestionSchema>;
+
+export const ExpectationSuggestionsResponseSchema = z.object({
+  suggestions: z.array(ExpectationSuggestionSchema),
+  /** The reference session the suggestions were derived from, or null for the heuristic list. */
+  reference: z.string().nullable(),
+  /** Present when there is nothing data-driven to say, telling the caller how to get more. */
+  note: z.string().optional(),
+});
+export type ExpectationSuggestionsResponse = z.infer<typeof ExpectationSuggestionsResponseSchema>;
+
+/** A passing session that can serve as the reference for expectation suggestions. */
+export const ReferenceCandidateSchema = SessionSummarySchema.pick({
+  id: true,
+  startedAt: true,
+  release: true,
+  browserName: true,
+  durationMs: true,
+  errorCount: true,
+});
+export type ReferenceCandidate = z.infer<typeof ReferenceCandidateSchema>;
+
 export const GenerateTestRequestSchema = z.object({
   incidentId: z.string().optional(),
   /** Extra expectations for the success state. `no-errors` is always included. */
