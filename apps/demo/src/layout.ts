@@ -11,12 +11,16 @@ export interface DemoPageConfig {
 
 export interface LayoutOptions {
   title: string;
-  /** Identifies the page to client/app.ts via <body data-page>. */
-  page: 'login' | 'checkout' | 'order' | 'error';
+  /** Identifies the page to the browser bundle via <body data-page>. */
+  page: 'login' | 'checkout' | 'order' | 'error' | 'examples' | 'settings' | 'inbox' | 'orders' | 'signup';
   body: string;
   demo: DemoPageConfig;
   /** Extra markup rendered outside the main card (for example the support widget). */
   after?: string;
+  /** The browser bundle for the page. Northwind pages share /app.js; each example has its own. */
+  script?: string;
+  /** Extra CSS appended to the base stylesheet (the examples share one block). */
+  styles?: string;
 }
 
 const STYLES = `
@@ -188,14 +192,14 @@ const STYLES = `
 `;
 
 export function renderLayout(options: LayoutOptions): string {
-  const { title, page, body, demo, after = '' } = options;
+  const { title, page, body, demo, after = '', script = '/app.js', styles = '' } = options;
   return `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${escapeHtml(title)} · Northwind Supply</title>
-<style>${STYLES}</style>
+<style>${STYLES}${styles}</style>
 <script>window.__DEMO__ = ${serializeForScript(demo)};</script>
 <script src="/vendor/repro.iife.js"></script>
 </head>
@@ -216,9 +220,9 @@ ${body}
 </main>
 ${after}
 <footer>
-  <p>Demo store used by Repro. Mode: <code data-testid="demo-mode">${escapeHtml(demo.mode)}</code> · Release <code>${escapeHtml(demo.release)}</code></p>
+  <p>Demo store used by Repro. Mode: <code data-testid="demo-mode">${escapeHtml(demo.mode)}</code> · Release <code>${escapeHtml(demo.release)}</code> · <a href="/examples" data-testid="examples-link">Examples gallery</a></p>
 </footer>
-<script src="/app.js" type="module"></script>
+<script src="${escapeHtml(script)}" type="module"></script>
 </body>
 </html>
 `;

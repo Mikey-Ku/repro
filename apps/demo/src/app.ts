@@ -4,6 +4,7 @@ import Fastify, { type FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { canaries } from './canaries.js';
 import type { DemoMode } from './env.js';
+import { registerExampleRoutes } from './examples/routes.js';
 import type { DemoPageConfig } from './layout.js';
 import { renderCheckoutPage } from './pages/checkout.js';
 import { renderLoginPage } from './pages/login.js';
@@ -126,6 +127,9 @@ export function createApp(options: AppOptions): FastifyInstance {
     if (!order) return reply.code(404).send(renderNotFoundPage(pageConfig(), 'We could not find that order.'));
     return reply.send(renderOrderPage(pageConfig(), order));
   });
+
+  // Examples gallery: four more small applications driven by the same mode.
+  registerExampleRoutes(app, { pageConfig });
 
   // API
   app.post('/api/login', async (request, reply) => {

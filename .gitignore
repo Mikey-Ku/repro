@@ -16,3 +16,5 @@ apps/worker/artifacts/
 scripts/bench/results/*.json
 !scripts/bench/results/.gitkeep
 .DS_Store
+
+apps/demo/public/examples/

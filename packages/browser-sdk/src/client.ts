@@ -160,7 +160,8 @@ export function createClient(options: ReproOptions, deps: ClientDeps = {}): Repr
   let session: PersistedSession | null = null;
   let recording = false;
   let ended = false;
-  let metaPending = false;
+  /** Session metadata captured at start(), so an early route change cannot alter the initial URL. */
+  let pendingMeta: SessionMeta | undefined;
   let mode: ReproMode = configuredMode;
   let triggered = false;
   let buffer: RecordedEvent[] = [];
@@ -239,9 +240,7 @@ export function createClient(options: ReproOptions, deps: ClientDeps = {}): Repr
   function buildBatches(events: RecordedEvent[], final: boolean): IngestBatch[] {
     if (!session) return [];
     const active = session;
-    const meta: SessionMeta | undefined = metaPending
-      ? buildMeta({ sdkVersion, startedAt: active.startedAt, release: options.release, environment: options.environment })
-      : undefined;
+    const meta = pendingMeta;
     const skeleton = (batchEvents: RecordedEvent[]): IngestBatch => ({
       v: SCHEMA_VERSION,
       sessionId: active.id,
@@ -260,7 +259,7 @@ export function createClient(options: ReproOptions, deps: ClientDeps = {}): Repr
       const first = batches[0]!;
       if (meta) {
         first.meta = meta;
-        metaPending = false;
+        pendingMeta = undefined;
         active.url = currentPageUrl();
       }
       if (final) batches[batches.length - 1]!.final = true;
@@ -335,7 +334,10 @@ export function createClient(options: ReproOptions, deps: ClientDeps = {}): Repr
     mode = triggered ? 'always' : configuredMode;
     buffer = [];
     checkouts = [];
-    metaPending = session.batchSeq === 0 || session.url !== currentPageUrl();
+    pendingMeta =
+      session.batchSeq === 0 || session.url !== currentPageUrl()
+        ? buildMeta({ sdkVersion, startedAt: session.startedAt, release: options.release, environment: options.environment })
+        : undefined;
     // Checkouts twice per window keep the retained prefix between 1x and 1.5x bufferSeconds.
     ctx.checkoutEveryMs = mode === 'on-incident' ? bufferMs / 2 : undefined;
 

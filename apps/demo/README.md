@@ -99,3 +99,16 @@ Environment (read from the repo root `.env` when present, never overriding varia
 | `DEMO_RELEASE` | `demo@1.4.2` |
 
 Other scripts: `build` (tsup server plus esbuild client), `start` (`node dist/server.js`), `typecheck`, `lint`, `test`.
+
+## Examples gallery
+
+`/examples` lists four more small applications that share this server, its layout and its broken/fixed switch. Each is one foundational UI element with one bug class; `docs/EXAMPLES.md` has the full table and what each teaches.
+
+| Example | The bug (broken mode) | The fix |
+| --- | --- | --- |
+| `/examples/settings` | `fetch` sends JSON with `content-type: text/plain`; the API answers 415 and the client only logs it | declare the body as JSON and show the failure in the form |
+| `/examples/inbox` | `document.getElementById('compose-dialg').close()` with a misspelled id throws and the dialog stays open | the real id `compose-dialog` |
+| `/examples/orders` | sorting by Total calls `a.total.toFixed(2)` on a null total and throws | compare totals as numbers, unpriced orders last |
+| `/examples/signup` | the Finish button enables only when `value.length === 7` while the input caps at 6 | `value.length === 6` |
+
+Server modules live in `src/examples/`, pages in `src/pages/examples/`, clients in `client/examples/` (one bundle each, built by `scripts/build-client.mjs`). `GET /__demo/examples` returns the gallery metadata.

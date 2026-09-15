@@ -38,6 +38,12 @@ Measured with `pnpm bench` on an Apple M5 laptop (16 GB, Node 25). Full methodol
 
 ![Incidents grouped by fingerprint across sessions](docs/images/incident-groups.png)
 
+## Examples gallery
+
+Besides the Northwind checkout, the demo server hosts four smaller applications, each one foundational UI element with a different bug class: a settings form whose save fails silently, an inbox with client-side routing and a modal that gets stuck, an orders table whose sort throws on real data, and a sign-up wizard that fails with no error and no failed request at all. `pnpm test:e2e` records, generates and reproduces every one of them. See `docs/EXAMPLES.md`.
+
+![The examples gallery](docs/images/examples-gallery.png)
+
 ## Quick start
 
 ```bash
