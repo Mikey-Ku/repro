@@ -30,7 +30,7 @@ pnpm verify        # everything, from a clean clone
 
 - pnpm workspaces, ESM, TypeScript strict, Zod 4, Vitest 4, Playwright 1.63, Next 16, Fastify 5, Drizzle.
 - No em dashes anywhere (docs, UI copy, comments).
-- Commits are authored by Michael. Do not add co-author trailers. Do not push.
+- Commits are authored by Michael. Do not add co-author trailers.
 - Do not mock the database in integration tests. Do not weaken a privacy test to make it pass.
 - Keep the demo app small; it exists to prove the vertical slice.
 
