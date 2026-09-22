@@ -19,6 +19,17 @@ const bytea = customType<{ data: Buffer; driverData: Buffer }>({
   },
 });
 
+/**
+ * A project-configured reproduction target: an application the project owner controls, stored as
+ * its origin only. The bundled demo is not stored; the worker reads it from DEMO_URL.
+ */
+export interface RunTarget {
+  id: string;
+  name: string;
+  url: string;
+  kind: 'external';
+}
+
 const timestamps = {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
@@ -39,6 +50,8 @@ export const projects = pgTable(
     name: text('name').notNull(),
     /** Sessions older than this are deleted by the retention job. */
     retentionDays: integer('retention_days').notNull().default(30),
+    /** External reproduction targets. The demo target is implicit and never stored here. */
+    runTargets: jsonb('run_targets').$type<RunTarget[]>().notNull().default(sql`'[]'::jsonb`),
     ...timestamps,
   },
 );
@@ -196,8 +209,13 @@ export const reproductionRuns = pgTable(
     sessionId: uuid('session_id').notNull().references(() => sessions.id, { onDelete: 'cascade' }),
     generatedTestId: uuid('generated_test_id').notNull().references(() => generatedTests.id, { onDelete: 'cascade' }),
     status: runStatus('status').notNull().default('queued'),
+    /** 'demo' or the id of one of the project's run targets at the time the run was queued. */
     target: text('target').notNull().default('demo'),
+    /** 'broken' or 'fixed' for the demo target; 'none' for external targets, which have no mode switch. */
     targetMode: text('target_mode').notNull().default('broken'),
+    /** Snapshot of the external target's origin and name, so the run stays readable after the target is removed. */
+    targetUrl: text('target_url'),
+    targetName: text('target_name'),
     queuedAt: timestamp('queued_at', { withTimezone: true }).notNull().defaultNow(),
     startedAt: timestamp('started_at', { withTimezone: true }),
     finishedAt: timestamp('finished_at', { withTimezone: true }),

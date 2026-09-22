@@ -5,11 +5,73 @@ import { EvidenceSummarySchema, InvestigationSchema } from './evidence.js';
 export const SessionStatus = z.enum(['recording', 'completed', 'expired']);
 export type SessionStatus = z.infer<typeof SessionStatus>;
 
+/** How many external reproduction targets one project may configure. */
+export const MAX_RUN_TARGETS = 10;
+
+/**
+ * The origin of a reproduction target, or null when the URL is not acceptable. A target is an
+ * origin and nothing more: http or https, a host, an optional port. Credentials, a path other
+ * than "/", a query string or a fragment are refused rather than silently dropped, so what the
+ * owner typed is what the worker will point Playwright at. Loopback and private hosts are allowed
+ * because Repro is a local tool and the application under test usually runs next to it.
+ */
+export function runTargetOrigin(raw: string): string | null {
+  let url: URL;
+  try {
+    url = new URL(raw.trim());
+  } catch {
+    return null;
+  }
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
+  if (url.username || url.password) return null;
+  if (url.pathname !== '/' && url.pathname !== '') return null;
+  if (url.search || url.hash) return null;
+  if (!url.hostname) return null;
+  return url.origin;
+}
+
+const RunTargetUrl = z
+  .string()
+  .max(2000)
+  .refine((value) => runTargetOrigin(value) !== null, 'must be an http(s) origin such as https://staging.example.com, without path, query or credentials');
+
+/** A project-configured reproduction target. `url` is always an origin. */
+export const RunTargetSchema = z.object({
+  id: z.string().min(1).max(64),
+  name: z.string().min(1).max(100),
+  url: RunTargetUrl,
+  kind: z.literal('external'),
+});
+export type RunTarget = z.infer<typeof RunTargetSchema>;
+
+/** What the owner submits to add a target. The id is assigned by the server and the url is normalised to its origin. */
+export const RunTargetInputSchema = z.object({
+  name: z.string().trim().min(1).max(100),
+  url: RunTargetUrl,
+});
+export type RunTargetInput = z.infer<typeof RunTargetInputSchema>;
+
+/** The implicit target every project has: the bundled demo application, read from DEMO_URL. */
+export const DemoRunTargetSchema = z.object({
+  id: z.literal('demo'),
+  name: z.string(),
+  url: z.string(),
+  kind: z.literal('demo'),
+});
+export type DemoRunTarget = z.infer<typeof DemoRunTargetSchema>;
+
+export const RunTargetsResponseSchema = z.object({
+  demo: DemoRunTargetSchema,
+  targets: z.array(RunTargetSchema),
+});
+export type RunTargetsResponse = z.infer<typeof RunTargetsResponseSchema>;
+
 export const ProjectSchema = z.object({
   id: z.string(),
   slug: z.string(),
   name: z.string(),
   retentionDays: z.number().int(),
+  runTargets: z.array(RunTargetSchema),
   createdAt: z.string(),
 });
 export type Project = z.infer<typeof ProjectSchema>;
@@ -207,8 +269,13 @@ export type GeneratedTest = z.infer<typeof GeneratedTestSchema>;
 export const RunStatus = z.enum(['queued', 'running', 'passed', 'failed', 'error', 'timeout']);
 export type RunStatus = z.infer<typeof RunStatus>;
 
+/** The demo application's two modes. Only the demo target has modes. */
 export const RunTargetMode = z.enum(['broken', 'fixed']);
 export type RunTargetMode = z.infer<typeof RunTargetMode>;
+
+/** What a run row records: a demo mode, or 'none' for an external target where nothing is switched. */
+export const RunMode = z.enum(['broken', 'fixed', 'none']);
+export type RunMode = z.infer<typeof RunMode>;
 
 export const ReproductionRunSchema = z.object({
   id: z.string(),
@@ -216,8 +283,12 @@ export const ReproductionRunSchema = z.object({
   sessionId: z.string(),
   generatedTestId: z.string(),
   status: RunStatus,
+  /** 'demo' or the id of the project target the run was queued against. */
   target: z.string(),
-  targetMode: RunTargetMode,
+  targetMode: RunMode,
+  /** Null for the demo target; the external target's name and origin as they were when the run was queued. */
+  targetName: z.string().nullable(),
+  targetUrl: z.string().nullable(),
   queuedAt: z.string(),
   startedAt: z.string().nullable(),
   finishedAt: z.string().nullable(),
@@ -230,7 +301,10 @@ export const ReproductionRunSchema = z.object({
 export type ReproductionRun = z.infer<typeof ReproductionRunSchema>;
 
 export const CreateRunRequestSchema = z.object({
-  mode: RunTargetMode.default('broken'),
+  /** 'demo' (the default) or the id of one of the project's run targets. */
+  targetId: z.string().min(1).max(64).default('demo'),
+  /** Only meaningful for the demo target, where it defaults to 'broken'. Ignored for external targets. */
+  mode: RunTargetMode.optional(),
 });
 export type CreateRunRequest = z.infer<typeof CreateRunRequestSchema>;
 

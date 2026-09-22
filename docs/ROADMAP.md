@@ -5,7 +5,7 @@ Ordered by the value it adds to the working vertical slice. Nothing here is prom
 ## Next
 
 1. **Object storage for chunks.** `event_chunks.location` already exists. Add an S3-compatible writer and a reader that streams by `batch_seq`, keep Postgres for metadata.
-2. **Run against your own app.** The runner already validates generated code with a syntax-tree allowlist; what is missing is per-project allowed origins, a hosted browser pool, and fixture secrets stored encrypted so `REPRO_FIXTURE_*` values do not live in shell env.
+2. **Run against your own app, properly.** Per-project external targets exist: a project registers an origin, a run is queued against it, and the runner validates the generated code against that origin instead of the demo's. What is still missing is a hosted browser pool so the worker's machine does not have to reach the target itself, per-target fixture secrets stored encrypted so `REPRO_FIXTURE_*` values do not live in shell env, and a way to express the expected before/after state for targets that have no mode switch.
 3. **Group-level incident state.** Groups by fingerprint exist as a query (`GET /incidents/groups`). Add a stored group with status, assignee and notes so a fix can be tracked across releases.
 4. **Sampling and rate controls in the SDK.** `sampleRate` exists; add error-triggered "record on incident" mode with a ring buffer so healthy sessions cost nothing.
 

@@ -5,7 +5,8 @@ import { CreateRunRequestSchema } from '@repro/contracts';
 import type { AppContext } from '../context.js';
 import { notFound } from '../errors.js';
 import { toRunDto } from '../mappers.js';
-import { createRun, getRun, listRunsForTest, resolveArtifact } from '../services/runs.js';
+import { findRunTarget } from '../services/projects.js';
+import { createRun, getRun, listRunsForTest, resolveArtifact, type ResolvedRunTarget } from '../services/runs.js';
 import { getTest } from '../services/tests.js';
 import { idParam, parseWith, requireProject } from './shared.js';
 
@@ -18,9 +19,18 @@ export function registerRunRoutes(app: FastifyInstance, ctx: AppContext): void {
     const project = await requireProject(ctx, request, request.params.projectId);
     const test = await getTest(ctx.db, project.id, idParam(request.params.testId, 'Generated test'));
     if (!test) throw notFound('Generated test');
-    const { mode } = parseWith(CreateRunRequestSchema, request.body ?? {}, 'Run request');
-    const run = await createRun(ctx.db, test, mode);
-    request.log.info({ testId: test.id, runId: run.id, mode }, 'reproduction run queued');
+    const { targetId, mode } = parseWith(CreateRunRequestSchema, request.body ?? {}, 'Run request');
+    let resolved: ResolvedRunTarget;
+    if (targetId === 'demo') {
+      resolved = { target: 'demo', targetMode: mode ?? 'broken', targetName: null, targetUrl: null };
+    } else {
+      // A target id from another project can never match this project's list, so it is a plain 404.
+      const target = findRunTarget(project, targetId);
+      if (!target) throw notFound('Run target');
+      resolved = { target: target.id, targetMode: 'none', targetName: target.name, targetUrl: target.url };
+    }
+    const run = await createRun(ctx.db, test, resolved);
+    request.log.info({ testId: test.id, runId: run.id, target: resolved.target, mode: resolved.targetMode }, 'reproduction run queued');
     return reply.status(201).send(toRunDto(run));
   });
 

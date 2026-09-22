@@ -25,7 +25,14 @@ const iso = (date: Date): string => date.toISOString();
 const isoOrNull = (date: Date | null): string | null => (date ? date.toISOString() : null);
 
 export function toProjectDto(row: ProjectRow): Project {
-  return { id: row.id, slug: row.slug, name: row.name, retentionDays: row.retentionDays, createdAt: iso(row.createdAt) };
+  return {
+    id: row.id,
+    slug: row.slug,
+    name: row.name,
+    retentionDays: row.retentionDays,
+    runTargets: row.runTargets.map((target) => ({ id: target.id, name: target.name, url: target.url, kind: 'external' })),
+    createdAt: iso(row.createdAt),
+  };
 }
 
 export function toIngestionKeyDto(row: IngestionKeyRow): IngestionKey {
@@ -141,7 +148,10 @@ export function toRunDto(row: RunRow): ReproductionRun {
     generatedTestId: row.generatedTestId,
     status: row.status,
     target: row.target,
-    targetMode: row.targetMode === 'fixed' ? 'fixed' : 'broken',
+    // 'none' is what external runs store: nothing is switched there. Anything unknown reads as broken.
+    targetMode: row.targetMode === 'fixed' || row.targetMode === 'none' ? row.targetMode : 'broken',
+    targetName: row.targetName,
+    targetUrl: row.targetUrl,
     queuedAt: iso(row.queuedAt),
     startedAt: isoOrNull(row.startedAt),
     finishedAt: isoOrNull(row.finishedAt),

@@ -17,6 +17,8 @@ export interface AppContext {
   artifactsDir: string;
   /** Base URL of the dashboard, used for links inside generated tests. */
   appUrl: string;
+  /** Origin of the bundled demo application: the implicit reproduction target of every project. */
+  demoUrl: string;
   investigator: Investigator;
   generateTest: GenerateTestFn;
   version: string;

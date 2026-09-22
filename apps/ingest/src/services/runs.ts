@@ -1,14 +1,20 @@
 import path from 'node:path';
 import { and, desc, eq } from 'drizzle-orm';
-import type { RunTargetMode } from '@repro/contracts';
+import type { RunMode } from '@repro/contracts';
 import { enqueueJob, reproductionRuns, type Db, type GeneratedTestRow, type RunRow } from '@repro/db';
 import { asDb } from './tx.js';
 
+/** Where a run executes, resolved by the route from the request's targetId. */
+export type ResolvedRunTarget =
+  | { target: 'demo'; targetMode: Exclude<RunMode, 'none'>; targetName: null; targetUrl: null }
+  | { target: string; targetMode: 'none'; targetName: string; targetUrl: string };
+
 /**
  * Queue a reproduction run. The row and its job are written in one transaction so a run can
- * never exist without the job that executes it (or the other way round).
+ * never exist without the job that executes it (or the other way round). External targets are
+ * copied onto the row so the worker and the dashboard never depend on the project's current list.
  */
-export async function createRun(db: Db, test: GeneratedTestRow, mode: RunTargetMode): Promise<RunRow> {
+export async function createRun(db: Db, test: GeneratedTestRow, resolved: ResolvedRunTarget): Promise<RunRow> {
   return db.transaction(async (tx) => {
     const [run] = await tx
       .insert(reproductionRuns)
@@ -17,8 +23,10 @@ export async function createRun(db: Db, test: GeneratedTestRow, mode: RunTargetM
         sessionId: test.sessionId,
         generatedTestId: test.id,
         status: 'queued',
-        target: 'demo',
-        targetMode: mode,
+        target: resolved.target,
+        targetMode: resolved.targetMode,
+        targetName: resolved.targetName,
+        targetUrl: resolved.targetUrl,
       })
       .returning();
     if (!run) throw new Error('Run insert returned no row');

@@ -47,7 +47,7 @@ describe.skipIf(!enabled)('reproduction runner smoke test', () => {
   it('passes a test that reaches the demo login page and restores the demo mode', async () => {
     const runId = randomUUID();
     const outcome = await executeRun(
-      { runId, code: spec("  await expect(page.getByRole('button', { name: /sign in/i })).toBeVisible();"), targetMode: 'fixed' },
+      { runId, code: spec("  await expect(page.getByRole('button', { name: /sign in/i })).toBeVisible();"), target: { kind: 'demo', mode: 'fixed' } },
       options(),
     );
     expect(outcome.status, outcome.failureMessage ?? outcome.logs ?? '').toBe('passed');
@@ -61,7 +61,7 @@ describe.skipIf(!enabled)('reproduction runner smoke test', () => {
   it('fails a test whose expectation does not hold and keeps the screenshot', async () => {
     const runId = randomUUID();
     const outcome = await executeRun(
-      { runId, code: spec("  await expect(page.getByTestId('does-not-exist')).toBeVisible();"), targetMode: 'broken' },
+      { runId, code: spec("  await expect(page.getByTestId('does-not-exist')).toBeVisible();"), target: { kind: 'demo', mode: 'broken' } },
       options(),
     );
     expect(outcome.status).toBe('failed');
@@ -73,7 +73,7 @@ describe.skipIf(!enabled)('reproduction runner smoke test', () => {
 
   it('reports a timeout when the test hangs past the limit', async () => {
     const outcome = await executeRun(
-      { runId: randomUUID(), code: spec('  await page.waitForTimeout(60_000);'), targetMode: 'broken' },
+      { runId: randomUUID(), code: spec('  await page.waitForTimeout(60_000);'), target: { kind: 'demo', mode: 'broken' } },
       { ...options(), runTimeoutMs: 8_000 },
     );
     expect(outcome.status).toBe('timeout');
@@ -83,7 +83,7 @@ describe.skipIf(!enabled)('reproduction runner smoke test', () => {
 
   it('stores an error without executing when the demo is unreachable', async () => {
     const outcome = await executeRun(
-      { runId: randomUUID(), code: spec(''), targetMode: 'broken' },
+      { runId: randomUUID(), code: spec(''), target: { kind: 'demo', mode: 'broken' } },
       { ...options(), demoUrl: 'http://127.0.0.1:1' },
     );
     expect(outcome.status).toBe('error');

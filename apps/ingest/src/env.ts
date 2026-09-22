@@ -39,6 +39,8 @@ export interface IngestEnv {
   logLevel: string;
   artifactsDir: string;
   appUrl: string;
+  /** Origin of the bundled demo application, reported as the implicit run target. */
+  demoUrl: string;
   /** Ingestion requests per minute per key. Benchmarks raise this. */
   rateLimitPerMinute: number;
 }
@@ -55,6 +57,13 @@ export function readEnv(env: NodeJS.ProcessEnv = process.env, repoRoot: string =
   if (!Number.isInteger(maxBatchBytes) || maxBatchBytes <= 0) {
     throw new Error(`INGEST_MAX_BATCH_BYTES is not a positive integer: ${env.INGEST_MAX_BATCH_BYTES}`);
   }
+  const demoUrl = (env.DEMO_URL ?? 'http://localhost:4100').replace(/\/+$/, '');
+  try {
+    const parsed = new URL(demoUrl);
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') throw new Error('not http(s)');
+  } catch {
+    throw new Error(`DEMO_URL is not a valid http(s) URL: "${demoUrl}"`);
+  }
   return {
     databaseUrl,
     host: env.INGEST_HOST ?? '0.0.0.0',
@@ -64,6 +73,7 @@ export function readEnv(env: NodeJS.ProcessEnv = process.env, repoRoot: string =
     logLevel: env.LOG_LEVEL ?? 'info',
     artifactsDir: env.REPRO_ARTIFACTS_DIR ?? path.join(repoRoot, '.repro', 'artifacts'),
     appUrl: env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000',
+    demoUrl,
     rateLimitPerMinute: Number(env.INGEST_RATE_LIMIT_PER_MINUTE ?? 600),
   };
 }

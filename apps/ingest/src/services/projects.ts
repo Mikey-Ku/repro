@@ -1,5 +1,6 @@
+import { randomBytes } from 'node:crypto';
 import { and, asc, count, eq, max, sql } from 'drizzle-orm';
-import type { ProjectStats } from '@repro/contracts';
+import { MAX_RUN_TARGETS, runTargetOrigin, type ProjectStats, type RunTarget, type RunTargetInput } from '@repro/contracts';
 import {
   LOCAL_USER,
   generatedTests,
@@ -71,6 +72,55 @@ export async function createProject(db: Db, input: { name: string; slug: string 
 export async function deleteProject(db: Db, projectId: string): Promise<boolean> {
   const rows = await db.delete(projects).where(eq(projects.id, projectId)).returning({ id: projects.id });
   return rows.length > 0;
+}
+
+// Reproduction targets ------------------------------------------------------------------------
+
+/** The stored target with this id, or null. 'demo' is never stored, so it never matches here. */
+export function findRunTarget(project: ProjectRow, targetId: string): RunTarget | null {
+  return project.runTargets.find((target) => target.id === targetId) ?? null;
+}
+
+function newTargetId(existing: RunTarget[]): string {
+  for (;;) {
+    const id = randomBytes(4).toString('hex');
+    if (!existing.some((target) => target.id === id)) return id;
+  }
+}
+
+/**
+ * Append a target to the project's list. The row is locked for the read-modify-write so two
+ * concurrent additions cannot drop each other's entry. The url is stored as its origin; the
+ * caller has already validated it with RunTargetInputSchema, so a null origin here is a bug.
+ */
+export async function addRunTarget(db: Db, projectId: string, input: RunTargetInput): Promise<RunTarget> {
+  const url = runTargetOrigin(input.url);
+  if (!url) throw new AppError('validation_failed', 'Target url must be an http(s) origin');
+  return db.transaction(async (tx) => {
+    const [project] = await tx.select().from(projects).where(eq(projects.id, projectId)).for('update').limit(1);
+    if (!project) throw new AppError('not_found', 'Project not found');
+    if (project.runTargets.length >= MAX_RUN_TARGETS) {
+      throw new AppError('validation_failed', `A project can have at most ${MAX_RUN_TARGETS} reproduction targets`);
+    }
+    const target: RunTarget = { id: newTargetId(project.runTargets), name: input.name, url, kind: 'external' };
+    await tx
+      .update(projects)
+      .set({ runTargets: [...project.runTargets, target], updatedAt: new Date() })
+      .where(eq(projects.id, projectId));
+    return target;
+  });
+}
+
+/** Remove a target by id. Returns false when the project has no such target. Past runs keep their snapshot of it. */
+export async function removeRunTarget(db: Db, projectId: string, targetId: string): Promise<boolean> {
+  return db.transaction(async (tx) => {
+    const [project] = await tx.select().from(projects).where(eq(projects.id, projectId)).for('update').limit(1);
+    if (!project) return false;
+    const remaining = project.runTargets.filter((target) => target.id !== targetId);
+    if (remaining.length === project.runTargets.length) return false;
+    await tx.update(projects).set({ runTargets: remaining, updatedAt: new Date() }).where(eq(projects.id, projectId));
+    return true;
+  });
 }
 
 export async function projectStats(db: Db, projectId: string): Promise<ProjectStats> {

@@ -97,7 +97,7 @@ export default async function SessionPage({ params, searchParams }: Props) {
       id: 'runs',
       label: 'Runs',
       badge: activeRuns ? <Badge tone="accent">{activeRuns} active</Badge> : runs.length ? <Badge>{runs.length}</Badge> : undefined,
-      content: <RunsPanel slug={slug} sessionId={id} test={selectedTest} runs={runs} />,
+      content: <RunsPanel slug={slug} sessionId={id} test={selectedTest} runs={runs} targets={project.runTargets} />,
     },
     {
       id: 'investigate',

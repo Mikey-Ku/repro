@@ -4,7 +4,7 @@ Honest list for the first release. Items marked (roadmap) have a planned directi
 
 ## Product
 
-- **Reproduction runs only target the bundled demo application.** The runner refuses any URL outside `DEMO_URL`. Running generated tests against your own application means copying the file into your own Playwright project. (roadmap)
+- **External reproduction targets have no mode switching and no browser pool.** A project can register the origins of applications its owner controls (Settings, "Reproduction targets"), and a run against one executes the generated test as is: nothing is flipped between a broken and a fixed state, so the pass/fail proof that the demo gives you is up to you to arrange (run it before and after a fix). Runs execute Playwright on the worker's machine, which must be able to reach the target; there is no hosted browser pool, no per-target credentials, and fixture values still come from the worker's environment. (roadmap)
 - **Expected success state is partly manual.** The recording captures a failure, so the intended outcome is not in the data. By default the generated test asserts "no uncaught errors and the last request succeeded"; a visible-element or URL expectation must be added by the engineer in the Test tab.
 - **Single local user, shared internal token.** There is no login, no roles, no audit log. Do not expose the dashboard or the internal API beyond localhost.
 - **Incident groups are computed, not stored.** The incidents page groups rows by fingerprint at query time. There is no group-level status, assignment or notes yet. (roadmap)

@@ -144,7 +144,7 @@ describe('validateTestCode', () => {
 
   it('rejects absolute URLs on another origin, even inside strings', () => {
     const result = validateTestCode(withLine("await page.getByRole('link').fill('https://evil.example/collect');"), DEMO_URL);
-    expect(result).toMatchObject({ ok: false, reason: expect.stringMatching(/only reference the demo application/) });
+    expect(result).toMatchObject({ ok: false, reason: expect.stringMatching(/only reference the target application/) });
   });
 
   it('rejects the demo host on another port', () => {

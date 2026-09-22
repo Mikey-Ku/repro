@@ -90,10 +90,11 @@ export function stripCode(code: string, options: { keepStrings: boolean }): stri
 }
 
 /**
- * Validate generated test code. `demoUrl` is the only origin an absolute URL may point at.
+ * Validate generated test code. `targetUrl` is the only origin an absolute URL may point at:
+ * the bundled demo, or the external target the run was queued against.
  * Returns a human-readable reason on rejection; the run is stored with it and never executed.
  */
-export function validateTestCode(code: string, demoUrl: string): ValidationResult {
+export function validateTestCode(code: string, targetUrl: string): ValidationResult {
   const bytes = Buffer.byteLength(code, 'utf8');
   if (bytes > MAX_CODE_BYTES) {
     return { ok: false, reason: `Test code is ${bytes} bytes; the limit is ${MAX_CODE_BYTES} bytes.` };
@@ -164,7 +165,7 @@ export function validateTestCode(code: string, demoUrl: string): ValidationResul
     }
   }
 
-  const origin = new URL(demoUrl).origin;
+  const origin = new URL(targetUrl).origin;
   for (const [url] of withStrings.matchAll(/https?:\/\/[^\s'"`)]+/g)) {
     let parsed: URL;
     try {
@@ -175,7 +176,7 @@ export function validateTestCode(code: string, demoUrl: string): ValidationResul
     if (parsed.origin !== origin) {
       return {
         ok: false,
-        reason: `Test code may only reference the demo application at ${origin} (found ${url}).`,
+        reason: `Test code may only reference the target application at ${origin} (found ${url}).`,
       };
     }
   }

@@ -32,6 +32,8 @@ export interface BuildAppOptions {
   generateTest?: typeof generatePlaywrightTest;
   /** Dashboard base URL for links inside generated tests. */
   appUrl?: string;
+  /** Origin of the bundled demo application. Defaults to DEMO_URL or http://localhost:4100. */
+  demoUrl?: string;
   rateLimit?: RateLimitSettings;
 }
 
@@ -55,6 +57,7 @@ export async function buildApp(options: BuildAppOptions): Promise<FastifyInstanc
     maxBatchBytes: options.maxBatchBytes,
     artifactsDir: options.artifactsDir,
     appUrl: (options.appUrl ?? process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000').replace(/\/+$/, ''),
+    demoUrl: (options.demoUrl ?? process.env.DEMO_URL ?? 'http://localhost:4100').replace(/\/+$/, ''),
     investigator: options.investigator ?? createInvestigatorFromEnv(),
     generateTest: options.generateTest ?? generatePlaywrightTest,
     version: readServiceVersion(),

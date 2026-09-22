@@ -1,44 +1,52 @@
-import type { GeneratedTest, ReproductionRun } from '@repro/contracts';
+import type { GeneratedTest, ReproductionRun, RunTarget } from '@repro/contracts';
 import { RunPoller } from './RunPoller';
+import { RunTargetSelect } from './RunTargetSelect';
 import { IconDownload } from '@/components/icons';
 import { Badge, Button, Disclosure, EmptyState, LinkButton, statusTone } from '@/components/ui';
 import { createRunAction } from '@/lib/actions';
 import { formatBytes, formatDateTime, formatDuration, shortId } from '@/lib/format';
 import { apiPath } from '@/lib/paths';
+import { DEMO_TARGET_LABEL } from '@/lib/run-target';
 
 const ACTIVE = new Set(['queued', 'running']);
 
 /**
- * Reproduction runs for the selected test version. Runs go through the job
- * queue and execute only against the bundled demo app, in broken or fixed mode.
+ * Reproduction runs for the selected test version. Runs go through the job queue and execute
+ * against the bundled demo app (in broken or fixed mode) or against one of the project's
+ * external targets, which have no mode.
  */
-export function RunsPanel({ slug, sessionId, test, runs }: { slug: string; sessionId: string; test: GeneratedTest | null; runs: ReproductionRun[] }) {
+export function RunsPanel({
+  slug,
+  sessionId,
+  test,
+  runs,
+  targets,
+}: {
+  slug: string;
+  sessionId: string;
+  test: GeneratedTest | null;
+  runs: ReproductionRun[];
+  targets: RunTarget[];
+}) {
   if (!test) {
-    return <EmptyState compact title="No test to run" description="Generate a test first. Runs execute a generated test version against the demo application." />;
+    return <EmptyState compact title="No test to run" description="Generate a test first. Runs execute a generated test version against the demo application or one of the project's targets." />;
   }
   const action = createRunAction.bind(null, slug, sessionId, test.id);
   const active = runs.filter((run) => ACTIVE.has(run.status)).map((run) => run.id);
 
   return (
     <div className="space-y-3 px-3 py-3 text-xs">
-      <div className="flex flex-wrap items-center gap-2">
-        <form action={action}>
-          <input type="hidden" name="mode" value="broken" />
-          <Button type="submit" variant="primary" disabled={active.length > 0}>
-            Run against demo (broken)
-          </Button>
-        </form>
-        <form action={action}>
-          <input type="hidden" name="mode" value="fixed" />
-          <Button type="submit" disabled={active.length > 0}>
-            Run against demo (fixed)
-          </Button>
-        </form>
-        <span className="text-muted">
-          Test v{test.version}. Expected: fails on broken, passes on fixed.
-        </span>
-      </div>
-      <p className="text-2xs text-muted">Runs execute only against the bundled demo application (apps/demo), in a sandboxed Playwright process with a timeout. Arbitrary targets are not supported.</p>
+      <form action={action} className="flex flex-wrap items-center gap-2">
+        <RunTargetSelect targets={targets} disabled={active.length > 0} />
+        <Button type="submit" variant="primary" disabled={active.length > 0}>
+          Run
+        </Button>
+        <span className="text-muted">Test v{test.version}. On the demo: fails on broken, passes on fixed.</span>
+      </form>
+      <p className="text-2xs text-muted">
+        Runs execute in a sandboxed Playwright process with a timeout, on the worker's machine. The bundled demo is switched into the chosen mode for the run; external targets (added
+        under Settings) run as they are and must be reachable from the worker.
+      </p>
       {active.length ? <RunPoller slug={slug} runIds={active} /> : null}
 
       {runs.length ? (
@@ -47,7 +55,18 @@ export function RunsPanel({ slug, sessionId, test, runs }: { slug: string; sessi
             <li key={run.id} className="rounded-md border border-border bg-raised/40 p-3">
               <div className="flex flex-wrap items-center gap-2">
                 <Badge tone={statusTone(run.status)}>{run.status}</Badge>
-                <Badge tone={run.targetMode === 'fixed' ? 'success' : 'warning'}>{run.targetMode}</Badge>
+                {run.target === 'demo' ? (
+                  <>
+                    <Badge tone={run.targetMode === 'fixed' ? 'success' : 'warning'}>{run.targetMode}</Badge>
+                    <span className="text-muted">{DEMO_TARGET_LABEL}</span>
+                  </>
+                ) : (
+                  <>
+                    <Badge tone="accent">external</Badge>
+                    <span className="text-text">{run.targetName ?? run.target}</span>
+                    {run.targetUrl ? <span className="font-mono text-2xs text-muted">{run.targetUrl}</span> : null}
+                  </>
+                )}
                 <span className="font-mono text-2xs text-muted">{shortId(run.id)}</span>
                 <span className="text-muted">queued {formatDateTime(run.queuedAt)}</span>
                 {run.durationMs !== null ? <span className="font-mono text-muted">{formatDuration(run.durationMs)}</span> : null}
@@ -84,7 +103,7 @@ export function RunsPanel({ slug, sessionId, test, runs }: { slug: string; sessi
           ))}
         </ol>
       ) : (
-        <EmptyState compact title="No runs yet" description="Run the test against the broken demo to confirm it reproduces the bug, then against the fixed demo to confirm it passes." />
+        <EmptyState compact title="No runs yet" description="Run the test against the broken demo to confirm it reproduces the bug, then against the fixed demo to confirm it passes. Pick an external target to try it against your own application." />
       )}
     </div>
   );

@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { CodeSnippet } from '@/components/CodeSnippet';
 import { PageHeader } from '@/components/PageHeader';
+import { AddTargetForm } from '@/components/settings/AddTargetForm';
 import { CreateKeyForm } from '@/components/settings/CreateKeyForm';
 import { KeysTable } from '@/components/settings/KeysTable';
+import { TargetsTable } from '@/components/settings/TargetsTable';
 import { Card, CardBody, CardHeader } from '@/components/ui';
 import { listKeys } from '@/lib/api';
 import { ingestUrl } from '@/lib/env';
@@ -42,6 +44,16 @@ export default async function SettingsPage({ params }: Props) {
               <p className="text-xs text-muted">
                 Options such as <code>strict</code>, <code>maskSelector</code>, <code>blockSelector</code> and <code>sampleRate</code> are documented in packages/browser-sdk.
               </p>
+            </CardBody>
+          </Card>
+          <Card>
+            <CardHeader
+              title="Reproduction targets"
+              description="Where generated tests can run besides the bundled demo. Origins only; the worker's machine must reach them, and they should be applications you own."
+            />
+            <TargetsTable slug={slug} targets={project.runTargets} />
+            <CardBody className="border-t border-border">
+              <AddTargetForm slug={slug} />
             </CardBody>
           </Card>
           <Card>

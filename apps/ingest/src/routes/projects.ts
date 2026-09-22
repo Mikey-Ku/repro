@@ -1,16 +1,19 @@
 import type { FastifyInstance } from 'fastify';
+import { RunTargetInputSchema, type RunTargetsResponse } from '@repro/contracts';
 import { z } from 'zod';
 import type { AppContext } from '../context.js';
 import { notFound } from '../errors.js';
 import { toIngestionKeyDto, toProjectDto } from '../mappers.js';
 import { createIngestionKey, listIngestionKeys, revokeIngestionKey } from '../services/keys.js';
 import {
+  addRunTarget,
   createProject,
   deleteProject,
   findLocalUser,
   getProjectBySlug,
   listProjects,
   projectStats,
+  removeRunTarget,
 } from '../services/projects.js';
 import { OK, parseWith, requireProject } from './shared.js';
 
@@ -84,6 +87,31 @@ export function registerProjectRoutes(app: FastifyInstance, ctx: AppContext): vo
     const revoked = await revokeIngestionKey(ctx.db, project.id, request.params.keyId);
     if (!revoked) throw notFound('Ingestion key');
     request.log.info({ keyId: request.params.keyId }, 'ingestion key revoked');
+    return OK;
+  });
+
+  /** The implicit demo target (from DEMO_URL) plus the project's own external targets. */
+  app.get<ProjectParams>('/projects/:projectId/targets', async (request): Promise<RunTargetsResponse> => {
+    const project = await requireProject(ctx, request, request.params.projectId);
+    return {
+      demo: { id: 'demo', name: 'Bundled demo', url: ctx.demoUrl, kind: 'demo' },
+      targets: project.runTargets,
+    };
+  });
+
+  app.post<ProjectParams>('/projects/:projectId/targets', async (request, reply) => {
+    const project = await requireProject(ctx, request, request.params.projectId);
+    const input = parseWith(RunTargetInputSchema, request.body, 'Run target');
+    const target = await addRunTarget(ctx.db, project.id, input);
+    request.log.info({ targetId: target.id, targetUrl: target.url }, 'run target added');
+    return reply.status(201).send(target);
+  });
+
+  app.delete<{ Params: { projectId: string; targetId: string } }>('/projects/:projectId/targets/:targetId', async (request) => {
+    const project = await requireProject(ctx, request, request.params.projectId);
+    const removed = await removeRunTarget(ctx.db, project.id, request.params.targetId);
+    if (!removed) throw notFound('Run target');
+    request.log.info({ targetId: request.params.targetId }, 'run target removed');
     return OK;
   });
 }

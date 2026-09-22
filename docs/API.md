@@ -64,6 +64,22 @@ All routes require `x-repro-internal-token`. All resources are scoped by project
 | POST | `/api/projects/:projectId/keys` | body `{ label }` → `IngestionKey & { key: string }` (plaintext once) |
 | DELETE | `/api/projects/:projectId/keys/:keyId` | revokes → `{ ok: true }` |
 
+`Project.runTargets` is the project's list of external reproduction targets (see below), so the dashboard does not need a second call to render them.
+
+### Reproduction targets
+
+Where a generated test can be executed. Every project has the implicit demo target (the bundled application at `DEMO_URL`, which the worker switches between `broken` and `fixed`) and up to 10 external targets configured by the project owner. See `docs/REPRODUCTION_RUNNER.md`, "Targets".
+
+| Method | Path | Response |
+| --- | --- | --- |
+| GET | `/api/projects/:projectId/targets` | `{ demo: { id: 'demo', name: 'Bundled demo', url: DEMO_URL, kind: 'demo' }, targets: RunTarget[] }` |
+| POST | `/api/projects/:projectId/targets` | body `RunTargetInput` `{ name, url }` → `RunTarget` `{ id, name, url, kind: 'external' }` (201) |
+| DELETE | `/api/projects/:projectId/targets/:targetId` | `{ ok: true }`; 404 when the project has no such target |
+
+The `url` must be a plain http or https origin: it must parse, its path must be empty or `/`, and it must carry no credentials, query string or fragment. It is stored normalised to its origin (`HTTPS://Staging.Example.com:8443/` becomes `https://staging.example.com:8443`). Anything else, including `javascript:`, `file:`, a path such as `https://host/app` or `https://user:pass@host`, is a 400 `validation_failed`. Loopback and private-network hosts (`localhost`, `127.0.0.1`, `10.x`, `192.168.x`) are accepted: Repro is a local tool and the application under test usually runs on the same machine as the worker. Treat that as a consequence of the deployment model, not a safe default for a shared server.
+
+Target ids are short random strings assigned by the server; `demo` is reserved and never stored. The demo target is not stored either, so it cannot be removed. The eleventh target is a 400. Removing a target does not touch runs already queued against it: each run keeps its own copy of the target's name and url.
+
 ### Sessions
 
 | Method | Path | Response |
@@ -127,12 +143,12 @@ Without `reference` the response is the heuristic list. `no-errors` is always ap
 
 | Method | Path | Response |
 | --- | --- | --- |
-| POST | `/api/projects/:projectId/tests/:testId/runs` | body `CreateRunRequest` → `ReproductionRun` with status `queued` |
+| POST | `/api/projects/:projectId/tests/:testId/runs` | body `CreateRunRequest` `{ targetId?: string, mode?: 'broken' \| 'fixed' }` → `ReproductionRun` with status `queued` |
 | GET | `/api/projects/:projectId/tests/:testId/runs` | `ReproductionRun[]` newest first |
 | GET | `/api/projects/:projectId/runs/:runId` | `ReproductionRun` |
 | GET | `/api/projects/:projectId/runs/:runId/artifacts/:name` | binary artifact (`screenshot.png`, `trace.zip`, `report.json`) |
 
-Runs execute only against the bundled demo application. See `docs/REPRODUCTION_RUNNER.md`.
+`targetId` defaults to `demo`, where `mode` (default `broken`) picks the demo's mode for the run. Any other `targetId` must be one of the project's targets, otherwise the response is 404 `not_found` (a target id from another project is indistinguishable from an unknown one). For an external target `mode` is ignored and the run records `targetMode: 'none'`, `target: <targetId>`, `targetName` and `targetUrl` copied from the target at the time of the request; the demo target records `targetName: null` and `targetUrl: null`. See `docs/REPRODUCTION_RUNNER.md` for what the worker does with each kind.
 
 ### Diagnostics
 

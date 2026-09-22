@@ -24,7 +24,15 @@ const SESSION = '22222222-2222-4222-8222-222222222222';
 const at = new Date('2024-05-01T10:00:00.000Z');
 const later = new Date('2024-05-01T10:01:30.500Z');
 
-const project: ProjectRow = { id: PROJECT, slug: 'demo', name: 'Demo', retentionDays: 30, createdAt: at, updatedAt: at };
+const project: ProjectRow = {
+  id: PROJECT,
+  slug: 'demo',
+  name: 'Demo',
+  retentionDays: 30,
+  runTargets: [{ id: 'a1b2c3d4', name: 'Staging', url: 'https://staging.example.com', kind: 'external' }],
+  createdAt: at,
+  updatedAt: at,
+};
 
 const key: IngestionKeyRow = {
   id: '33333333-3333-4333-8333-333333333333',
@@ -72,6 +80,7 @@ describe('mappers produce DTOs that satisfy the contracts schemas', () => {
     const dto = toProjectDto(project);
     expect(ProjectSchema.parse(dto)).toEqual(dto);
     expect(dto.createdAt).toBe('2024-05-01T10:00:00.000Z');
+    expect(dto.runTargets).toEqual([{ id: 'a1b2c3d4', name: 'Staging', url: 'https://staging.example.com', kind: 'external' }]);
 
     const keyDto = toIngestionKeyDto(key);
     expect(IngestionKeySchema.parse(keyDto)).toEqual(keyDto);
@@ -146,6 +155,8 @@ describe('mappers produce DTOs that satisfy the contracts schemas', () => {
       status: 'passed',
       target: 'demo',
       targetMode: 'fixed',
+      targetUrl: null,
+      targetName: null,
       queuedAt: at,
       startedAt: at,
       finishedAt: later,
@@ -159,6 +170,12 @@ describe('mappers produce DTOs that satisfy the contracts schemas', () => {
     expect(ReproductionRunSchema.parse(dto)).toEqual(dto);
     expect(dto.artifacts).toEqual([{ name: 'screenshot.png', contentType: 'image/png', bytes: 10 }]);
     expect(JSON.stringify(dto)).not.toContain('/var/secret');
+    expect(dto).toMatchObject({ targetMode: 'fixed', targetName: null, targetUrl: null });
+
+    // An external run stores 'none' as its mode and keeps the target snapshot; an unknown mode reads as broken.
+    const external = toRunDto({ ...row, target: 'a1b2c3d4', targetMode: 'none', targetName: 'Staging', targetUrl: 'https://staging.example.com' });
+    expect(ReproductionRunSchema.parse(external)).toMatchObject({ target: 'a1b2c3d4', targetMode: 'none', targetName: 'Staging', targetUrl: 'https://staging.example.com' });
+    expect(toRunDto({ ...row, targetMode: 'sideways' }).targetMode).toBe('broken');
   });
 
   it('finding', () => {

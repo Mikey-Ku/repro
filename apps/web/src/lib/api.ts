@@ -13,12 +13,14 @@ import {
   ReferenceCandidateSchema,
   ReproductionRunSchema,
   DiagnosticFindingSchema,
+  RunTargetSchema,
+  RunTargetsResponseSchema,
   SessionListResponseSchema,
   type CreateRunRequest,
   type GenerateTestRequest,
   type Health,
   type IncidentKind,
-  type RunTargetMode,
+  type RunTargetInput,
   type SessionFilters,
 } from '@repro/contracts';
 import { z as zod } from 'zod';
@@ -183,6 +185,21 @@ export async function revokeKey(projectId: string, keyId: string) {
   return request(`/api/projects/${projectId}/keys/${keyId}`, OkSchema, { method: 'DELETE' });
 }
 
+// Reproduction targets -------------------------------------------------------
+
+/** The implicit demo target plus the project's external targets. `Project.runTargets` carries the same list. */
+export async function listTargets(projectId: string) {
+  return request(`/api/projects/${projectId}/targets`, RunTargetsResponseSchema);
+}
+
+export async function addTarget(projectId: string, input: RunTargetInput) {
+  return request(`/api/projects/${projectId}/targets`, RunTargetSchema, { method: 'POST', body: input });
+}
+
+export async function removeTarget(projectId: string, targetId: string) {
+  return request(`/api/projects/${projectId}/targets/${encodeURIComponent(targetId)}`, OkSchema, { method: 'DELETE' });
+}
+
 // Sessions -------------------------------------------------------------------
 
 export async function listSessions(projectId: string, filters: Partial<SessionFilters>) {
@@ -275,8 +292,7 @@ export async function getExpectationSuggestions(projectId: string, sessionId: st
 
 // Reproduction runs ----------------------------------------------------------
 
-export async function createRun(projectId: string, testId: string, mode: RunTargetMode) {
-  const body: CreateRunRequest = { mode };
+export async function createRun(projectId: string, testId: string, body: CreateRunRequest) {
   return request(`/api/projects/${projectId}/tests/${testId}/runs`, ReproductionRunSchema, { method: 'POST', body });
 }
 

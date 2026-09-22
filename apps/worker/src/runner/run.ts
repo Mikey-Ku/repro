@@ -10,10 +10,23 @@ import { createWorkspace, removeWorkspace, type Workspace } from './workspace.js
 
 export const MAX_LOG_BYTES = 200 * 1024;
 
+/**
+ * Where a run executes. The bundled demo is switched into the requested mode for the duration
+ * of the run; an external target is an origin the project owner configured, and nothing about
+ * it is switched: the test simply runs against it as it is.
+ */
+export type RunTargetSpec = { kind: 'demo'; mode: RunTargetMode } | { kind: 'external'; url: string };
+
 export interface RunInput {
   runId: string;
   code: string;
-  targetMode: RunTargetMode;
+  target: RunTargetSpec;
+}
+
+/** The demo's mode control, injectable so a unit test can prove it is never touched for an external target. */
+export interface DemoModeClient {
+  get: (demoUrl: string) => Promise<RunTargetMode>;
+  set: (demoUrl: string, mode: RunTargetMode) => Promise<void>;
 }
 
 export interface RunnerOptions {
@@ -22,6 +35,9 @@ export interface RunnerOptions {
   workspaceDir: string;
   runTimeoutMs: number;
   log: Logger;
+  /** Test seams. Production uses the real demo control endpoint and the real Playwright child. */
+  demoMode?: DemoModeClient;
+  execute?: typeof executePlaywright;
 }
 
 /** Everything the job handler writes back onto the reproduction_runs row. */
@@ -52,6 +68,11 @@ async function readReport(reportPath: string): Promise<unknown | undefined> {
   }
 }
 
+/** The origin Playwright is pointed at: the demo, or the external target's stored origin. */
+export function targetUrl(target: RunTargetSpec, demoUrl: string): string {
+  return target.kind === 'demo' ? demoUrl : target.url;
+}
+
 /**
  * Execute one reproduction run end to end. Never throws for anything the run itself can
  * cause (bad code, unreachable demo, failing or hanging test): those become an outcome. Only
@@ -60,6 +81,9 @@ async function readReport(reportPath: string): Promise<unknown | undefined> {
 export async function executeRun(input: RunInput, options: RunnerOptions): Promise<RunOutcome> {
   const startedAt = Date.now();
   const log = options.log.child({ runId: input.runId });
+  const demoMode: DemoModeClient = options.demoMode ?? { get: getDemoMode, set: setDemoMode };
+  const execute = options.execute ?? executePlaywright;
+  const url = targetUrl(input.target, options.demoUrl);
   const finish = (partial: Omit<RunOutcome, 'finishedAt' | 'durationMs'>): RunOutcome => {
     const finishedAt = new Date();
     return { ...partial, finishedAt, durationMs: finishedAt.getTime() - startedAt };
@@ -67,37 +91,42 @@ export async function executeRun(input: RunInput, options: RunnerOptions): Promi
   const errorOutcome = (failureMessage: string, logs: string | null = null): RunOutcome =>
     finish({ status: 'error', failureMessage, logs, exitCode: null, artifacts: [] });
 
-  // 1. Validation. Rejected code is never written to disk.
-  const validation = validateTestCode(input.code, options.demoUrl);
+  // 1. Validation against the origin this run targets. Rejected code is never written to disk.
+  const validation = validateTestCode(input.code, url);
   if (!validation.ok) {
     log.warn({ reason: validation.reason }, 'generated test rejected by validator');
     return errorOutcome(`Generated test was rejected before execution: ${validation.reason}`);
   }
 
-  // 2. Point the demo at the requested mode, remembering what it was so it can be put back.
-  let previousMode: RunTargetMode;
-  try {
-    previousMode = await getDemoMode(options.demoUrl);
-    if (previousMode !== input.targetMode) await setDemoMode(options.demoUrl, input.targetMode);
-  } catch (error) {
-    if (error instanceof DemoUnreachableError) {
-      log.warn({ err: error }, 'demo application unreachable');
-      return errorOutcome(error.message);
+  // 2. Demo target only: point the demo at the requested mode, remembering what it was so it can
+  //    be put back. An external target has no mode and its control endpoint is never called.
+  let previousMode: RunTargetMode | undefined;
+  if (input.target.kind === 'demo') {
+    try {
+      previousMode = await demoMode.get(options.demoUrl);
+      if (previousMode !== input.target.mode) await demoMode.set(options.demoUrl, input.target.mode);
+    } catch (error) {
+      if (error instanceof DemoUnreachableError) {
+        log.warn({ err: error }, 'demo application unreachable');
+        return errorOutcome(error.message);
+      }
+      throw error;
     }
-    throw error;
   }
+  const restoreMode = input.target.kind === 'demo' && previousMode !== undefined && previousMode !== input.target.mode ? previousMode : null;
 
   let workspace: Workspace | undefined;
   try {
     // 3. Workspace with the fixed config and the validated spec.
     workspace = await createWorkspace(options.workspaceDir, input.runId, input.code);
-    log.info({ workspace: workspace.dir, mode: input.targetMode }, 'running playwright');
+    log.info({ workspace: workspace.dir, target: input.target.kind, url, mode: input.target.kind === 'demo' ? input.target.mode : 'none' }, 'running playwright');
 
-    // 4. Execute with a hard timeout and an allowlisted environment.
-    const result = await executePlaywright({
+    // 4. Execute with a hard timeout and an allowlisted environment. REPRO_TARGET_URL is the
+    //    target origin, which the fixed config uses as baseURL.
+    const result = await execute({
       workspaceDir: workspace.dir,
       configPath: workspace.configPath,
-      targetUrl: options.demoUrl,
+      targetUrl: url,
       timeoutMs: options.runTimeoutMs,
     });
     const logs = truncateLogs(result.stdout, result.stderr);
@@ -139,9 +168,9 @@ export async function executeRun(input: RunInput, options: RunnerOptions): Promi
       artifacts,
     });
   } finally {
-    // 6 and 7. Always restore the demo and drop the workspace, whatever happened above.
-    if (previousMode !== input.targetMode) {
-      await setDemoMode(options.demoUrl, previousMode).catch((error: unknown) => {
+    // 6 and 7. Always restore the demo (when it was switched) and drop the workspace, whatever happened above.
+    if (restoreMode !== null) {
+      await demoMode.set(options.demoUrl, restoreMode).catch((error: unknown) => {
         log.error({ err: error }, 'could not restore demo mode');
       });
     }

@@ -19,6 +19,7 @@ async function main(): Promise<void> {
     maxBatchBytes: env.maxBatchBytes,
     artifactsDir: env.artifactsDir,
     appUrl: env.appUrl,
+    demoUrl: env.demoUrl,
     rateLimit: { max: env.rateLimitPerMinute, timeWindow: '1 minute' },
     logger: prettyLogs
       ? { level: env.logLevel, transport: { target: 'pino-pretty', options: { translateTime: 'HH:MM:ss', ignore: 'pid,hostname' } } }
